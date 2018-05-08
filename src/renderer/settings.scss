@@ -1,0 +1,13 @@
+/*~~~ Global variables ~~~*/
+$primary-color: #e6a23c;
+$secondary-color: #409eff;
+$secondary-color-darker: rgb(4, 129, 255);
+
+$tab-btn-height: 80px;
+$tab-btn-header-height: 120px;
+$app-height: $tab-btn-header-height + $tab-btn-height * 5;
+$tab-header-height: 70px;
+$tab-container-height: $app-height - $tab-header-height;
+
+$tab-container-padding: 20px;
+$tab-header-padding: ($tab-header-height - 40px)/2 /* 40px is the size of the Element UI button */ 
