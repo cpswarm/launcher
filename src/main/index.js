@@ -13,15 +13,19 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow () {
+function createWindow() {
   /**
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 515, // Slightly smaller than the App height so that it doesn't leave a white line
+    height: 535, // Slightly smaller than the App height so that it doesn't leave a white line
     useContentSize: true,
-    width: 1000
+    width: 1000,
+    resizable: true,
+    'minHeight': 535,
+    'minWidth': 1000
   })
+  //mainWindow.setMenu(null);
 
   mainWindow.loadURL(winURL)
 
