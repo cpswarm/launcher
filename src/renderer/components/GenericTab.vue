@@ -4,8 +4,8 @@
     <el-input v-bind:placeholder="tab.execPath" v-model="tab.execPath">
       <el-button slot="append" icon="el-icon-search" v-on:click="openFileDialog()"></el-button>
     </el-input>
-    <div>{{path}}</div>
-    <div class="label">Available Resources</div>
+    
+    <div class="label">Available Inputs ({{path + "\\" + tab.inputPath}})</div>
     <el-table ref="multipleTable" :data="tab.input" style="width: 100%" @selection-change="handleSelectionChange">
       <el-table-column type="selection" width="55">
       </el-table-column>

@@ -14,7 +14,7 @@ export function getTabs(){
           isDone: false,
           execPath: "C:\\Modelio\\modelio.exe",
           inputPath: "modelling",
-          input: [{name: "gid"}, {name: "gud"}],
+          input: [],
           args: []
         },
         {
@@ -24,6 +24,8 @@ export function getTabs(){
           enabled: true,
           isDone: false,
           execPath: "C:\\Simulation_orchestrator.exe",
+          inputPath: "modelling",
+          input: [],
           args: []
         },
         {
@@ -33,6 +35,8 @@ export function getTabs(){
           enabled: true,
           isDone: false,
           execPath: "C:\\Code_Generator.exe",
+          inputPath: "simulation",
+          input: [],
           args: []
         },
         {
@@ -42,6 +46,8 @@ export function getTabs(){
           enabled: true,
           isDone: false,
           execPath: "C:\\Deployment_tool.exe",
+          inputPath: "generation",
+          input: [],
           args: []
         },
         {
@@ -51,6 +57,8 @@ export function getTabs(){
           enabled: true,
           isDone: false,
           execPath: "C:\\Monitoring_tool.exe",
+          inputPath: "modelling",
+          input: [],
           args: []
         }
       ];

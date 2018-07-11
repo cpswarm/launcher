@@ -30,8 +30,11 @@
 </template> 
 
 <script>
+// Import events module
+const events = require("events");
 const chokidar = require("chokidar");
 const fs = require("fs");
+var fw = require("@/components/FileWatcher.js");
 
 import GenericTab from "@/components/GenericTab.vue";
 import TabHeader from "@/components/TabHeader.vue";
@@ -43,10 +46,13 @@ export default {
   props: ["path"],
   data() {
     var tabs = getTabs();
+    var eventEmitter = new events.EventEmitter();
+    var fileWatcher = fw(eventEmitter);
     return {
       tabs: tabs,
       currentTab: tabs[0],
-      watcher: null
+      emitter: eventEmitter,
+      watcher: fileWatcher
     };
   },
   components: {
@@ -59,45 +65,7 @@ export default {
       if (tab.enabled) {
         this.currentTab = tab;
       }
-    },
-
-    // TODO: improve this
-    watchFile: function(tabs, basePath) {
-      // Close previous file watcher
-      if (this.watcher) {
-        this.watcher.close();
-      }
-
-      for (var i in tabs) {
-        var tab = tabs[i];
-        if (tab.inputWatcher) tabs[i].inputWatcher.close();
-
-        if (tab.inputPath) {
-          var watchPath = basePath + "\\" + tab.inputPath;
-          tab.inputWatcher = chokidar
-            .watch(watchPath, {
-              ignored: /(^|[\/\\])\../,
-              depth: 0
-            })
-            .on("all", function(event, path) {
-              fs.readdir(watchPath, function(err, files) {
-                console.log(tab.input);
-                this.input = [];
-                files.forEach(file => {
-                  this.input.push({name: file});
-                });
-              }.bind(this));
-              console.log(event, path);
-            }.bind(tab));
-        }
-      }
-    },
-
-    // Handle file watcher events from different tabs
-    handleFWEvents: function(event) {},
-
-    // Handle subprocess events from different tabs
-    handleSPEvents: function(event) {}
+    }
   },
 
   watch: {
@@ -112,10 +80,27 @@ export default {
   },
   computed: {},
   mounted() {
-    // Start watching files
-    if (!this.watcher && this.path) {
-      this.watchFile(this.tabs, this.path);
+    for (var i in this.tabs) {
+      this.watcher.watch(
+        this.tabs[i].id,
+        this.path + "\\" + this.tabs[i].inputPath
+      );
     }
+
+    this.emitter.on(
+      "file",
+      function(id, files) {
+        var tabs = this.tabs;
+        for (var i in tabs) {
+          if (tabs[i].id === id) {
+            tabs[i].input = [];
+            files.forEach(function(file) {
+              tabs[i].input.push({ name: file });
+            });
+          }
+        }
+      }.bind(this)
+    );
   }
 };
 </script>
