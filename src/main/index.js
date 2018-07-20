@@ -18,7 +18,7 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 535, // Slightly smaller than the App height so that it doesn't leave a white line
+    height: 580, // Slightly smaller than the App height so that it doesn't leave a white line
     useContentSize: true,
     width: 1000,
     resizable: true,

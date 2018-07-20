@@ -8,28 +8,24 @@
           </span>
           <div class="image"><img src="@/assets/swarm.png"></div>
         </div>
-
-        <div style="  display: flex; align-items: center; justify-content: center;" v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { disabled: !tab.status.enabled  },{ selected: currentTab.id === tab.id  }]">
-          <div>
-            <div class="icon"><img style="height: 30px;" v-bind:src="tab.icon"></div>
-            <div class="text">{{tab.name}}</div>
-            <div class="status"><img v-if="tab.status.running" src="@/assets/running.png"><img v-if="tab.status.done" src="@/assets/finish.png"></div>
+        <el-row v-for="tab in tabs" v-bind:key="tab.id">
+          <div v-on:click="selectTab(tab)" v-bind:class="['tab-button', 'enabled',{ active: currentTab.id === tab.id  }]">
+            <el-col :span="6" class="btn-icon"><img v-bind:src="tab.icon"></el-col>
+            <el-col :span="18" class="btn-text">
+              <div>{{tab.name}} <img v-if="tab.status.running" src="@/assets/running.png"></div>
+            </el-col>
           </div>
-        </div>
+        </el-row>
 
+        
         <div class="tab-button-filler"></div>
       </el-col>
       <el-col :span="17" class="whole-tab-container">
         <tab-header v-bind:tab="currentTab" class="tab-header"></tab-header>
         <div class="tab-container">
-          <!-- <keep-alive>
+          <keep-alive>
             <component :is="currentTabComponent" :id="currentTab.id" :path="path" @status-changed="handleTabStateChange" />
-          </keep-alive> -->
-          <modelling-tab :id="'modelling'" v-show="currentTab.id === 'modelling'" :path="path" @status-changed="handleTabStateChange" />
-          <simulation-tab :id="'simulation'" v-show="currentTab.id === 'simulation'" :path="path" @status-changed="handleTabStateChange" />
-          <code-generation-tab :id="'code-generation'" v-show="currentTab.id === 'code-generation'" :path="path" @status-changed="handleTabStateChange" />
-          <deployment-tab :id="'deployment'" v-show="currentTab.id === 'deployment'" :path="path" @status-changed="handleTabStateChange" />
-          <monitoring-tab :id="'monitoring'" v-show="currentTab.id === 'monitoring'" :path="path" @status-changed="handleTabStateChange" />
+          </keep-alive>
         </div>
       </el-col>
     </el-row>
@@ -59,31 +55,31 @@ export default {
         id: "modelling",
         name: "Modelling",
         icon: modelingIcon,
-        status: { enabled: true, done: false, running: false }
+        status: { enabled: true, running: false }
       },
       {
         id: "simulation",
-        name: "Simulation & Optimization",
+        name: "Simulation",
         icon: simulationIcon,
-        status: { enabled: true, done: false, running: false }
+        status: { enabled: true, running: false }
       },
       {
         id: "code-generation",
         name: "Code Generation",
         icon: codeIcon,
-        status: { enabled: true, done: false, running: false }
+        status: { enabled: true, running: false }
       },
       {
         id: "deployment",
         name: "Deployment",
         icon: deploymentIcon,
-        status: { enabled: true, done: false, running: false }
+        status: { enabled: true, running: false }
       },
       {
         id: "monitoring",
-        name: "Monitoring & Command",
+        name: "Monitor & Command",
         icon: monitoringIcon,
-        status: { enabled: true, done: false, running: false }
+        status: { enabled: true, running: false }
       }
     ];
     return {
@@ -102,12 +98,11 @@ export default {
 
   methods: {
     selectTab: function(tab) {
-      if (tab.status.enabled) {
-        this.currentTab = tab;
-      }
+      this.currentTab = tab;
     },
 
     handleTabStateChange: function(id, status) {
+      console.log(id, status);
       for (var i in this.tabs) {
         if (this.tabs[i].id === id) {
           this.tabs[i].status = Object.assign({}, status);
@@ -178,15 +173,14 @@ export default {
       }
 
       .tab-button {
-        display: flex;
-        align-items: center;
-        justify-content: center;
         box-sizing: border-box;
         background-color: $secondary-color;
+        flex: 0 1 $tab-btn-height;
         color: #303133;
-        font-size: 1.2em;
+        font-size: 1.1em;
         height: $tab-btn-height;
 
+        vertical-align: middle;
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         position: relative;
@@ -196,20 +190,15 @@ export default {
           @include pseudo-shadow;
         }
 
-        &:hover {
-          background-color: $secondary-color-darker;
-          &.disabled {
-            background-color: $secondary-color;
-          }
-          &.selected {
-            background-color: transparent;
+        &.enabled {
+          &:hover {
+            background-color: $secondary-color-darker;
           }
         }
 
         &.disabled {
           cursor: not-allowed;
           border-bottom: none;
-          // The white opaque overlay
           &::after {
             background: white;
             opacity: 0.5;
@@ -222,31 +211,42 @@ export default {
           }
         }
 
-        &.selected {
+        &.active {
           background: transparent;
           border-bottom: none;
+          &:hover {
+            background-color: transparent;
+          }
           &::before {
             box-shadow: none;
           }
         }
 
-        .icon {
+        .btn-icon {
+          height: 100%;
+          position: relative;
           img {
-            height: 30px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 26px;
+            height: 26px;
+            margin-top: -13px; /* Half the height */
+            margin-left: -13px; /* Half the width */
           }
         }
 
-        .text {
-        }
-
-        .status {
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          right: 5px;
-          img {
-            height: 25px;
-            margin: 0 5px;
+        .btn-text {
+          height: 100%;
+          display: table;
+          div {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: left;
+            img {
+              height: 18px;
+              vertical-align: middle;
+            }
           }
         }
       }

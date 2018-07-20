@@ -23,11 +23,9 @@ export default {
   },
   methods: {
     stateChanged: function(folders) {
-      console.log("get event state changed!");
     },
 
     folderSelected: function(folder) {
-      console.log("get event folder selected");
     }
   }
 };
