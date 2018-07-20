@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <el-row>
-      <el-col :span="12" class="title-container">
-        {{tab.name}}
-      </el-col>
-      <el-col :span="12" class="menu-btn-container">
-        <span>John Doe</span>
-        <el-button type="primary" circle><img src="@/assets/user.png"></el-button>
-      </el-col>
-    </el-row>
+    <table>
+      <tr>
+        <td class="cell name">{{tab.name}}</td>
+        <td class="cell user">
+          <span>John Doe</span>
+          <el-button type="primary" circle><img src="@/assets/user.png"></el-button>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -33,21 +33,27 @@ export default {
   &::before {
     @include pseudo-shadow;
   }
-  .el-row {
+
+  table {
     height: 100%;
-    .title-container {
-      height: $tab-header-height;
-      line-height: $tab-header-height;
-      font-size: 1.6em;
+    width: 100%;
+    .cell {
+      width: 50%;
       vertical-align: middle;
-    }
-    .menu-btn-container {
-      height: $tab-header-height;
-      line-height: $tab-header-height;
-      vertical-align: middle;
-      text-align: right;
-      img {
-        height: 20px;
+      &.name {
+        text-align: left;
+        font-size: 1.6em;
+      }
+      &.user {
+        text-align: right;
+        span {
+          vertical-align: middle;
+          margin-right: 10px;
+        }
+        img {
+          height: 30px;
+          vertical-align: middle;
+        }
       }
     }
   }

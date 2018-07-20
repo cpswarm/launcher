@@ -1,17 +1,19 @@
 <template>
   <div class="folder-container">
-    <el-row v-for="folder in folders" v-bind:key="folder.name" v-bind:class="['folder', { selected: selectedFolder === folder }]" @click="selectFolder(folder)">
-      <el-col :span="8">
-        <div v-show="folder.empty" class="icon"><img src="@/assets/empty-folder.png">SFSDFSDF</div>
-        <div v-show="!folder.empty" class="icon"><img src="@/assets/non-empty-folder.png">SFSDFSDF</div>
-      </el-col>
-      <el-col :span="14">
-        <div @click="selectFolder(folder)" class="text">{{folder.name}}</div>
-      </el-col>
-      <el-col :span="2">
-        <action-menu :name="folder.name" :path="path" @delete-folder="deleteFolder" @rename-folder="renameFolder" @open-explorer="openExplorer"></action-menu>
-      </el-col>
-    </el-row>
+    <table>
+      <tr v-for="folder in folders" v-bind:key="folder.name" v-bind:class="['folder', { selected: selectedFolder === folder }]" @click="selectFolder(folder)">
+        <td class="cell icon">
+          <img v-show="folder.empty" src="@/assets/empty-folder.png">
+          <img v-show="!folder.empty" src="@/assets/non-empty-folder.png">
+        </td>
+        <td class="cell name">
+          <div class="text">{{folder.name}}</div>
+        </td>
+        <td class="cell actions">
+          <action-menu class="action-menu" :name="folder.name" :path="path" @delete-folder="deleteFolder" @rename-folder="renameFolder" @open-explorer="openExplorer"></action-menu>
+        </td>
+      </tr>
+    </table>
   </div>
 </template>
 
@@ -20,6 +22,7 @@ const rimraf = require("rimraf");
 const events = require("events");
 const path = require("path");
 const { shell } = require("electron");
+const fs = require("fs");
 var fw = require("@/components/FileList/FileWatcher.js");
 
 import ActionMenu from "@/components/FileList/ActionMenu.vue";
@@ -79,26 +82,80 @@ export default {
       this.$emit("folder-selected", clonedFolder);
     },
 
+    // deleteFolder: function(folder) {
+    //   var folderPath = path.join(this.path, folder);
+    //   rimraf(folderPath, err => {
+    //     if (err) {
+    //       // Emit error message
+    //       this.$emit("error", err);
+    //       return;
+    //     }
+    //     this.$emit("folder-deleted", folderPath);
+    //   });
+    // },
+
     deleteFolder: function(folder) {
-      var folderPath = path.join(this.path, folder);
-      rimraf(folderPath, err => {
-        if (err) {
-          // Emit error message
-          this.$emit("error", err);
-          return;
+      this.$confirm(
+        "This will delete the folder and all of its content. Continue?",
+        "Warning",
+        {
+          confirmButtonText: "OK",
+          cancelButtonText: "Cancel",
+          type: "warning"
         }
-        this.$emit("folder-deleted", folderPath);
-      });
+      )
+        .then(() => {
+          var folderPath = path.join(this.path, folder);
+          rimraf(folderPath, err => {
+            if (err) {
+              // Emit error message
+              this.$emit("error", err);
+              return;
+            }
+            this.$emit("folder-deleted", folderPath);
+            this.$message({
+              type: "success",
+              message: "Folder " + folderPath + " deleted"
+            });
+          });
+        })
+        .catch(() => {});
     },
 
     renameFolder: function(folder) {
+      var originalFolderPath = path.join(this.path, folder);
       // TODO: implement the renaming
+      this.$prompt("Original Name: " + folder, "Rename Folder", {
+        confirmButtonText: "OK",
+        cancelButtonText: "Cancel",
+        inputErrorMessage: "Invalid Folder Name"
+      })
+        .then(value => {
+          fs.rename(
+            originalFolderPath,
+            path.join(this.path, value.value),
+            (err) => {
+              if (err) {
+                // Emit error message
+                this.$emit("error", err);
+                return;
+              }
+              this.$message({
+                type: "success",
+                message: "Folder rename successful!"
+              });
+            }
+          );
+        })
+        .catch(() => {});
     },
 
     openExplorer: function(folder) {
       var folderPath = path.join(this.path, folder);
       var success = shell.showItemInFolder(folderPath);
-      this.$emit("error", new Error("Unable to open folder in file explorer."));
+      if (!success) {
+        this.$emit("error", new Error("Unable to open folder in file explorer."));
+      }
     }
   },
 
@@ -116,35 +173,44 @@ export default {
 
 <style lang="scss" scoped>
 .folder-container {
-  .folder {
-    height: 40px;
-    .el-col {
-      height: 100%;
-      .icon {
-        height: 100%;
-        img {
-          vertical-align: super;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #555555;
+    .folder {
+      &.selected {
+        color: black;
+        background-color: #f0f0f0;
+      }
+
+      &:hover {
+        background-color: #eeeeee;
+      }
+
+      .cell {
+        height: 35px;
+        vertical-align: middle;
+        border-bottom: 1px solid #ddd;
+        border-top: 1px solid #ddd;
+        &.icon {
+          width: 10%;
+          text-align: center;
+          img {
+            height: 24px;
+            display: block;
+            margin: 0 auto;
+          }
+        }
+
+        &.name {
+          width: 80%;
+        }
+
+        &.actions {
+          width: 10%;
+          text-align: center;
         }
       }
-
-      .text {
-        height: 100%;
-        vertical-align: middle;
-      }
-    }
-
-    &.selected {
-      color: red;
-    }
-    &:hover {
-      background-color: #eeeeee;
-      .menu-icon {
-        display: block;
-      }
-    }
-
-    .menu-icon {
-      display: none;
     }
   }
 }

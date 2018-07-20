@@ -4,7 +4,7 @@ $primary-color: #ffc332;
 $secondary-color: #68a2da;
 $secondary-color-darker: #5c91c2;
 $secondary-color-lighter: #acd7ff;
-$tab-btn-height: 80px;
+$tab-btn-height: 120px; // Because we are using flex box, this pixel is actually the greatest height a tab button could be (it will be stretch with the window)
 $tab-btn-header-height: 140px;
 $tab-header-height: 80px;
 $tab-container-padding: 20px;

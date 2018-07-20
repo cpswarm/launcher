@@ -43,7 +43,6 @@ module.exports = function (eventEmitter) {
 
 
     var watch = function (watchPath) {
-        console.log("watching: " + watchPath);
         if (watcher) watcher.close();
         _watchPath = watchPath;
         watcher = chokidar

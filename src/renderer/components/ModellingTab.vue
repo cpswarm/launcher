@@ -4,8 +4,6 @@
     <el-input :readonly="true" v-model="commandLine"></el-input>
     <div class="label">Executable Path</div>
     <el-input v-model="execPath"></el-input>
-    <div>Enabled: {{status.enabled}}</div>
-    <div>Running: {{status.running}}</div>
     <div class="label">Available Inputs ({{inputPath}}) </div>
     <file-list :path="inputPath" @folder-selected="folderSelected" @state-changed="inputChanged" @error="handleError"></file-list>
     <process-manager :execPath="commandLine" :allowLaunch="allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
@@ -32,6 +30,7 @@ export default {
       // running: it means the component has been launched and is still running 
       status: {
         enabled: true,
+        done: false,
         running: false
       },
 
@@ -70,7 +69,15 @@ export default {
 
     updateStatus: function() {
       // Update status and emit event to parent
-      this.status.enabled = (this.inputFolders.length > 0); // TODO: This is just a naive method
+      this.status.done = false;
+      for (var i in this.inputFolders) {
+        console.log(this.inputFolders[i].empty);
+        if (!this.inputFolders[i].empty) {
+          this.status.done = true;
+          break;
+        } 
+      }
+      this.status.enabled = true; // TODO: This is just a naive method
       this.status.running = this.isProcessRunning;
       this.$emit("status-changed", this.id, this.status);
     },
