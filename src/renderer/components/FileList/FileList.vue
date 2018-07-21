@@ -82,18 +82,6 @@ export default {
       this.$emit("folder-selected", clonedFolder);
     },
 
-    // deleteFolder: function(folder) {
-    //   var folderPath = path.join(this.path, folder);
-    //   rimraf(folderPath, err => {
-    //     if (err) {
-    //       // Emit error message
-    //       this.$emit("error", err);
-    //       return;
-    //     }
-    //     this.$emit("folder-deleted", folderPath);
-    //   });
-    // },
-
     deleteFolder: function(folder) {
       this.$confirm(
         "This will delete the folder and all of its content. Continue?",
@@ -112,6 +100,7 @@ export default {
               this.$emit("error", err);
               return;
             }
+            this.selectFolder(null);
             this.$emit("folder-deleted", folderPath);
             this.$message({
               type: "success",
@@ -140,6 +129,7 @@ export default {
                 this.$emit("error", err);
                 return;
               }
+              this.selectFolder(null);
               this.$message({
                 type: "success",
                 message: "Folder rename successful!"

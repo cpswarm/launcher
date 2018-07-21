@@ -22,14 +22,7 @@
       <el-col :span="17" class="whole-tab-container">
         <tab-header v-bind:tab="currentTab" class="tab-header"></tab-header>
         <div class="tab-container">
-          <!-- <keep-alive>
-            <component :is="currentTabComponent" :id="currentTab.id" :path="path" @status-changed="handleTabStateChange" />
-          </keep-alive> -->
-          <modelling-tab :id="'modelling'" v-show="currentTab.id === 'modelling'" :path="path" @status-changed="handleTabStateChange" />
-          <simulation-tab :id="'simulation'" v-show="currentTab.id === 'simulation'" :path="path" @status-changed="handleTabStateChange" />
-          <code-generation-tab :id="'code-generation'" v-show="currentTab.id === 'code-generation'" :path="path" @status-changed="handleTabStateChange" />
-          <deployment-tab :id="'deployment'" v-show="currentTab.id === 'deployment'" :path="path" @status-changed="handleTabStateChange" />
-          <monitoring-tab :id="'monitoring'" v-show="currentTab.id === 'monitoring'" :path="path" @status-changed="handleTabStateChange" />
+          <template-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :id="tab.id" :path="path" @status-changed="handleTabStateChange"></template-tab>
         </div>
       </el-col>
     </el-row>
@@ -37,11 +30,7 @@
 </template> 
 
 <script>
-import ModellingTab from "@/components/ModellingTab.vue";
-import SimulationTab from "@/components/SimulationTab.vue";
-import CodeGenerationTab from "@/components/CodeGenerationTab.vue";
-import DeploymentTab from "@/components/DeploymentTab.vue";
-import MonitoringTab from "@/components/MonitoringTab.vue";
+
 import TabHeader from "@/components/TabHeader.vue";
 
 import modelingIcon from "@/assets/modelling.png";
@@ -49,6 +38,8 @@ import simulationIcon from "@/assets/simulation.png";
 import codeIcon from "@/assets/code.png";
 import deploymentIcon from "@/assets/deployment.png";
 import monitoringIcon from "@/assets/monitoring.png";
+
+import TemplateTab from "@/components/TemplateTab.vue";
 
 export default {
   // The directory path of the launcher project
@@ -92,12 +83,8 @@ export default {
     };
   },
   components: {
-    ModellingTab: ModellingTab,
-    SimulationTab: SimulationTab,
-    CodeGenerationTab: CodeGenerationTab,
-    DeploymentTab: DeploymentTab,
-    MonitoringTab: MonitoringTab,
-    TabHeader: TabHeader
+    TabHeader: TabHeader,
+    TemplateTab: TemplateTab
   },
 
   methods: {
