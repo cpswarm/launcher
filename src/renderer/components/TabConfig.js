@@ -1,111 +1,264 @@
-import modelingIcon from "@/assets/modelling.png";
-import simulationIcon from "@/assets/simulation.png";
-import codeIcon from "@/assets/code.png";
-import deploymentIcon from "@/assets/deployment.png";
-import monitoringIcon from "@/assets/monitoring.png";
+module.exports = function () {
+    return [
+        {
+            id: "modelling",
+            name: "Modelling",
+            icon: require("@/assets/modelling.png"),
+            widgets: [
+                {
+                    type: "text",
+                    label: "Executable Path",
+                    varId: "execPath",
+                    default: "C:\\Modelio.exe"
+                },
+                {
+                    type: "file-list-add",
+                    label: "Available Input",
+                    selectedFolder: "selectedInputFolder",
+                    folders: "inputFolders",
+                    watchPath: "modelling"
+                }
+            ],
+            status: {enabled: true, running: false, done: false},
+            isDone: function (component) {
+                var done = false;
+                for (var i in component['inputFolders']) {
+                    if (!component['inputFolders'][i].empty) {
+                        done = true;
+                        break;
+                    }
+                }
+                return done;
+            },
+            defaultExec: "C:\\Modelio.exe",
+            isEnabled: function (component) {
+                return true;
+            },
 
-module.exports = [
-    {
-        id: "modelling",
-        name: "Modelling",
-        icon: modelingIcon,
-        widgets: [
-            {
-                type: "text",
-                label: "Executable Path",
-                varId: "execPath"
+            allowLaunch: function (component) {
+                return component["selectedInputFolder"];
             },
-            {
-                type: "file-list-add",
-                label: "Available Input",
-                selectedFolder: "selectedInputFolder",
-                folders: "inputFolders",
-                watchPath: "modelling"
+
+            getCommandLine: function (component) {
+                var command = "";
+                command += component["execPath"];
+                if (component["selectedInputFolder"]) {
+                    command += " --src " + component["selectedInputFolder"].name;
+                    if (component["selectedInputFolder"].empty) {
+                        command += " --create-project";
+                    }
+                }
+                return command;
             }
-        ]
-    },
-    {
-        id: "simulation",
-        name: "Simulation & Optimization",
-        icon: simulationIcon,
-        widgets: [
-            {
-                type: "text",
-                label: "Executable Path",
-                varId: "execPath"
+        },
+        {
+            id: "simulation",
+            name: "Simulation & Optimization",
+            icon: require("@/assets/simulation.png"),
+            widgets: [
+                {
+                    type: "text",
+                    label: "Executable Path",
+                    varId: "execPath",
+                    default: "C:\\Simulation.exe"
+                },
+                {
+                    type: "file-list",
+                    label: "Available Input",
+                    selectedFolder: "selectedInputFolder",
+                    folders: "inputFolders",
+                    watchPath: "modelling"
+                },
+                {
+                    type: "file-list-add",
+                    label: "Existing Output",
+                    selectedFolder: "selectedOutputFolder",
+                    folders: "outputFolders",
+                    watchPath: "simulation"
+                }
+            ],
+            status: {enabled: true, running: false, done: false},
+            defaultExec: "C:\\Modelio.exe",
+            isDone: function (component) {
+                var done = false;
+                for (var i in component['outputFolders']) {
+                    if (!component['outputFolders'][i].empty) {
+                        done = true;
+                        break;
+                    }
+                }
+                return done;
             },
-            {
-                type: "file-list",
-                label: "Available Input",
-                selectedFolder: "selectedInputFolder",
-                folders: "inputFolders",
-                watchPath: "modelling"
+
+            isEnabled: function (component) {
+                var enabled = false;
+                for (var i in component['inputFolders']) {
+                    if (!component['inputFolders'][i].empty) {
+                        enabled = true;
+                        break;
+                    }
+                }
+                return enabled;
             },
-            {
-                type: "file-list-add",
-                label: "Existing Output",
-                selectedFolder: "selectedOutputFolder",
-                folders: "outputFolders",
-                watchPath: "simulation"
+
+            allowLaunch: function (component) {
+                return component["selectedInputFolder"] 
+                    && component["selectedOutputFolder"];
+            },
+
+            getCommandLine: function (component) {
+                var command = "";
+                command += component["execPath"];
+                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].name;
+                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].name;
+                return command;
             }
-        ]
-    },
-    
-    {
-        id: "code-generation",
-        name: "Code Generation",
-        icon: codeIcon,
-        widgets: [
-            {
-                type: "text",
-                label: "Executable Path",
-                varId: "execPath"
+
+        },
+
+        {
+            id: "code-generation",
+            name: "Code Generation",
+            icon: require("@/assets/code.png"),
+            widgets: [
+                {
+                    type: "text",
+                    label: "Executable Path",
+                    varId: "execPath",
+                    default: "C:\\Code Generation.exe"
+                },
+                {
+                    type: "file-list",
+                    label: "Available Input",
+                    selectedFolder: "selectedInputFolder",
+                    folders: "inputFolders",
+                    watchPath: "modelling"
+                },
+                {
+                    type: "file-list-add",
+                    label: "Existing Output",
+                    selectedFolder: "selectedOutputFolder",
+                    folders: "outputFolders",
+                    watchPath: "generation"
+                }
+            ],
+            status: {enabled: true, running: false, done: false},
+            
+            isDone: function (component) {
+                var done = false;
+                for (var i in component['outputFolders']) {
+                    if (!component['outputFolders'][i].empty) {
+                        done = true;
+                        break;
+                    }
+                }
+                return done;
             },
-            {
-                type: "file-list",
-                label: "Available Input",
-                selectedFolder: "selectedInputFolder",
-                folders: "inputFolders",
-                watchPath: "modelling"
+
+            isEnabled: function (component) {
+                var enabled = false;
+                for (var i in component['inputFolders']) {
+                    if (!component['inputFolders'][i].empty) {
+                        enabled = true;
+                        break;
+                    }
+                }
+                return enabled;
             },
-            {
-                type: "file-list-add",
-                label: "Existing Output",
-                selectedFolder: "selectedOutputFolder",
-                folders: "outputFolders",
-                watchPath: "generation"
-            }
-        ]
-    },
-    {
-        id: "deployment",
-        name: "Deployment",
-        icon: deploymentIcon,
-        widgets: [
-            {
-                type: "text",
-                label: "Executable Path",
-                varId: "execPath"
+
+            allowLaunch: function (component) {
+                return component["selectedInputFolder"] 
+                    && component["selectedOutputFolder"];
             },
-            {
-                type: "file-list-add",
-                label: "Available Input",
-                selectedFolder: "selectedInputFolder",
-                folders: "inputFolders",
-                watchPath: "generation"
+
+            getCommandLine: function (component) {
+                var command = "";
+                command += component["execPath"];
+                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].name;
+                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].name;
+                return command;
             }
-        ]
-    },
-    {
-        id: "monitoring",
-        name: "Monitor & Command",
-        icon: monitoringIcon,
-        widgets: [
-            {
-                type: "text",
-                label: "Executable Path",
-                varId: "execPath"
+        },
+        {
+            id: "deployment",
+            name: "Deployment",
+            icon: require("@/assets/deployment.png"),
+            widgets: [
+                {
+                    type: "text",
+                    label: "Executable Path",
+                    varId: "execPath",
+                    default: "C:\\Deployment.exe"
+                },
+                {
+                    type: "file-list-add",
+                    label: "Available Input",
+                    selectedFolder: "selectedInputFolder",
+                    folders: "inputFolders",
+                    watchPath: "generation"
+                }
+            ],
+            status: {enabled: true, running: false, done: false},
+            defaultExec: "C:\\Deployment.exe",
+            isDone: function (component) {
+                return false;
+            },
+
+            isEnabled: function (component) {
+                var enabled = false;
+                for (var i in component['inputFolders']) {
+                    if (!component['inputFolders'][i].empty) {
+                        enabled = true;
+                        break;
+                    }
+                }
+                return enabled;
+            },
+
+            allowLaunch: function (component) {
+                return component["selectedInputFolder"];
+            },
+
+            getCommandLine: function (component) {
+                var command = "";
+                command += component["execPath"];
+                if (component["selectedInputFolder"]) {
+                    command += " --src " + component["selectedInputFolder"].name;
+                }
+                return command;
             }
-        ]
-    }
-];
+        },
+        {
+            id: "monitoring",
+            name: "Monitor & Command",
+            icon: require("@/assets/monitoring.png"),
+            widgets: [
+                {
+                    type: "text",
+                    label: "Executable Path",
+                    varId: "execPath",
+                    default: "C:\\Monitoring.exe"
+                }
+            ],
+            defaultExec: "C:\\Monitoring.exe",
+            status: {enabled: true, running: false, done: false},
+            isDone: function (component) {
+                return false;
+            },
+
+            isEnabled: function (component) {
+                return true;
+            },
+
+            allowLaunch: function (component) {
+                return true;
+            },
+
+            getCommandLine: function (component) {
+                var command = "";
+                command += component["execPath"];
+                return command;
+            }
+        }
+    ]
+}

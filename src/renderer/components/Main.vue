@@ -22,7 +22,7 @@
       <el-col :span="17" class="whole-tab-container">
         <tab-header v-bind:tab="currentTab" class="tab-header"></tab-header>
         <div class="tab-container">
-          <template-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :id="tab.id" :path="path" @status-changed="handleTabStateChange"></template-tab>
+          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab" :path="path" @status-changed="handleTabStateChange"></generic-tab>
         </div>
       </el-col>
     </el-row>
@@ -32,51 +32,15 @@
 <script>
 
 import TabHeader from "@/components/TabHeader.vue";
+import GenericTab from "@/components/GenericTab.vue";
 
-import modelingIcon from "@/assets/modelling.png";
-import simulationIcon from "@/assets/simulation.png";
-import codeIcon from "@/assets/code.png";
-import deploymentIcon from "@/assets/deployment.png";
-import monitoringIcon from "@/assets/monitoring.png";
-
-import TemplateTab from "@/components/TemplateTab.vue";
+var tabConfig = require("@/components/TabConfig.js");
 
 export default {
   // The directory path of the launcher project
   props: ["path"],
   data() {
-    var tabs = [
-      {
-        id: "modelling",
-        name: "Modelling",
-        icon: modelingIcon,
-        status: { enabled: true, done: false, running: false }
-      },
-      {
-        id: "simulation",
-        name: "Simulation & Optimization",
-        icon: simulationIcon,
-        status: { enabled: true, done: false, running: false }
-      },
-      {
-        id: "code-generation",
-        name: "Code Generation",
-        icon: codeIcon,
-        status: { enabled: true, done: false, running: false }
-      },
-      {
-        id: "deployment",
-        name: "Deployment",
-        icon: deploymentIcon,
-        status: { enabled: true, done: false, running: false }
-      },
-      {
-        id: "monitoring",
-        name: "Monitoring & Command",
-        icon: monitoringIcon,
-        status: { enabled: true, done: false, running: false }
-      }
-    ];
+    var tabs = tabConfig();
     return {
       tabs: tabs,
       currentTab: tabs[0]
@@ -84,7 +48,7 @@ export default {
   },
   components: {
     TabHeader: TabHeader,
-    TemplateTab: TemplateTab
+    GenericTab: GenericTab
   },
 
   methods: {
@@ -101,12 +65,6 @@ export default {
           break;
         }
       }
-    }
-  },
-  watch: {},
-  computed: {
-    currentTabComponent: function() {
-      return this.currentTab.id + "-tab";
     }
   }
 };
