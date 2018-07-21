@@ -81,8 +81,7 @@ export default {
       }
       return command;
     }
-  },
-
+  }
 };
 </script>
 
