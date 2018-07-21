@@ -1,27 +1,22 @@
 <template>
   <div>
-    <div class="label">Command Line</div>
-    <el-input :readonly="true" v-model="commandLine"></el-input>
     <div class="label">Executable Path</div>
     <el-input v-model="execPath"></el-input>
     <div class="label">Available Inputs ({{inputPath}}) </div>
-    <file-list :path="inputPath" @folder-selected="inputFolderSelected" @state-changed="inputChanged"></file-list>
+    <file-list :path="inputPath" @folder-selected="inputFolderSelected" @state-changed="inputChanged" @error="emitError"></file-list>
 
     <div class="label">Existing Outputs ({{outputPath}}) </div>
-    <file-list-with-add :path="outputPath" @folder-selected="outputFolderSelected" @state-changed="outputChanged"></file-list-with-add>
-    <process-manager :execPath="commandLine" :allowLaunch="allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
+    <file-list-with-add :path="outputPath" @folder-selected="outputFolderSelected" @state-changed="outputChanged" @error="emitError"></file-list-with-add>
   </div>
 </template>
 
 <script>
 import FileList from "@/components/FileList/FileList.vue";
 import FileListWithAdd from "@/components/FileList/FileListWithAdd.vue";
-import ProcessManager from "@/components/process-manager/ProcessManager.vue";
-
 const path = require("path");
 
 export default {
-  props: ["id", "path"],
+  props: ["path"],
     
   data() {
     return {
@@ -35,11 +30,10 @@ export default {
       status: {
         enabled: true,
         done: false,
-        running: false
+        allowLaunch: false,
+        commandLine: ""
       },
 
-      // A helper variable to indicate if a process is running
-      isProcessRunning: false,
 
       // It holds all the available input folders
       inputFolders: [],
@@ -55,38 +49,29 @@ export default {
   components: {
     FileList: FileList,
     FileListWithAdd: FileListWithAdd,
-    ProcessManager: ProcessManager
   },
   methods: {
     inputChanged: function(folders) {
       this.inputFolders = folders;
-      this.updateStatus();
+      this.emitStatus();
     },
 
     outputChanged: function(folders) {
       this.outputFolders = folders;
-      this.updateStatus();
-    },
-
-    processStarted: function() {
-      this.isProcessRunning = true;
-      this.updateStatus();
-    },
-
-    processEnded: function() {
-      this.isProcessRunning = false;
-      this.updateStatus();
+      this.emitStatus();
     },
 
     inputFolderSelected: function(folder) {
       this.selectedInputFolder = folder;
+      this.emitStatus();
     },
 
     outputFolderSelected: function(folder) {
       this.selectedOutputFolder = folder;
+      this.emitStatus();
     },
 
-    updateStatus: function() {
+    emitStatus: function() {
       // Update status and emit event to parent
       this.status.done = false;
       for (var i in this.outputFolders) {
@@ -103,25 +88,23 @@ export default {
           break;
         } 
       }
-
-      this.status.running = this.isProcessRunning;
-      this.$emit("status-changed", this.id, this.status);
+      this.status.allowLaunch = this.selectedInputFolder && this.selectedOutputFolder ? true : false;
+      this.status.commandLine = this.getCommandLine();
+      this.$emit("status-changed", this.status);
     },
 
-  },
+    emitError: function(err) {
+      this.$emit("error", err);
+    },
 
-  computed: {
-    commandLine: function(){
+    getCommandLine: function(){
       var command = "";
       command += this.execPath;
       if(this.selectedInputFolder) command += " --src " + this.selectedInputFolder.name;
       if(this.selectedOutputFolder) command += " --target " + this.selectedOutputFolder.name;
       return command;
-    },
-
-    allowLaunch: function() {
-      return this.selectedInputFolder && this.selectedOutputFolder ? false : true;
     }
+
   }
 };
 </script>
@@ -131,8 +114,5 @@ export default {
   margin: 30px 0 10px 0;
 }
 
-.label:first-of-type {
-  margin-top: 0px;
-}
 
 </style>

@@ -10,14 +10,10 @@
           </span>
         </td>
         <td class="cell launch">
-          <el-button class="button" type="primary" @click="launch()" :disabled="allowLaunch">Launch</el-button>
+          <el-button class="button" type="primary" @click="launch()" :disabled="!allowLaunch">Launch</el-button>
         </td>
       </tr>
     </table>
-    <!-- <div class="btn-container">
-      <span @click="toggleTextAreaVisibility" class="toggleButton">Process Output <span v-show="showTextarea">-</span><span v-show="!showTextarea">+</span></span>
-      <el-button class="button" type="primary" @click="launch()" :disabled="allowLaunch">Launch</el-button>
-    </div> -->
     <el-collapse-transition>
       <div v-show="showTextarea">
         <el-input ref="output" v-model="textarea" type="textarea" :rows="12"></el-input>
@@ -45,7 +41,7 @@ export default {
     launch: function() {
       const bat = spawn("cmd.exe", [
         "/c",
-        "C:\\Users\\liang\\Desktop\\test\\my.bat"
+        "C:\\Users\\Administrator\\Desktop\\test\\my.bat"
       ]);
 
       bat.stdout.on("data", data => {
