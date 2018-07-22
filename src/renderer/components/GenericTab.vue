@@ -102,14 +102,14 @@ export default {
 
 <style lang="scss" scoped>
 .input-container {
+  margin: 40px 0 20px 0;
+
   .label {
-    margin: 30px 0 10px 0;
+    margin-bottom: 10px;
   }
 
   &:first-of-type {
-    .label {
-      margin-top: 0px;
-    }
+    margin-top: 0px;
   }
 }
 

@@ -11,7 +11,9 @@
 </template>
 
 <script>
+import utils from "@/utils/utils.js";
 const { dialog } = require("electron").remote;
+
 
 export default {
   data() {
@@ -20,14 +22,21 @@ export default {
   methods: {
     createProject: function() {
       var _this = this;
-      dialog.showOpenDialog({properties: ['openDirectory']}, function(dirPath) {
-        console.log(dirPath[0]);
-        // TODO: create project metadata file within the dir
+      dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
+        
+        if (!dirPath) return;
 
-        // If everything all right, emit event telling the parent the dir path
-        _this.$emit("open-project", dirPath[0]);
+        // Create project metadata file within the dir
+        var structure = require("@/utils/FileStructure.json");
+        var list = utils.createProjectFolder(dirPath[0], 
+          structure,
+          (err) => {
+             // If everything all right, emit event telling the parent the dir path
+            this.$emit("open-project", dirPath[0]);
+          });  
       });
     },
+
     openProject: function() {
       var _this = this;
       dialog.showOpenDialog({properties: ['openDirectory']}, function(dirPath) {
@@ -38,6 +47,27 @@ export default {
         _this.$emit("open-project", dirPath[0]);
       });
     },
+
+    createList: function(ob) {
+        var toReturn = {};
+        
+        for (var i in ob) {
+            if (!ob.hasOwnProperty(i)) continue;
+            
+            if ((typeof ob[i]) == 'object') {
+                var flatObject = flattenObject(ob[i]);
+                for (var x in flatObject) {
+                    if (!flatObject.hasOwnProperty(x)) continue;
+                    
+                    toReturn[i + '.' + x] = flatObject[x];
+                }
+            } else {
+                toReturn[i] = ob[i];
+            }
+        }
+        return toReturn;
+    }
+
   },
   computed: {}
 };

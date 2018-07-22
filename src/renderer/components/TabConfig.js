@@ -19,7 +19,6 @@ module.exports = function () {
                     watchPath: "modelling"
                 }
             ],
-            status: {enabled: true, running: false, done: false},
             isDone: function (component) {
                 var done = false;
                 for (var i in component['inputFolders']) {
@@ -77,7 +76,6 @@ module.exports = function () {
                     watchPath: "simulation"
                 }
             ],
-            status: {enabled: true, running: false, done: false},
             defaultExec: "C:\\Modelio.exe",
             isDone: function (component) {
                 var done = false;
@@ -142,8 +140,6 @@ module.exports = function () {
                     watchPath: "generation"
                 }
             ],
-            status: {enabled: true, running: false, done: false},
-            
             isDone: function (component) {
                 var done = false;
                 for (var i in component['outputFolders']) {
@@ -198,7 +194,6 @@ module.exports = function () {
                     watchPath: "generation"
                 }
             ],
-            status: {enabled: true, running: false, done: false},
             defaultExec: "C:\\Deployment.exe",
             isDone: function (component) {
                 return false;
@@ -241,7 +236,6 @@ module.exports = function () {
                 }
             ],
             defaultExec: "C:\\Monitoring.exe",
-            status: {enabled: true, running: false, done: false},
             isDone: function (component) {
                 return false;
             },
