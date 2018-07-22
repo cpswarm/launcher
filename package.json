@@ -56,7 +56,6 @@
     "chokidar": "^2.0.4",
     "element-ui": "^2.3.6",
     "fs-extra": "^7.0.0",
-    "npm": "^6.2.0",
     "rimraf": "^2.6.2",
     "underscore": "^1.9.1",
     "vue": "^2.3.3",

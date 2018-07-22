@@ -1,10 +1,11 @@
 <template>
-    <div class="backdrop">
+    <div class="backdrop" v-loading="isLoading">
         <div class="content-container">
+            <div class="logo"><img src="@/assets/logo.svg"></div>
             <div class="title">CPSwarm Launcher</div>
             <div class="btn-container">
-                <el-button type="primary" @click="createProject()">Create</el-button>
-                <el-button type="primary" @click="openProject()">Open</el-button>
+                <el-button type="primary" @click="createProject()">Create Project</el-button>
+                <el-button type="primary" @click="openProject()">Open Project</el-button>
             </div>
         </div>
     </div>
@@ -17,11 +18,13 @@ const { dialog } = require("electron").remote;
 
 export default {
   data() {
-    return {};
+    return {
+      isLoading: false
+    };
   },
   methods: {
     createProject: function() {
-      var _this = this;
+      this.isLoading = true;
       dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
         
         if (!dirPath) return;
@@ -31,6 +34,7 @@ export default {
         var list = utils.createProjectFolder(dirPath[0], 
           structure,
           (err) => {
+            this.isLoading = false;
              // If everything all right, emit event telling the parent the dir path
             this.$emit("open-project", dirPath[0]);
           });  
@@ -38,36 +42,14 @@ export default {
     },
 
     openProject: function() {
-      var _this = this;
-      dialog.showOpenDialog({properties: ['openDirectory']}, function(dirPath) {
-        console.log(dirPath[0]);
+      this.isLoading = true;
+      dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
         // TODO: Check whether this is a valid project dir (e.g. by checking if metadata file exists)
-
+        this.isLoading = false;
         // If everything all right, emit event telling the parent the dir path
-        _this.$emit("open-project", dirPath[0]);
+        this.$emit("open-project", dirPath[0]);
       });
-    },
-
-    createList: function(ob) {
-        var toReturn = {};
-        
-        for (var i in ob) {
-            if (!ob.hasOwnProperty(i)) continue;
-            
-            if ((typeof ob[i]) == 'object') {
-                var flatObject = flattenObject(ob[i]);
-                for (var x in flatObject) {
-                    if (!flatObject.hasOwnProperty(x)) continue;
-                    
-                    toReturn[i + '.' + x] = flatObject[x];
-                }
-            } else {
-                toReturn[i] = ob[i];
-            }
-        }
-        return toReturn;
     }
-
   },
   computed: {}
 };
@@ -80,7 +62,20 @@ export default {
   width: 100%;
   height: 100%;
   position: absolute;
-  background: $secondary-color;
+  background-color: $secondary-color;
+
+  &::before {
+    content: "";
+    background-image: url("../assets/cover.jpg");
+    background-size: cover;
+    opacity: 0.3;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+ 
+  }
 
   .content-container {
     width: 400px;
@@ -90,6 +85,13 @@ export default {
     transform: translateY(-50%);
     //margin-top: -150px;
     text-align: center;
+
+    .logo {
+      margin-bottom: 30px;
+      img {
+        height: 150px;
+      }
+    }
 
     .title {
       font-size: 2em;

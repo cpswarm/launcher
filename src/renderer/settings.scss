@@ -1,12 +1,12 @@
 /*~~~ Global variables ~~~*/
 
 $primary-color: #ffc332;
-$secondary-color: #68a2da;
+$secondary-color: #75b3ee;
 $secondary-color-darker: #5c91c2;
 $secondary-color-lighter: #acd7ff;
 $tab-btn-height: 120px; // Because we are using flex box, this pixel is actually the greatest height a tab button could be (it will be stretch with the window)
 $tab-btn-header-height: 140px;
-$tab-header-height: 80px;
+$tab-header-height: 100px;
 $tab-container-padding: 20px;
 $tab-header-padding: ($tab-header-height - 40px)/2;
 /* 40px is the size of the Element UI button */

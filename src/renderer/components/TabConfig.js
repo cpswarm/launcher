@@ -2,12 +2,13 @@ module.exports = function () {
     return [
         {
             id: "modelling",
-            name: "Modelling",
+            name: "Swarm Modelling",
             icon: require("@/assets/modelling.png"),
             widgets: [
                 {
                     type: "text",
                     label: "Executable Path",
+                    info: "The path to the executable",
                     varId: "execPath",
                     default: "C:\\Modelio.exe"
                 },

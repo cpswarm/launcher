@@ -1,5 +1,6 @@
 <template>
   <div class="folder-container">
+    <div class="path-indicator">{{path}}</div>
     <table>
       <tr v-for="folder in folders" v-bind:key="folder.name" v-bind:class="['folder', { selected: selectedFolder === folder }]" @click="selectFolder(folder)">
         <td class="cell icon">
@@ -170,6 +171,13 @@ export default {
 
 <style lang="scss" scoped>
 .folder-container {
+  .path-indicator {
+    font-size: 0.9em;
+    margin-bottom: 5px;
+    color: #555555;
+  }
+
+
   table {
     width: 100%;
     border-collapse: collapse;
@@ -206,6 +214,9 @@ export default {
         &.actions {
           width: 10%;
           text-align: center;
+          .action-menu {
+            cursor: pointer;
+          }
         }
       }
     }

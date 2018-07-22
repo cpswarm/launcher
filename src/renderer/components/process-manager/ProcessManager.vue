@@ -19,7 +19,6 @@
         <el-input ref="output" v-model="textarea" type="textarea" :rows="12"></el-input>
       </div>
     </el-collapse-transition>
-
   </div>
 </template>
 
@@ -41,7 +40,7 @@ export default {
     launch: function() {
       const bat = spawn("cmd.exe", [
         "/c",
-        "C:\\Users\\Administrator\\Desktop\\test\\my.bat"
+        "C:\\Users\\liang\\Desktop\\test\\my.bat"
       ]);
 
       bat.stdout.on("data", data => {
@@ -109,6 +108,9 @@ export default {
       text-align: left;
       font-size: 0.96em;
       color: #555555;
+      .toggleButton {
+        cursor: pointer;
+      }
     }
     &.launch {
       text-align: right;
