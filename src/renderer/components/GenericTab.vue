@@ -1,15 +1,16 @@
 <template>
   <div>
-    <div class="input-container">
-      <div class="label">Command Line</div>
-      <el-input :readonly="true" v-model="status.commandLine"></el-input>
-    </div>
+    
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index">
       <div class="label">{{widget.label}}</div>
       <file-list v-show="widget.type === 'file-list'" :path="widget.watchPath" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
       <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.watchPath" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
       <text-input v-show="widget.type === 'text'" :default="widget.default" @input="handleEvent(widget.varId, $event)"></text-input>
+    </div>
+    <div class="input-container">
+      <div class="label">Command Line</div>
+      <el-input :readonly="true" v-model="status.commandLine"></el-input>
     </div>
     <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
   </div>
@@ -89,10 +90,7 @@ export default {
     },
 
     emitError: function(err) {
-      this.$notify.error({
-        title: "Error",
-        message: err.toString()
-      });
+      this.$message.error(err.toString());
     }
   },
   computed: {}
@@ -105,7 +103,7 @@ export default {
 
   .label {
     margin-bottom: 10px;
-    font-size: 1.2em;
+    font-size: 1.3em;
   }
 
   &:first-of-type {

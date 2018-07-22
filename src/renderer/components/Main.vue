@@ -8,7 +8,6 @@
           </span>
           <div class="image"><img src="@/assets/swarm.png"></div>
         </div>
-
         <div v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { disabled: !tab.status.enabled  },{ selected: currentTab.id === tab.id  }]">
           <div>
             <div class="icon"><img v-bind:src="tab.config.icon"></div>
@@ -98,14 +97,13 @@ export default {
       .tab-button-header {
         background-color: $primary-color;
         flex: 0 0 $tab-btn-header-height;
-        height: $tab-btn-header-height;
         position: relative;
 
         .text {
-          font-size: 2.2em;
+          font-size: 1.8em;
           color: white;
           position: relative;
-          top: 30px;
+          top: 35px;
         }
 
         .image {
@@ -116,8 +114,8 @@ export default {
           bottom: 0;
 
           img {
-            width: 50px;
-            margin-left: -190px;
+            height: 2.7em;
+            margin-left: -155px;
             margin-top: 5px;
           }
         }
@@ -127,6 +125,7 @@ export default {
         }
       }
 
+
       .tab-button {
         display: flex;
         align-items: center;
@@ -134,13 +133,19 @@ export default {
         box-sizing: border-box;
         background-color: $secondary-color;
         color: #303133;
-        font-size: 1.2em;
-        height: $tab-btn-height;
+        font-size: 1em;
+        height: $tab-btn-height; // Actually implied flex 0 1 $tab-btn-height
 
         cursor: pointer;
         transition: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
         position: relative;
-        border-bottom: 1px solid #5c91c2;
+
+        // This selector selects all .tab-button, which has a sibling and preceding .tab-button
+        // So basically all .tab-button except the first one
+        & ~ .tab-button {
+          border-top: 1px solid $secondary-color-darker;
+        }
+
 
         &::before {
           @include pseudo-shadow;
@@ -158,7 +163,7 @@ export default {
 
         &.disabled {
           cursor: not-allowed;
-          border-bottom: none;
+          border-top: 1px solid transparent;
           // The white opaque overlay
           &::after {
             background: white;
@@ -170,19 +175,27 @@ export default {
             left: 0;
             right: 0;
           }
+
+          & + .tab-button {
+            border-top: 1px solid transparent;
+          }
         }
 
         &.selected {
           background: transparent;
-          border-bottom: none;
+          border-top: 1px solid transparent;
           &::before {
             box-shadow: none;
+          }
+
+          & + .tab-button {
+            border-top: 1px solid transparent;
           }
         }
 
         .icon {
           img {
-            height: 30px;
+            height: 1.5em;
           }
         }
 
@@ -196,8 +209,8 @@ export default {
           top: 10px;
           right: 10px;
           img {
-            height: 20px;
-            margin-left: 0 5px;
+            height: 1em;
+            margin-left: 1em;;
           }
         }
       }

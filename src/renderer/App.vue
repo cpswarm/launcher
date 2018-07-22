@@ -27,13 +27,7 @@ export default {
     // The initialization method, which should be used to set up filewatcher, etc.
     initMain(path) {
       // Start file watching
-      console.log(path);
       this.path = path;
-      // chokidar
-      //   .watch(path, { ignored: /(^|[\/\\])\../ })
-      //   .on("all", (event, path) => {
-      //     console.log(event, path);
-      //   });
 
       // Switch to main panel
       this.currentActivity = this.activities[1];
