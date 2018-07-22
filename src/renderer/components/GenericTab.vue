@@ -10,7 +10,6 @@
       </file-list>
       <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.watchPath" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
       <text-input v-show="widget.type === 'text'" :default="widget.default" @input="handleEvent(widget.varId, $event)"></text-input>
-      <!-- <el-input v-show="widget.type === 'text'" :value="widget.default" @input="handleEvent(widget.varId, $event)"></el-input> -->
     </div>
     <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
   </div>
@@ -106,6 +105,7 @@ export default {
 
   .label {
     margin-bottom: 10px;
+    font-size: 1.2em;
   }
 
   &:first-of-type {
