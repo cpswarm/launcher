@@ -2,7 +2,7 @@
   <div class="container">
     <table>
       <tr>
-        <td class="cell name">{{tab.name}}</td>
+        <td class="cell name">{{tab.config.name}}</td>
         <td class="cell user">
           <span>John Doe</span>
           <el-button type="primary" circle><img src="@/assets/user.png"></el-button>

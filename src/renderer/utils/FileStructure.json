@@ -1,0 +1,15 @@
+{
+    "europe": {
+        "poland": {},
+        "france": {},
+        "spain": {},
+        "greece": {},
+        "UK": {},
+        "germany": "txt",
+        "US": ["1.txt", "2.txt"]
+    },
+    "Asia": {
+        "india": "xml"
+    },
+    "Africa": null
+}

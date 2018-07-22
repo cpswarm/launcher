@@ -9,20 +9,19 @@
           <div class="image"><img src="@/assets/swarm.png"></div>
         </div>
 
-        <div style="  display: flex; align-items: center; justify-content: center;" v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { disabled: !tab.status.enabled  },{ selected: currentTab.id === tab.id  }]">
+        <div v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { disabled: !tab.status.enabled  },{ selected: currentTab.id === tab.id  }]">
           <div>
-            <div class="icon"><img style="height: 30px;" v-bind:src="tab.icon"></div>
-            <div class="text">{{tab.name}}</div>
+            <div class="icon"><img v-bind:src="tab.config.icon"></div>
+            <div class="text">{{tab.config.name}}</div>
             <div class="status"><img v-if="tab.status.running" src="@/assets/running.png"><img v-if="tab.status.done" src="@/assets/finish.png"></div>
           </div>
         </div>
-
         <div class="tab-button-filler"></div>
       </el-col>
       <el-col :span="17" class="whole-tab-container">
         <tab-header v-bind:tab="currentTab" class="tab-header"></tab-header>
         <div class="tab-container">
-          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab" :path="path" @status-changed="handleTabStateChange"></generic-tab>
+          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab.config" :path="path" @status-changed="handleTabStateChange"></generic-tab>
         </div>
       </el-col>
     </el-row>
@@ -30,7 +29,6 @@
 </template> 
 
 <script>
-
 import TabHeader from "@/components/TabHeader.vue";
 import GenericTab from "@/components/GenericTab.vue";
 
@@ -40,7 +38,14 @@ export default {
   // The directory path of the launcher project
   props: ["path"],
   data() {
-    var tabs = tabConfig();
+    var tabConfigs = tabConfig();
+
+    var tabs = [];
+    for (var i in tabConfigs) {
+      var status = {running: false, done: false, enabled: false};
+      tabs.push({id: tabConfigs[i].id, status: status, config: tabConfigs[i]});
+    }
+
     return {
       tabs: tabs,
       currentTab: tabs[0]
@@ -186,12 +191,13 @@ export default {
 
         .status {
           position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-          right: 5px;
+          // top: 50%;
+          // transform: translateY(-50%);
+          top: 10px;
+          right: 10px;
           img {
-            height: 25px;
-            margin: 0 5px;
+            height: 20px;
+            margin-left: 0 5px;
           }
         }
       }
