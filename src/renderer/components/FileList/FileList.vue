@@ -14,6 +14,7 @@
         </td>
       </tr>
     </table>
+    <div v-show="isFoldersEmpty">Empty Content...</div>
   </div>
 </template>
 
@@ -156,6 +157,12 @@ export default {
       }
       this.fileWatcher.unwatch();
       this.fileWatcher.watch(newPath);
+    }
+  },
+
+  computed: {
+    isFoldersEmpty: function() {
+      return this.folders.length === 0;
     }
   }
 };

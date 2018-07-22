@@ -84,11 +84,11 @@ export default {
 
   .content-container {
     width: 400px;
-    height: 300px;
     margin: 0 auto;
     position: relative;
     top: 50%;
-    margin-top: -150px;
+    transform: translateY(-50%);
+    //margin-top: -150px;
     text-align: center;
 
     .title {
