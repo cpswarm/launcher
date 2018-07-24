@@ -188,11 +188,21 @@ module.exports = function () {
                     default: "C:\\Deployment.exe"
                 },
                 {
+                    type: "single-checkbox",
+                    label: "Use Generated Code",
+                    checkboxLabel: "Use Generated Code",
+                    varId: "useGeneratedCode",
+                    default: true
+                },
+                {
                     type: "file-list-add",
                     label: "Available Input",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
-                    watchPath: "generation"
+                    watchPath: "generation",
+                    isEnabled: function(component) {
+                        return !component.useGeneratedCode;
+                    }
                 }
             ],
             defaultExec: "C:\\Deployment.exe",

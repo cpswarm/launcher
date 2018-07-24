@@ -1,6 +1,6 @@
 <template>
   <div>
-    <file-list :path="path" @state-changed="stateChanged" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
+    <file-list :path="path" :enabled="enabled" @state-changed="stateChanged" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
     <div class="new-folder-container">
       <el-button class="create-button" @click="createFolder()" size="small">+ New Folder</el-button>
       <el-input class="folder-name-input" placeholder="New Folder Name" v-model="newFolder" size="small"></el-input>
@@ -14,7 +14,7 @@
 <script>
 const fs = require("fs");
 const path = require("path");
-import FileList from "@/components/FileList/FileList.vue";
+import FileList from "@/components/widgets/FileList/FileList.vue";
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -22,7 +22,7 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path"],
+  props: ["path", "enabled"],
   data() {
     return {
       newFolder: null,

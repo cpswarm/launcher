@@ -1,12 +1,12 @@
 <template>
   <div>
-    
-    <div class="input-container" v-for="(widget, index) in config.widgets" :key="index">
+    <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div class="label">{{widget.label}}</div>
-      <file-list v-show="widget.type === 'file-list'" :path="widget.watchPath" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
+      <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
-      <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.watchPath" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
-      <text-input v-show="widget.type === 'text'" :default="widget.default" @input="handleEvent(widget.varId, $event)"></text-input>
+      <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
+      <text-input v-show="widget.type === 'text'" :default="widget.default" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
+      <single-checkbox v-show="widget.type === 'single-checkbox'" :default="widget.default" :label="widget.checkboxLabel" :enabled="widget.status.enabled"  @input="handleEvent(widget.varId, $event)"></single-checkbox>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
@@ -17,17 +17,26 @@
 </template>
 
 <script>
-import ProcessManager from "@/components/process-manager/ProcessManager.vue";
-import FileListWithAdd from "@/components/FileList/FileListWithAdd.vue";
-import FileList from "@/components/FileList/FileList.vue";
+import ProcessManager from "@/components/widgets/ProcessManager/ProcessManager.vue";
+import FileListWithAdd from "@/components/widgets/FileList/FileListWithAdd.vue";
+import FileList from "@/components/widgets/FileList/FileList.vue";
 import TextInput from "@/components/widgets/TextInput.vue";
+import SingleCheckbox from "@/components/widgets/SingleCheckBox.vue";
 const path = require("path");
 
 export default {
   props: ["config", "path"],
 
   data() {
+    // Not a good solution! But I have no other way to get it work easily
     this.combinePath(this.config, this.path);
+
+    // Initialize status of each widget
+    for (let i in this.config.widgets) {
+      let widget = this.config.widgets[i];
+      widget.status = {visible: true, enabled: true}
+    }
+
     return {
       // The status of this tab
       // enabled: it means the component in this tab has enough inputs to be launched
@@ -46,7 +55,8 @@ export default {
     ProcessManager: ProcessManager,
     FileList: FileList,
     FileListWithAdd: FileListWithAdd,
-    TextInput: TextInput
+    TextInput: TextInput,
+    SingleCheckbox: SingleCheckbox
   },
   methods: {
     processStarted: function() {
@@ -66,11 +76,38 @@ export default {
     },
 
     updateStatus: function() {
+      // Update tab status and emit it to parent
       this.status.done = this.config.isDone(this);
       this.status.enabled = this.config.isEnabled(this);
       this.status.allowLaunch = this.config.allowLaunch(this);
       this.status.commandLine = this.config.getCommandLine(this);
       this.emitStatus();
+
+      // Update status of each widget
+      for (let i in this.config.widgets) {
+        // TODO: detect whether there is change to improve performance
+        let widget = this.config.widgets[i];
+        let hasChanged = false;
+        if (widget.isEnabled) {
+          let enabled = widget.isEnabled(this);
+          if (widget.status.enabled !== enabled) {
+            widget.status.enabled = enabled;
+            hasChanged = true;
+          }
+        }
+        if (widget.isVisible) {
+          let visible = widget.isVisible(this);
+          if (widget.status.visible !== visible) {
+            widget.status.visible = visible;
+            hasChanged = true;
+          }
+        }
+        // Must use this.$set, otherwise list item won't update
+        if (hasChanged) {
+          this.$set(this.config.widgets, i, widget);
+        }
+      }
+
     },
 
     combinePath: function(config, dirPath) {
@@ -80,7 +117,7 @@ export default {
           widgets[i].type === "file-list" ||
           widgets[i].type === "file-list-add"
         ) {
-          widgets[i].watchPath = path.join(dirPath, widgets[i].watchPath);
+          widgets[i].fullWatchPath = path.join(dirPath, widgets[i].watchPath);
         }
       }
     },
@@ -110,5 +147,4 @@ export default {
     margin-top: 0px;
   }
 }
-
 </style>
