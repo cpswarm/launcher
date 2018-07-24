@@ -1,5 +1,6 @@
 <template>
   <div class="folder-container">
+    <div class="overlay" v-show="!enabled"></div>
     <div class="path-indicator">{{path}}</div>
     <table>
       <tr v-for="folder in folders" v-bind:key="folder.name" v-bind:class="['folder', { selected: selectedFolder === folder }]" @click="selectFolder(folder)">
@@ -25,9 +26,9 @@ const events = require("events");
 const path = require("path");
 const { shell } = require("electron");
 const fs = require("fs");
-var fw = require("@/components/FileList/FileWatcher.js");
+var fw = require("@/components/widgets/FileList/FileWatcher.js");
 
-import ActionMenu from "@/components/FileList/ActionMenu.vue";
+import ActionMenu from "@/components/widgets/FileList/ActionMenu.vue";
 
 export default {
   // TODO: think whether it is necessary to propagate folder-deleted
@@ -38,7 +39,7 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path"],
+  props: ["path", "enabled"],
   data() {
     var eventEmitter = new events.EventEmitter();
     // Initiallize watcher
@@ -171,6 +172,18 @@ export default {
 
 <style lang="scss" scoped>
 .folder-container {
+  position: relative;
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: 0.5;
+    z-index: 1;
+  }
+
   .path-indicator {
     font-size: 0.9em;
     margin-bottom: 5px;
