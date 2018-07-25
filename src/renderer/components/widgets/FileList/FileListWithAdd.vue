@@ -1,6 +1,6 @@
 <template>
   <div>
-    <file-list :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="watchFile" :watchDir="watchDir"  @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
+    <file-list :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="watchFile" :watchDir="watchDir" :multiSelect="multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
     <div class="new-folder-container">
       <el-button class="create-button" @click="createFolder()" size="small">+ New Folder</el-button>
       <el-input class="folder-name-input" placeholder="New Folder Name" v-model="newFolder" size="small"></el-input>
@@ -22,7 +22,7 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path", "enabled", "watchDir", "watchFile"],
+  props: ["path", "enabled", "watchDir", "watchFile", "multiSelect"],
   data() {
     return {
       newFolder: null,
