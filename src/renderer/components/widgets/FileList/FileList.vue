@@ -3,7 +3,7 @@
     <div class="overlay" v-show="!enabled"></div>
     <div class="path-indicator">{{path}}</div>
     <table>
-      <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFolder === stat }]" @click="selectFolder(stat)">
+      <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]" @click="selectFolder(stat)">
         <td class="cell icon">
           <img v-show="stat.type === 'dir' && !stat.valid" src="@/assets/empty-folder.png">
           <img v-show="stat.type === 'dir' && stat.valid" src="@/assets/non-empty-folder.png">
@@ -40,20 +40,19 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path", "enabled", "watchDir", "watchFile"],
+  props: ["path", "enabled", "watchDir", "watchFile", "multiSelect"],
   data() {
-    
     // Determine the types of file (file/dir) to watch
     // Default is to watch dirs but not files
     var watchTypes = [];
-    if(typeof this.watchDir === "undefined") {
+    if (typeof this.watchDir === "undefined") {
       watchTypes.push("dir");
     } else {
-      if(this.watchDir) watchTypes.push("dir");
+      if (this.watchDir) watchTypes.push("dir");
     }
 
     if (typeof this.watchFile !== "undefined") {
-      if(this.watchFile) watchTypes.push("file");
+      if (this.watchFile) watchTypes.push("file");
     }
 
     var eventEmitter = new events.EventEmitter();
@@ -66,13 +65,17 @@ export default {
       // Update file list
       this.folders = folders;
       // Emit event
-      this.$emit("state-changed", this.folders);
+      var availableFilesArr = [];
+      for (let key in this.folders) {
+        availableFilesArr.push(this.folders[key]);
+      }
+      this.$emit("state-changed", availableFilesArr);
     });
 
     return {
       // The data field contain data local to one tab,
       // such as the currently selected input, etc.
-      selectedFolder: null,
+      selectedFiles: {},
       fileWatcher: fileWatcher,
       folders: []
     };
@@ -83,14 +86,32 @@ export default {
   },
 
   methods: {
-    selectFolder: function(file) {
-      // If the same folder is clicked again, deselect it
-      this.selectedFolder = this.selectedFolder === file ? null : file;
-
-      // Emit event
-      console.log(file);
-      this.$emit("folder-selected", this.selectedFolder);
+    selectFolder: function(fileStat) {
+      if (!fileStat) {
+        this.selectedFiles = {};
+      } else {
+        if (this.selectedFiles[fileStat.path]) {
+          // Must use this.$delete to force update on list
+          this.$delete(this.selectedFiles, fileStat.path);
+        } else {
+          if(this.multiSelect) {
+            // Must use this.$delete to force update on list
+            this.$set(this.selectedFiles, fileStat.path, fileStat);
+          } else {
+            this.selectedFiles = {};
+            this.selectedFiles[fileStat.path] = fileStat;
+          }
+          
+        }
+      }
+      // TODO: whether to expose an object or an array?
+      var selectedFilesArr = [];
+      for (let key in this.selectedFiles) {
+        selectedFilesArr.push(this.selectedFiles[key]);
+      }
+      this.$emit("folder-selected", selectedFilesArr);
     },
+
 
     deleteFolder: function(folder) {
       this.$confirm(
@@ -133,7 +154,7 @@ export default {
           fs.rename(
             originalFolderPath,
             path.join(this.path, value.value),
-            (err) => {
+            err => {
               if (err) {
                 // Emit error message
                 this.$emit("error", err);
@@ -154,7 +175,10 @@ export default {
       var folderPath = path.join(this.path, folder);
       var success = shell.showItemInFolder(folderPath);
       if (!success) {
-        this.$emit("error", new Error("Unable to open folder in file explorer."));
+        this.$emit(
+          "error",
+          new Error("Unable to open folder in file explorer.")
+        );
       }
     }
   },
@@ -196,7 +220,6 @@ export default {
     margin-bottom: 5px;
     color: #555555;
   }
-
 
   table {
     width: 100%;

@@ -17,7 +17,8 @@ module.exports = function () {
                     label: "Available Input",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
-                    watchPath: "modelling"
+                    watchPath: "modelling",
+                    multiSelect: true
                 }
             ],
             isDone: function (component) {
@@ -42,9 +43,9 @@ module.exports = function () {
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) {
-                    command += " --src " + component["selectedInputFolder"].path;
-                    if (!component["selectedInputFolder"].valid) {
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) {
+                    command += " --src " + component["selectedInputFolder"][0].path;
+                    if (!component["selectedInputFolder"][0].valid) {
                         command += " --create-project";
                     }
                 }
@@ -110,15 +111,17 @@ module.exports = function () {
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"] 
-                    && component["selectedOutputFolder"];
+                return component["selectedInputFolder"]
+                    && component["selectedInputFolder"].length > 0
+                    && component["selectedOutputFolder"]
+                    && component["selectedOutputFolder"].length > 0;
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].path;
-                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].path;
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + component["selectedInputFolder"][0].path;
+                if (component["selectedOutputFolder"] && component["selectedOutputFolder"].length > 0) command += " --target " + component["selectedOutputFolder"][0].path;
                 return command;
             }
 
@@ -150,7 +153,7 @@ module.exports = function () {
                     watchPath: "generation",
                     watchDir: true,
                     watchFile: true,
-                    isVisible: function(component) {
+                    isVisible: function (component) {
                         return false;
                     }
                 }
@@ -175,13 +178,13 @@ module.exports = function () {
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"];
+                return component["selectedInputFolder"] && component["selectedInputFolder"].length > 0;
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].path;
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + component["selectedInputFolder"][0].path;
                 return command;
             }
         },
@@ -209,7 +212,7 @@ module.exports = function () {
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
                     watchPath: "generation",
-                    isEnabled: function(component) {
+                    isEnabled: function (component) {
                         return !component.useGeneratedCode;
                     }
                 }
@@ -228,14 +231,14 @@ module.exports = function () {
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"] || component["useGeneratedCode"];
+                return (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) || component["useGeneratedCode"];
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) {
-                    command += " --src " + component["selectedInputFolder"].path;
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) {
+                    command += " --src " + component["selectedInputFolder"][0].path;
                 }
                 return command;
             }
