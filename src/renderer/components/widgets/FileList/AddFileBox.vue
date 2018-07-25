@@ -1,20 +1,15 @@
 <template>
-  <div>
-    <file-list :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="watchFile" :watchDir="watchDir" :multiSelect="multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
     <div class="new-folder-container">
       <el-button class="create-button" @click="createFolder()" size="small">+ New Folder</el-button>
       <el-input class="folder-name-input" placeholder="New Folder Name" v-model="newFolder" size="small"></el-input>
       <el-alert class="error-msg" :title="errMsg" v-show="errMsg" type="error" @close="clearError">
       </el-alert>
     </div>
-
-  </div>
 </template>
 
 <script>
 const fs = require("fs");
 const path = require("path");
-import FileList from "@/components/widgets/FileList/FileList.vue";
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -22,29 +17,15 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path", "enabled", "watchDir", "watchFile", "multiSelect"],
+  props: ["path"],
   data() {
     return {
       newFolder: null,
       errMsg: ""
     };
   },
-  components: {
-    FileList: FileList
-  },
+  components: {},
   methods: {
-    stateChanged: function(folders) {
-      this.$emit("state-changed", folders);
-    },
-
-    folderSelected: function(folder) {
-      this.$emit("folder-selected", folder);
-    },
-
-    folderDeleted: function(folder) {
-      this.$emit("folder-deleted", folder);
-    },
-
     createFolder: function() {
       if (!this.newFolder) {
         this.errMsg = "Folder name can't be empty!";
@@ -85,7 +66,7 @@ export default {
 
 <style lang="scss" scoped>
 .new-folder-container {
-  margin-top: 15px;
+  
   .create-button {
     vertical-align: middle;
   }
