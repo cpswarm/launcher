@@ -6,12 +6,21 @@
 
 <script>
 export default {
-  props: ["default", "enabled"],
+  props: ["enabled", "properties"],
   data() {
-    var defaultValue = this.default ? this.default : "";
-    this.$emit("input", defaultValue);
+    var properties = {
+      default: ""
+    };
+
+    if (this.properties) {
+      for (let key in this.properties) {
+        properties[key] = this.properties[key];
+      }
+    }
+
+    this.$emit("input", properties["default"]);
     return {
-      textValue : defaultValue
+      textValue : properties["default"]
     };
   },
   methods: {

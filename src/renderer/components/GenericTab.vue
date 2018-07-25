@@ -2,11 +2,10 @@
   <div>
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div class="label">{{widget.label}}</div>
-      <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :watchFile="widget.watchFile" :watchDir="widget.watchDir" :multiSelect="widget.multiSelect" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
+      <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
-      <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :watchFile="widget.watchFile" :watchDir="widget.watchDir" :multiSelect="widget.multiSelect" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
-      <text-input v-show="widget.type === 'text'" :default="widget.default" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
-      <single-checkbox v-show="widget.type === 'single-checkbox'" :default="widget.default" :label="widget.checkboxLabel" :enabled="widget.status.enabled"  @input="handleEvent(widget.varId, $event)"></single-checkbox>
+      <text-input v-show="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
+      <single-checkbox v-show="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled"  @input="handleEvent(widget.varId, $event)"></single-checkbox>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
@@ -18,8 +17,7 @@
 
 <script>
 import ProcessManager from "@/components/widgets/ProcessManager/ProcessManager.vue";
-import FileListWithAdd from "@/components/widgets/FileList/FileListWithAdd.vue";
-import FileList from "@/components/widgets/FileList/FileList.vue";
+import FileList from "@/components/widgets/FileList/CompleteFileList.vue";
 import TextInput from "@/components/widgets/TextInput.vue";
 import SingleCheckbox from "@/components/widgets/SingleCheckBox.vue";
 const path = require("path");
@@ -54,7 +52,6 @@ export default {
   components: {
     ProcessManager: ProcessManager,
     FileList: FileList,
-    FileListWithAdd: FileListWithAdd,
     TextInput: TextInput,
     SingleCheckbox: SingleCheckbox
   },
