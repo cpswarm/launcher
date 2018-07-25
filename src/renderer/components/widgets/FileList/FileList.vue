@@ -3,20 +3,21 @@
     <div class="overlay" v-show="!enabled"></div>
     <div class="path-indicator">{{path}}</div>
     <table>
-      <tr v-for="folder in folders" v-bind:key="folder.name" v-bind:class="['folder', { selected: selectedFolder === folder }]" @click="selectFolder(folder)">
+      <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFolder === stat }]" @click="selectFolder(stat)">
         <td class="cell icon">
-          <img v-show="folder.empty" src="@/assets/empty-folder.png">
-          <img v-show="!folder.empty" src="@/assets/non-empty-folder.png">
+          <img v-show="stat.type === 'dir' && !stat.valid" src="@/assets/empty-folder.png">
+          <img v-show="stat.type === 'dir' && stat.valid" src="@/assets/non-empty-folder.png">
+          <img v-show="stat.type === 'file'" src="@/assets/file.png">
         </td>
         <td class="cell name">
-          <div class="text">{{folder.name}}</div>
+          <div class="text">{{fileName}}</div>
         </td>
         <td class="cell actions">
-          <action-menu class="action-menu" :name="folder.name" :path="path" @delete-folder="deleteFolder" @rename-folder="renameFolder" @open-explorer="openExplorer"></action-menu>
+          <action-menu class="action-menu" :name="fileName" :path="path" @delete-folder="deleteFolder" @rename-folder="renameFolder" @open-explorer="openExplorer"></action-menu>
         </td>
       </tr>
     </table>
-    <div v-show="isFoldersEmpty">Empty Content...</div>
+    <div v-show="isNoFiles">Empty Content...</div>
   </div>
 </template>
 
@@ -26,8 +27,8 @@ const events = require("events");
 const path = require("path");
 const { shell } = require("electron");
 const fs = require("fs");
-var fw = require("@/components/widgets/FileList/FileWatcher.js");
 
+import fw from "@/components/widgets/FileList/FileWatcher.js";
 import ActionMenu from "@/components/widgets/FileList/ActionMenu.vue";
 
 export default {
@@ -39,11 +40,25 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path", "enabled"],
+  props: ["path", "enabled", "watchDir", "watchFile"],
   data() {
+    
+    // Determine the types of file (file/dir) to watch
+    // Default is to watch dirs but not files
+    var watchTypes = [];
+    if(typeof this.watchDir === "undefined") {
+      watchTypes.push("dir");
+    } else {
+      if(this.watchDir) watchTypes.push("dir");
+    }
+
+    if (typeof this.watchFile !== "undefined") {
+      if(this.watchFile) watchTypes.push("file");
+    }
+
     var eventEmitter = new events.EventEmitter();
     // Initiallize watcher
-    var fileWatcher = fw(eventEmitter);
+    var fileWatcher = fw(eventEmitter, watchTypes);
     // Start watching
     fileWatcher.watch(this.path);
     // Catch file change event
@@ -68,21 +83,13 @@ export default {
   },
 
   methods: {
-    selectFolder: function(folder) {
+    selectFolder: function(file) {
       // If the same folder is clicked again, deselect it
-      this.selectedFolder = this.selectedFolder === folder ? null : folder;
-
-      var clonedFolder = this.selectedFolder
-        ? Object.assign({}, this.selectedFolder)
-        : null;
-
-      // Add the complete path to the folder name
-      if (clonedFolder) {
-        clonedFolder.name = path.join(this.path, this.selectedFolder.name);
-      }
+      this.selectedFolder = this.selectedFolder === file ? null : file;
 
       // Emit event
-      this.$emit("folder-selected", clonedFolder);
+      console.log(file);
+      this.$emit("folder-selected", this.selectedFolder);
     },
 
     deleteFolder: function(folder) {
@@ -163,8 +170,8 @@ export default {
   },
 
   computed: {
-    isFoldersEmpty: function() {
-      return this.folders.length === 0;
+    isNoFiles: function() {
+      return Object.keys(this.folders).length === 0;
     }
   }
 };

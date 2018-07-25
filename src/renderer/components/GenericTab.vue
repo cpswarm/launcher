@@ -2,9 +2,9 @@
   <div>
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div class="label">{{widget.label}}</div>
-      <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
+      <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :watchFile="widget.watchFile" :watchDir="widget.watchDir" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
-      <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
+      <file-list-with-add v-show="widget.type === 'file-list-add'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :watchFile="widget.watchFile" :watchDir="widget.watchDir" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError"></file-list-with-add>
       <text-input v-show="widget.type === 'text'" :default="widget.default" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
       <single-checkbox v-show="widget.type === 'single-checkbox'" :default="widget.default" :label="widget.checkboxLabel" :enabled="widget.status.enabled"  @input="handleEvent(widget.varId, $event)"></single-checkbox>
     </div>
@@ -85,7 +85,6 @@ export default {
 
       // Update status of each widget
       for (let i in this.config.widgets) {
-        // TODO: detect whether there is change to improve performance
         let widget = this.config.widgets[i];
         let hasChanged = false;
         if (widget.isEnabled) {

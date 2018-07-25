@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <el-row class="content-container">
-      <el-col :span="7" class="tab-button-container">
+      <el-col :span="6" class="tab-button-container">
         <div class="tab-button-header">
           <span class="text">
             CPSwarm<br>Launcher
@@ -17,7 +17,7 @@
         </div>
         <div class="tab-button-filler"></div>
       </el-col>
-      <el-col :span="17" class="whole-tab-container">
+      <el-col :span="18" class="whole-tab-container">
         <tab-header v-bind:tab="currentTab" class="tab-header"></tab-header>
         <div class="tab-container">
           <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab.config" :path="path" @status-changed="handleTabStateChange"></generic-tab>
@@ -142,6 +142,7 @@ export default {
 
         // This selector selects all .tab-button, which has a sibling and preceding .tab-button
         // So basically all .tab-button except the first one
+        border-top: 1px solid transparent;
         & ~ .tab-button {
           border-top: 1px solid $secondary-color-darker;
         }
@@ -170,7 +171,7 @@ export default {
             opacity: 0.5;
             content: "";
             position: absolute;
-            top: 0;
+            top: -1px; // This is to compensate the border width
             bottom: 0;
             left: 0;
             right: 0;
@@ -210,7 +211,7 @@ export default {
           right: 10px;
           img {
             height: 1em;
-            margin-left: 1em;;
+            margin-left: 0.5em;;
           }
         }
       }
