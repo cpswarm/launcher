@@ -10,15 +10,19 @@ module.exports = function () {
                     label: "Executable Path",
                     info: "The path to the executable",
                     varId: "execPath",
-                    default: "C:\\Modelio.exe"
+                    properties: {
+                        default: "C:\\Modelio.exe"
+                    }
                 },
                 {
-                    type: "file-list-add",
+                    type: "file-list",
                     label: "Available Input",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
                     watchPath: "modelling",
-                    multiSelect: true
+                    properties: {
+                        allowAdd: true
+                    }
                 }
             ],
             isDone: function (component) {
@@ -61,7 +65,9 @@ module.exports = function () {
                     type: "text",
                     label: "Executable Path",
                     varId: "execPath",
-                    default: "C:\\Simulation.exe"
+                    properties: {
+                        default: "C:\\Simulation.exe"
+                    }
                 },
                 {
                     type: "file-list",
@@ -71,11 +77,14 @@ module.exports = function () {
                     watchPath: "modelling"
                 },
                 {
-                    type: "file-list-add",
+                    type: "file-list",
                     label: "Existing Output",
                     selectedFolder: "selectedOutputFolder",
                     folders: "outputFolders",
-                    watchPath: "simulation"
+                    watchPath: "simulation",
+                    properties: {
+                        allowAdd: true
+                    }
                 },
                 {
                     type: "file-list",
@@ -83,8 +92,10 @@ module.exports = function () {
                     selectedFolder: "selectedSimulationConf",
                     folders: "simConfFiles",
                     watchPath: "simulation",
-                    watchDir: false,
-                    watchFile: true
+                    properties: {
+                        watchDir: false,
+                        watchFile: true
+                    }
                 }
             ],
             defaultExec: "C:\\Modelio.exe",
@@ -136,7 +147,9 @@ module.exports = function () {
                     type: "text",
                     label: "Executable Path",
                     varId: "execPath",
-                    default: "C:\\Code Generation.exe"
+                    properties: {
+                        default: "C:\\Code Generation.exe"
+                    }
                 },
                 {
                     type: "file-list",
@@ -151,8 +164,10 @@ module.exports = function () {
                     selectedFolder: "selectedFiles",
                     folders: "genFiles",
                     watchPath: "generation",
-                    watchDir: true,
-                    watchFile: true,
+                    properties: {
+                        watchDir: true,
+                        watchFile: true
+                    },
                     isVisible: function (component) {
                         return false;
                     }
@@ -197,23 +212,32 @@ module.exports = function () {
                     type: "text",
                     label: "Executable Path",
                     varId: "execPath",
-                    default: "C:\\Deployment.exe"
+                    properties: {
+                        default: "C:\\Deployment.exe"
+                    }
                 },
                 {
                     type: "single-checkbox",
                     label: "Use Generated Code",
                     checkboxLabel: "Use Generated Code",
                     varId: "useGeneratedCode",
+                    properties: {
+                        default: true,
+                        label: "Use Generated Code",
+                    },
                     default: true
                 },
                 {
-                    type: "file-list-add",
+                    type: "file-list",
                     label: "Available Input",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
                     watchPath: "generation",
                     isEnabled: function (component) {
                         return !component.useGeneratedCode;
+                    },
+                    properties: {
+                        allowAdd: true,
                     }
                 }
             ],
@@ -252,7 +276,9 @@ module.exports = function () {
                     type: "text",
                     label: "Executable Path",
                     varId: "execPath",
-                    default: "C:\\Monitoring.exe"
+                    properties: {
+                        default: "C:\\Monitoring.exe"
+                    }
                 }
             ],
             defaultExec: "C:\\Monitoring.exe",

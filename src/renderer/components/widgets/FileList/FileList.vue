@@ -1,6 +1,6 @@
 <template>
   <div class="folder-container">
-    <div class="overlay" v-show="!enabled"></div>
+    
     <div class="path-indicator">{{path}}</div>
     <table>
       <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]" @click="selectFolder(stat)">
@@ -40,6 +40,10 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
+  // 2. properties: an object, which contains the following properties:
+  //    1) watchDir: boolean, whether to watch directory, default is true
+  //    2) watchFile: boolean, whether to watch files, default is false
+  //    3) multiSelect: boolean, whether to allow multiple selection, default is false
   props: ["path", "enabled", "watchDir", "watchFile", "multiSelect"],
   data() {
     // Determine the types of file (file/dir) to watch
