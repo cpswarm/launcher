@@ -23,7 +23,7 @@ module.exports = function () {
             isDone: function (component) {
                 var done = false;
                 for (var i in component['inputFolders']) {
-                    if (!component['inputFolders'][i].empty) {
+                    if (component['inputFolders'][i].valid) {
                         done = true;
                         break;
                     }
@@ -43,8 +43,8 @@ module.exports = function () {
                 var command = "";
                 command += component["execPath"];
                 if (component["selectedInputFolder"]) {
-                    command += " --src " + component["selectedInputFolder"].name;
-                    if (component["selectedInputFolder"].empty) {
+                    command += " --src " + component["selectedInputFolder"].path;
+                    if (!component["selectedInputFolder"].valid) {
                         command += " --create-project";
                     }
                 }
@@ -75,13 +75,22 @@ module.exports = function () {
                     selectedFolder: "selectedOutputFolder",
                     folders: "outputFolders",
                     watchPath: "simulation"
+                },
+                {
+                    type: "file-list",
+                    label: "Simulation Configuration",
+                    selectedFolder: "selectedSimulationConf",
+                    folders: "simConfFiles",
+                    watchPath: "simulation",
+                    watchDir: false,
+                    watchFile: true
                 }
             ],
             defaultExec: "C:\\Modelio.exe",
             isDone: function (component) {
                 var done = false;
                 for (var i in component['outputFolders']) {
-                    if (!component['outputFolders'][i].empty) {
+                    if (component['outputFolders'][i].valid) {
                         done = true;
                         break;
                     }
@@ -92,7 +101,7 @@ module.exports = function () {
             isEnabled: function (component) {
                 var enabled = false;
                 for (var i in component['inputFolders']) {
-                    if (!component['inputFolders'][i].empty) {
+                    if (component['inputFolders'][i].valid) {
                         enabled = true;
                         break;
                     }
@@ -108,8 +117,8 @@ module.exports = function () {
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].name;
-                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].name;
+                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].path;
+                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].path;
                 return command;
             }
 
@@ -134,20 +143,22 @@ module.exports = function () {
                     watchPath: "modelling"
                 },
                 {
-                    type: "file-list-add",
-                    label: "Existing Output",
-                    selectedFolder: "selectedOutputFolder",
-                    folders: "outputFolders",
-                    watchPath: "generation"
+                    type: "file-list",
+                    label: "",
+                    selectedFolder: "selectedFiles",
+                    folders: "genFiles",
+                    watchPath: "generation",
+                    watchDir: true,
+                    watchFile: true,
+                    isVisible: function(component) {
+                        return false;
+                    }
                 }
             ],
             isDone: function (component) {
                 var done = false;
-                for (var i in component['outputFolders']) {
-                    if (!component['outputFolders'][i].empty) {
-                        done = true;
-                        break;
-                    }
+                for (var i in component['genFiles']) {
+                    done = true;
                 }
                 return done;
             },
@@ -155,7 +166,7 @@ module.exports = function () {
             isEnabled: function (component) {
                 var enabled = false;
                 for (var i in component['inputFolders']) {
-                    if (!component['inputFolders'][i].empty) {
+                    if (component['inputFolders'][i].valid) {
                         enabled = true;
                         break;
                     }
@@ -164,21 +175,19 @@ module.exports = function () {
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"] 
-                    && component["selectedOutputFolder"];
+                return component["selectedInputFolder"];
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
-                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].name;
-                if (component["selectedOutputFolder"]) command += " --target " + component["selectedOutputFolder"].name;
+                if (component["selectedInputFolder"]) command += " --src " + component["selectedInputFolder"].path;
                 return command;
             }
         },
         {
             id: "deployment",
-            name: "Deployment",
+            name: "Swarm Deployment",
             icon: require("@/assets/deployment.png"),
             widgets: [
                 {
@@ -213,23 +222,20 @@ module.exports = function () {
             isEnabled: function (component) {
                 var enabled = false;
                 for (var i in component['inputFolders']) {
-                    if (!component['inputFolders'][i].empty) {
-                        enabled = true;
-                        break;
-                    }
+                    enabled = true;
                 }
                 return enabled;
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"];
+                return component["selectedInputFolder"] || component["useGeneratedCode"];
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += component["execPath"];
                 if (component["selectedInputFolder"]) {
-                    command += " --src " + component["selectedInputFolder"].name;
+                    command += " --src " + component["selectedInputFolder"].path;
                 }
                 return command;
             }
