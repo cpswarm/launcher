@@ -1,13 +1,8 @@
 <template>
   <div class="container">
     <div class="overlay" v-show="!enabled"></div>
-    <file-list :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
-    <div v-if="listProperties.allowAdd" class="new-folder-container">
-      <el-button class="create-button" @click="createFolder()" size="small">+ New Folder</el-button>
-      <el-input class="folder-name-input" placeholder="New Folder Name" v-model="newFolder" size="small"></el-input>
-      <el-alert class="error-msg" :title="errMsg" v-show="errMsg" type="error" @close="clearError">
-      </el-alert>
-    </div>
+    <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
+    <add-file-box class="add-file-box" :path="path"></add-file-box>
   </div>
 </template>
 
@@ -15,6 +10,7 @@
 const fs = require("fs");
 const path = require("path");
 import FileList from "@/components/widgets/FileList/FileList.vue";
+import AddFileBox from "@/components/widgets/FileList/AddFileBox.vue";
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -50,7 +46,8 @@ export default {
     };
   },
   components: {
-    FileList: FileList
+    FileList: FileList,
+    AddFileBox: AddFileBox
   },
   methods: {
     stateChanged: function(folders) {
@@ -118,21 +115,8 @@ export default {
     z-index: 1;
   }
 
-  .new-folder-container {
+  .add-file-box {
     margin-top: 15px;
-    .create-button {
-      vertical-align: middle;
-    }
-
-    .folder-name-input {
-      width: 180px;
-      vertical-align: middle;
-    }
-    .error-msg {
-      display: inline-block;
-      width: 300px;
-      vertical-align: middle;
-    }
   }
 }
 </style>
