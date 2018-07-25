@@ -2,7 +2,7 @@
   <div class="menu-container">
     <el-dropdown @command="handleCommand" trigger="click">
       <span class="el-dropdown-link">
-        <img src="@/assets/menu.png">
+        <img src="@/assets/down-arrow.png">
       </span>
       <el-dropdown-menu slot="dropdown" >
         <el-dropdown-item command="delete">Delete</el-dropdown-item>
@@ -64,7 +64,8 @@ export default {
 <style lang="scss" scoped>
 .el-dropdown-link {
   img {
-    height: 20px;
+    height: 0.8em;
+    vertical-align: middle;
   }
 }
 </style>

@@ -24,12 +24,11 @@ export default {
   },
   methods: {
     createProject: function() {
-      this.isLoading = true;
       dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
-        
-        if (!dirPath) return;
+        if (!dirPath) return; 
 
         // Create project metadata file within the dir
+        this.isLoading = true;
         var structure = require("@/utils/FileStructure.json");
         var list = utils.createProjectFolder(dirPath[0], 
           structure,
@@ -42,8 +41,11 @@ export default {
     },
 
     openProject: function() {
-      this.isLoading = true;
+      
       dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
+        if (!dirPath) return; 
+
+        this.isLoading = true;
         // TODO: Check whether this is a valid project dir (e.g. by checking if metadata file exists)
         this.isLoading = false;
         // If everything all right, emit event telling the parent the dir path
