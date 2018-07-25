@@ -240,7 +240,7 @@ export default {
       }
 
       .cell {
-        height: 35px;
+        height: 2em;
         vertical-align: middle;
         border-bottom: 1px solid #ddd;
         border-top: 1px solid #ddd;
@@ -248,7 +248,7 @@ export default {
           width: 10%;
           text-align: center;
           img {
-            height: 24px;
+            height: 1.4em;
             display: block;
             margin: 0 auto;
           }

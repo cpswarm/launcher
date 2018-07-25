@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    <el-input @input="input" :disabled="!enabled" v-model="textValue"></el-input>
+    <el-input size="small" @input="input" :disabled="!enabled" v-model="textValue"></el-input>
   </div>
 </template>
 

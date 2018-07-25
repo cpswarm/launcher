@@ -1,15 +1,15 @@
 <template>
-  <div>
+  <div class="tab-content">
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div class="label">{{widget.label}}</div>
       <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
       <text-input v-show="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
-      <single-checkbox v-show="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled"  @input="handleEvent(widget.varId, $event)"></single-checkbox>
+      <single-checkbox v-show="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></single-checkbox>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
-      <el-input :readonly="true" v-model="status.commandLine"></el-input>
+      <el-input size="small" :readonly="true" v-model="status.commandLine"></el-input>
     </div>
     <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
   </div>
@@ -32,7 +32,7 @@ export default {
     // Initialize status of each widget
     for (let i in this.config.widgets) {
       let widget = this.config.widgets[i];
-      widget.status = {visible: true, enabled: true}
+      widget.status = { visible: true, enabled: true };
     }
 
     return {
@@ -103,7 +103,6 @@ export default {
           this.$set(this.config.widgets, i, widget);
         }
       }
-
     },
 
     combinePath: function(config, dirPath) {
@@ -131,16 +130,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.input-container {
-  margin: 40px 0 20px 0;
+.tab-content {
+  font-size: 0.9em;
+  .input-container {
+    margin: 40px 0 20px 0;
 
-  .label {
-    margin-bottom: 10px;
-    font-size: 1.3em;
-  }
+    .label {
+      margin-bottom: 10px;
+      font-size: 1.3em;
+    }
 
-  &:first-of-type {
-    margin-top: 0px;
+    &:first-of-type {
+      margin-top: 0px;
+    }
   }
 }
 </style>
