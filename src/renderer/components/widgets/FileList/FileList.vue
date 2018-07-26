@@ -132,7 +132,7 @@ export default {
           rimraf(folderPath, err => {
             if (err) {
               // Emit error message
-              this.$emit("error", err);
+              this.emitError(err);
               return;
             }
             this.selectFolder(null);
@@ -161,7 +161,7 @@ export default {
             err => {
               if (err) {
                 // Emit error message
-                this.$emit("error", err);
+                this.emitError(err);
                 return;
               }
               this.selectFolder(null);
@@ -179,11 +179,12 @@ export default {
       var folderPath = path.join(this.path, folder);
       var success = shell.showItemInFolder(folderPath);
       if (!success) {
-        this.$emit(
-          "error",
-          new Error("Unable to open folder in file explorer.")
-        );
+        this.emitError("Unable to open folder in file explorer.");
       }
+    },
+
+    emitError: function(err) {
+      this.$emit("error", err);
     }
   },
 

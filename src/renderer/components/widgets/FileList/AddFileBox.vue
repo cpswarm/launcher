@@ -40,11 +40,13 @@ export default {
 
       fs.mkdir(newFolderPath, err => {
         if (err) {
-          this.errMsg =
+          // This is a bigger error, so emit it to parent
+          var errMsg =
             "Error while creating folder in path " +
             newFolderPath +
             ", cause: " +
             err;
+          this.emitError(errMsg);
           return;
         }
         this.errMsg = "";
