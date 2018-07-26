@@ -1,4 +1,5 @@
-import { app, BrowserWindow, ipcMain } from 'electron'
+import { app, BrowserWindow, ipcMain, Menu } from 'electron'
+import MenuBuilder from "./menu.js"
 
 /**
  * Set `__static` path to static files in production
@@ -33,6 +34,9 @@ function createWindow() {
   mainWindow.on('closed', () => {
     mainWindow = null
   })
+
+  var mb = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(mb.getStartMenu());
 }
 
 app.on('ready', createWindow)
@@ -49,8 +53,23 @@ app.on('activate', () => {
   }
 })
 
-ipcMain.on('change-title', (event, arg) => {
-  mainWindow.setTitle("CPSwarm Launcher - " + arg);
+ipcMain.on('set-title', (event, path) => {
+  mainWindow.setTitle("CPSwarm Launcher - " + path);
+})
+
+ipcMain.on('reset-title', (event, arg) => {
+  mainWindow.setTitle("CPSwarm Launcher");
+  console.log("reset!");
+})
+
+ipcMain.on('set-opt-menu', () => {
+  var mb = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(mb.getOperationMenu());
+})
+
+ipcMain.on('set-start-menu', () => {
+  var mb = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(mb.getStartMenu());
 })
 
 
