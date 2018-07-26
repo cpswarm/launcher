@@ -3,13 +3,13 @@
     
     <div class="path-indicator">{{path}}</div>
     <table>
-      <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]" @click="selectFolder(stat)">
-        <td class="cell icon">
+      <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]">
+        <td class="cell icon" @click="selectFolder(stat)">
           <img v-show="stat.type === 'dir' && !stat.valid" src="@/assets/empty-folder.png">
           <img v-show="stat.type === 'dir' && stat.valid" src="@/assets/non-empty-folder.png">
           <img v-show="stat.type === 'file'" src="@/assets/file.png">
         </td>
-        <td class="cell name">
+        <td class="cell name" @click="selectFolder(stat)">
           <div class="text">{{fileName}}</div>
         </td>
         <td class="cell actions">
