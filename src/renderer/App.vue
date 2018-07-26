@@ -48,7 +48,7 @@ export default {
 
       // Switch to main panel
       this.currentActivity = "Welcome";
-      
+
       // A hacky way to force the main panel to reload
       setImmediate(() => {
         this.currentActivity = "MainPanel";
@@ -127,6 +127,18 @@ body,
   overflow-y: hidden;
   cursor: default;
   position: relaitve;
+
+  // A hacky fix, because the font color of disabled button is hard-coded as white in the element ui style sheet
+  .el-button {
+    &.is-disabled {
+      &,
+      &:hover,
+      &:focus,
+      &:active {
+        color: $btn-disabled-color !important;
+      }
+    }
+  }
 
   .overlay {
     position: absolute;
