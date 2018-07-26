@@ -41,7 +41,8 @@ module.exports = function () {
             },
 
             allowLaunch: function (component) {
-                return component["selectedInputFolder"];
+                if(!component["selectedInputFolder"]) return false;
+                return component["selectedInputFolder"].length > 0;
             },
 
             getCommandLine: function (component) {

@@ -4,8 +4,7 @@
       <tr>
         <td class="cell name"><img v-bind:src="tab.config.icon"><span>{{tab.config.name}}</span></td>
         <td class="cell user">
-          <span>John Doe</span>
-          <el-button type="primary" circle><img src="@/assets/user.png"></el-button>
+          <el-button type="primary" circle><img src="@/assets/manual.png"></el-button>
         </td>
       </tr>
     </table>
