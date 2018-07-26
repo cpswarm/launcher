@@ -13,6 +13,18 @@ var chokidar = require("chokidar");
 
 export default {
   data() {
+    // Initialize ipcRenderer listener
+    ipcRenderer.on("close-project", () => {
+      // Switch to main panel
+      this.currentActivity = this.activities[0];
+
+      // Ask main to reset window title
+      ipcRenderer.send('reset-title');
+
+      // Ask main to set menu to start menu
+      ipcRenderer.send('set-start-menu');
+    })
+
     var activities = ["Welcome", "MainPanel"];
     return {
       activities: activities,
@@ -33,8 +45,11 @@ export default {
       // Switch to main panel
       this.currentActivity = this.activities[1];
 
-      // Send message to main
-      ipcRenderer.send('change-title', path);
+      // Ask main to change window title
+      ipcRenderer.send('set-title', path);
+
+      // Ask main to change menu to operation menu
+      ipcRenderer.send('set-opt-menu');
     }
   },
   computed: {}
