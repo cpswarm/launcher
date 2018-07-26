@@ -4,8 +4,8 @@
             <div class="logo"><img src="@/assets/logo.svg"></div>
             <div class="title">CPSwarm Launcher</div>
             <div class="btn-container">
-                <el-button type="primary" @click="createProject()">Create Project</el-button>
-                <el-button type="primary" @click="openProject()">Open Project</el-button>
+                <el-button type="primary" @click="createProject">Create Project</el-button>
+                <el-button type="primary" @click="openProject">Open Project</el-button>
             </div>
         </div>
     </div>
@@ -24,33 +24,11 @@ export default {
   },
   methods: {
     createProject: function() {
-      dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
-        if (!dirPath) return; 
-
-        // Create project metadata file within the dir
-        this.isLoading = true;
-        var structure = require("@/utils/FileStructure.json");
-        var list = utils.createProjectFolder(dirPath[0], 
-          structure,
-          (err) => {
-            this.isLoading = false;
-             // If everything all right, emit event telling the parent the dir path
-            this.$emit("open-project", dirPath[0]);
-          });  
-      });
+      this.$emit("create-project");
     },
 
     openProject: function() {
-      
-      dialog.showOpenDialog({properties: ['openDirectory']}, (dirPath) => {
-        if (!dirPath) return; 
-
-        this.isLoading = true;
-        // TODO: Check whether this is a valid project dir (e.g. by checking if metadata file exists)
-        this.isLoading = false;
-        // If everything all right, emit event telling the parent the dir path
-        this.$emit("open-project", dirPath[0]);
-      });
+      this.$emit("open-project");
     }
   },
   computed: {}

@@ -6,7 +6,12 @@ export default function (win) {
         {
             label: 'File',
             submenu: [
-                { label: 'New Project' },
+                { 
+                    label: 'New Project', 
+                    click() {
+                        win.webContents.send("create-project"); 
+                    } 
+                },
                 {
                     label: 'Open Project...',
                     click() {
@@ -26,6 +31,18 @@ export default function (win) {
         {
           label: 'File',
           submenu: [
+            { 
+                label: 'New Project', 
+                click() {
+                    win.webContents.send("create-project"); 
+                }
+            },
+            {
+                label: 'Open Project...',
+                click() {
+                    win.webContents.send("open-project");
+                }
+            },
             {
               label: 'Close Project',
               click() {

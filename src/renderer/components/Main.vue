@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    <div class="overlay" v-show="isInitializing" v-loading="isInitializing"></div>
     <el-row class="content-container">
       <el-col :span="6" class="tab-button-container">
         <div class="tab-button-header">
@@ -45,10 +44,8 @@ export default {
       var status = {running: false, done: false, enabled: false};
       tabs.push({id: tabConfigs[i].id, status: status, config: tabConfigs[i]});
     }
-    setTimeout(() => {this.isInitializing = false;}, 1500);
 
     return {
-      isInitializing: true,
       tabs: tabs,
       currentTab: tabs[0]
     };
@@ -86,16 +83,6 @@ export default {
   position: relative;
   z-index: 5;
 
-  .overlay {
-    position: absolute;
-    background-color: white;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 100;
-  }
-
   .content-container {
     height: 100%;
 
@@ -117,6 +104,7 @@ export default {
           color: white;
           position: relative;
           top: 35px;
+          z-index: 5;
         }
 
         .image {
@@ -125,6 +113,7 @@ export default {
           top: 0;
           right: 0;
           bottom: 0;
+          z-index: 1;
 
           img {
             height: 2.7em;
