@@ -11,7 +11,7 @@ module.exports = function () {
                     info: "The path to the executable",
                     varId: "execPath",
                     properties: {
-                        default: "C:\\Modelio.exe"
+                        default: "C:\\Users\\liang\\Desktop\\test\\my.bat"
                     }
                 },
                 {

@@ -34,7 +34,7 @@ export default {
     launch: function() {
       const bat = spawn("cmd.exe", [
         "/c",
-        "C:\\Users\\liang\\Desktop\\test\\my.bat"
+        this.execPath
       ]);
 
       bat.stdout.on("data", data => {
@@ -49,7 +49,7 @@ export default {
       });
 
       bat.stderr.on("data", data => {
-        console.log(data.toString());
+        this.emitError(data.toString());
       });
 
       bat.on("exit", code => {
@@ -63,6 +63,10 @@ export default {
 
       // Emit event
       this.$emit("process-started", "");
+    },
+
+    emitError: function(err) {
+      this.$emit("error", err)
     },
 
     toggleTextAreaVisibility: function() {

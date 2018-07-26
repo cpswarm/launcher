@@ -4,14 +4,14 @@
       <div class="label">{{widget.label}}</div>
       <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
-      <text-input v-show="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></text-input>
-      <single-checkbox v-show="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)"></single-checkbox>
+      <text-input v-show="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></text-input>
+      <single-checkbox v-show="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></single-checkbox>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
       <el-input size="small" :readonly="true" v-model="status.commandLine"></el-input>
     </div>
-    <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded"></process-manager>
+    <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded" @error="emitError"></process-manager>
   </div>
 </template>
 
