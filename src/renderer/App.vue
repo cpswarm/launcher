@@ -6,6 +6,7 @@
 </template> 
 
 <script>
+const {ipcRenderer} = require('electron');
 import Welcome from "@/components/Welcome.vue";
 import MainPanel from "@/components/Main.vue";
 var chokidar = require("chokidar");
@@ -16,7 +17,7 @@ export default {
     return {
       activities: activities,
       currentActivity: activities[0],
-      path: 'lalala'
+      path: ''
     };
   },
   components: {
@@ -31,6 +32,9 @@ export default {
 
       // Switch to main panel
       this.currentActivity = this.activities[1];
+
+      // Send message to main
+      ipcRenderer.send('change-title', path);
     }
   },
   computed: {}

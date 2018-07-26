@@ -1,22 +1,16 @@
 <template>
   <div>
 
-    <table class="btn-container">
-      <tr>
-        <td class="cell toggle">
-          <span @click="toggleTextAreaVisibility" class="toggleButton">Process Output
-            <span v-show="showTextarea">-</span>
-            <span v-show="!showTextarea">+</span>
-          </span>
-        </td>
-        <td class="cell launch">
-          <el-button class="button" type="primary" @click="launch()" :disabled="!allowLaunch">Launch</el-button>
-        </td>
-      </tr>
-    </table>
+    <div class="btn-container">
+      <el-button-group>
+        <el-button type="primary" @click="launch" :disabled="!allowLaunch">Launch</el-button>
+        <el-button type="primary" @click="toggleTextAreaVisibility"><img :class="['dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
+      </el-button-group>
+    </div>
+
     <el-collapse-transition>
       <div v-show="showTextarea">
-        <el-input ref="output" v-model="textarea" type="textarea" :rows="12"></el-input>
+        <el-input class="output" ref="output" v-model="textarea" type="textarea" :rows="12"></el-input>
       </div>
     </el-collapse-transition>
   </div>
@@ -81,40 +75,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// .btn-container {
-//   margin-top: 40px;
-//   margin-bottom: 20px;
-//   text-align: right;
-
-//   .toggleButton {
-//     float: left;
-//     font-size: 0.97em;
-//     color: #555555;
-//   }
-
-//   .button {
-//   }
-
-//   span {}
-// }
-
 .btn-container {
   margin-top: 40px;
   margin-bottom: 20px;
   width: 100%;
-  .cell {
-    width: 50%;
-    &.toggle {
-      text-align: left;
-      font-size: 0.96em;
-      color: #555555;
-      .toggleButton {
-        cursor: pointer;
-      }
-    }
-    &.launch {
-      text-align: right;
+  text-align: right;
+
+  .dropdown-btn {
+    height: 0.8em;
+    vertical-align: middle;
+
+    &.expanded {
+      transform: rotate(180deg);
     }
   }
+}
+
+.output {
+  font-size: 1.1em;
 }
 </style>

@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import { app, BrowserWindow, ipcMain } from 'electron'
 
 /**
  * Set `__static` path to static files in production
@@ -18,10 +18,11 @@ function createWindow() {
    * Initial window options
    */
   mainWindow = new BrowserWindow({
-    height: 580, // Slightly smaller than the App height so that it doesn't leave a white line
+    height: 580,
     useContentSize: true,
     width: 1000,
     resizable: true,
+    title: "CPSwarm Launcher",
     'minHeight': 535,
     'minWidth': 1000
   })
@@ -47,6 +48,11 @@ app.on('activate', () => {
     createWindow()
   }
 })
+
+ipcMain.on('change-title', (event, arg) => {
+  mainWindow.setTitle("CPSwarm Launcher - " + arg);
+})
+
 
 /**
  * Auto Updater
