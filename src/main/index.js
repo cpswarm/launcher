@@ -35,8 +35,8 @@ function createWindow() {
     mainWindow = null
   })
 
-  var mb = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(mb.getStartMenu());
+  var menuBuilder = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(menuBuilder.getStartMenu());
 }
 
 app.on('ready', createWindow)
@@ -63,13 +63,13 @@ ipcMain.on('reset-title', (event, arg) => {
 })
 
 ipcMain.on('set-opt-menu', () => {
-  var mb = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(mb.getOperationMenu());
+  var menuBuilder = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(menuBuilder.getOperationMenu());
 })
 
 ipcMain.on('set-start-menu', () => {
-  var mb = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(mb.getStartMenu());
+  var menuBuilder = MenuBuilder(mainWindow);
+  Menu.setApplicationMenu(menuBuilder.getStartMenu());
 })
 
 
