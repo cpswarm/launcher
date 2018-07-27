@@ -2,7 +2,7 @@
   <div class="tab-content">
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div :class="['label', {disabled: !widget.status.enabled}]">{{widget.label}}</div>
-      <file-list v-if="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
+      <file-list v-if="widget.type === 'file-list'" :path="getFullPath(path, widget.watchPath)" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
       <text-input v-if="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></text-input>
       <single-checkbox v-if="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></single-checkbox>
@@ -26,9 +26,6 @@ export default {
   props: ["config", "path"],
 
   data() {
-    // Not a good solution! But I have no other way to get it work easily
-    this.combinePath(this.config, this.path);
-
     // Initialize status of each widget
     for (let i in this.config.widgets) {
       let widget = this.config.widgets[i];
@@ -105,16 +102,8 @@ export default {
       }
     },
 
-    combinePath: function(config, dirPath) {
-      var widgets = config["widgets"];
-      for (var i in widgets) {
-        if (
-          widgets[i].type === "file-list" ||
-          widgets[i].type === "file-list-add"
-        ) {
-          widgets[i].fullWatchPath = path.join(dirPath, widgets[i].watchPath);
-        }
-      }
+    getFullPath: function(rootPath, relPath) {
+      return path.join(rootPath, relPath);
     },
 
     emitStatus: function() {
