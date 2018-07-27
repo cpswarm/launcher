@@ -4,6 +4,7 @@
       <tr>
         <td class="cell name"><img v-bind:src="tab.config.icon"><span>{{tab.config.name}}</span></td>
         <td class="cell user">
+          <el-button type="primary" circle @click="openTerminal"><img src="@/assets/terminal.png"></el-button>
           <el-button type="primary" circle><img src="@/assets/manual.png"></el-button>
         </td>
       </tr>
@@ -12,12 +13,32 @@
 </template>
 
 <script>
+const { spawn } = require("child_process");
+
 export default {
   data() {
     return {};
   },
-  props: ["tab"],
-  methods: {},
+  props: ["tab", "path"],
+  methods: {
+    openTerminal: function() {
+      var shellExec = "";
+      if (process.platform === "win32") {
+        shellExec = "cmd.exe";
+      }
+
+      if (process.platform === "linux" || process.platform === "darwin") {
+        shellExec = "/bin/sh";
+      }
+
+      const sp = spawn(shellExec, [], {
+        cwd: this.path,
+        shell: true,
+        detached: true,
+        stdio: "ignore"
+      });
+    }
+  },
   computed: {}
 };
 </script>
