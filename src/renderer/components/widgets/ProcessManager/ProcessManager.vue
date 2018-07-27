@@ -3,14 +3,16 @@
 
     <div class="btn-container">
       <el-button-group>
-        <el-button type="primary" @click="launch" :disabled="!allowLaunch">Launch</el-button>
-        <el-button type="primary" @click="toggleTextAreaVisibility"><img :class="['dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
+        <el-button type="primary" @click="launchUndetached" :disabled="!allowLaunch">Launch</el-button>
+        <el-button type="primary" @click="launchDetached" :disabled="!allowLaunch"><img :class="['icon-btn', 'detach-launch-btn', {disabled: !allowLaunch}]" src="@/assets/external.png"></el-button>
+        <el-button type="primary" @click="toggleTextAreaVisibility"><img :class="['icon-btn', 'dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
       </el-button-group>
     </div>
 
     <el-collapse-transition>
-      <div v-show="showTextarea">
-        <el-input class="output" ref="output" v-model="textarea" type="textarea" :rows="12"></el-input>
+      <div class="textarea-container" v-show="showTextarea">
+        <el-input class="output" ref="output" v-model="textarea" type="textarea" :rows="12" readonly></el-input>
+        <el-button type="primary" class="clear-btn" @click="clearOutput">clear</el-button>
       </div>
     </el-collapse-transition>
   </div>
@@ -31,46 +33,62 @@ export default {
     };
   },
   methods: {
-    launch: function() {
-      const bat = spawn("cmd.exe", [
-        "/c",
-        this.execPath
-      ]);
+    launch: function(isDetached) {
+      const sp = spawn(this.execPath, {
+        shell: true,
+        detached: isDetached,
+        stdio: isDetached ? "ignore" : "pipe"
+      });
 
-      bat.stdout.on("data", data => {
-        this.textarea += data.toString();
-        if (this.textarea.length > 3000) {
-          this.textarea = this.textarea.substring(2000, this.textarea.length);
-        }
-        setImmediate(() => {
-          var outTextArea = this.$refs.output.$refs.textarea;
-          outTextArea.scrollTop = outTextArea.scrollHeight;
+      if (sp.stdout) {
+        sp.stdout.on("data", data => {
+          this.textarea += data.toString();
+          if (this.textarea.length > 3000) {
+            this.textarea = this.textarea.substring(2000, this.textarea.length);
+          }
+          setImmediate(() => {
+            var outTextArea = this.$refs.output.$refs.textarea;
+            outTextArea.scrollTop = outTextArea.scrollHeight;
+          });
         });
-      });
+      }
 
-      bat.stderr.on("data", data => {
-        this.emitError(data.toString());
-      });
+      if (sp.stderr) {
+        sp.stderr.on("data", data => {
+          this.emitError(data.toString());
+        });
+      }
 
-      bat.on("exit", code => {
+      sp.on("exit", code => {
         // Update tab state
         console.log(`Child exited with code ${code}`);
         this.$emit("process-ended", code);
       });
 
-      // Dispaly the textarea
-      this.showTextarea = true;
-
       // Emit event
       this.$emit("process-started", "");
     },
 
+    launchDetached: function() {
+      this.launch(true);
+    },
+
+    launchUndetached: function() {
+      // Dispaly the textarea
+      this.showTextarea = true;
+      this.launch(false);
+    },
+
     emitError: function(err) {
-      this.$emit("error", err)
+      this.$emit("error", err);
     },
 
     toggleTextAreaVisibility: function() {
       this.showTextarea = !this.showTextarea;
+    },
+
+    clearOutput: function() {
+      this.textarea = "";
     }
   },
 
@@ -85,17 +103,26 @@ export default {
   width: 100%;
   text-align: right;
 
-  .dropdown-btn {
+  .icon-btn {
     height: 0.8em;
     vertical-align: middle;
 
-    &.expanded {
-      transform: rotate(180deg);
+    &.disabled {
+      opacity: 0.4;
+    }
+
+    .dropdown-btn {
+      &.expanded {
+        transform: rotate(180deg);
+      }
     }
   }
 }
 
-.output {
-  font-size: 1.1em;
+.textarea-container {
+  .output {
+    font-size: 1.1em;
+    margin-bottom: 10px;
+  }
 }
 </style>
