@@ -18,6 +18,7 @@ export default function (win) {
                         win.webContents.send("open-project");
                     }
                 },
+                {type: 'separator'},
                 { label: 'Exit' }
             ]
         },
@@ -43,12 +44,14 @@ export default function (win) {
                     win.webContents.send("open-project");
                 }
             },
+            {type: 'separator'},
             {
               label: 'Close Project',
               click() {
                 win.webContents.send("close-project");
               }
             },
+            {type: 'separator'},
             { label: 'Exit' }
           ]
         },

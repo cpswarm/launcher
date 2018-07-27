@@ -4,7 +4,8 @@
     <div class="btn-container">
       <el-button-group>
         <el-button type="primary" @click="launchUndetached" :disabled="!allowLaunch">Launch</el-button>
-        <el-button type="primary" @click="launchDetached" :disabled="!allowLaunch"><img :class="['icon-btn', 'detach-launch-btn', {disabled: !allowLaunch}]" src="@/assets/external.png"></el-button>
+        <el-button type="primary" @click="launchDetached" :disabled="!allowLaunch"><img :class="['icon-btn', {disabled: !allowLaunch}]" src="@/assets/external.png"></el-button>
+        <el-button type="primary" @click="killSubProcess" v-show="currentSubProcess"><img :class="['icon-btn']" src="@/assets/close.png"></el-button>
         <el-button type="primary" @click="toggleTextAreaVisibility"><img :class="['icon-btn', 'dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
       </el-button-group>
     </div>
@@ -20,6 +21,7 @@
 
 <script>
 const { spawn } = require("child_process");
+const kill  = require('tree-kill');
 
 export default {
   // 2 Props:
@@ -29,7 +31,8 @@ export default {
   data() {
     return {
       textarea: "",
-      showTextarea: false
+      showTextarea: false,
+      currentSubProcess: null
     };
   },
   methods: {
@@ -62,8 +65,11 @@ export default {
       sp.on("exit", code => {
         // Update tab state
         console.log(`Child exited with code ${code}`);
+        this.currentSubProcess = null;
         this.$emit("process-ended", code);
       });
+
+      this.currentSubProcess = sp;
 
       // Emit event
       this.$emit("process-started", "");
@@ -71,6 +77,13 @@ export default {
 
     launchDetached: function() {
       this.launch(true);
+    },
+
+    killSubProcess: function() {
+      if(this.currentSubProcess) {
+        kill(this.currentSubProcess.pid);
+        this.currentSubProcess = null;
+      }
     },
 
     launchUndetached: function() {

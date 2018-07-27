@@ -1,7 +1,7 @@
 <template>
   <div class="tab-content">
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
-      <div class="label">{{widget.label}}</div>
+      <div :class="['label', {disabled: !widget.status.enabled}]">{{widget.label}}</div>
       <file-list v-show="widget.type === 'file-list'" :path="widget.fullWatchPath" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
       </file-list>
       <text-input v-show="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></text-input>
@@ -138,6 +138,10 @@ export default {
     .label {
       margin-bottom: 10px;
       font-size: 1.3em;
+
+      &.disabled {
+        color: #bbbbbb;
+      }
     }
 
     &:first-of-type {
