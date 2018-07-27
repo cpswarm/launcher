@@ -225,8 +225,7 @@ module.exports = function () {
                     properties: {
                         default: true,
                         label: "Use Generated Code",
-                    },
-                    default: true
+                    }
                 },
                 {
                     type: "file-list",
