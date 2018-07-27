@@ -4,12 +4,10 @@
     <div class="path-indicator">{{path}}</div>
     <table>
       <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]">
-        <td class="cell icon" @click="selectFolder(stat)">
+        <td class="cell name" @click="selectFolder(stat)">
           <img v-show="stat.type === 'dir' && !stat.valid" src="@/assets/empty-folder.png">
           <img v-show="stat.type === 'dir' && stat.valid" src="@/assets/non-empty-folder.png">
           <img v-show="stat.type === 'file'" src="@/assets/file.png">
-        </td>
-        <td class="cell name" @click="selectFolder(stat)">
           <div class="text">{{fileName}}</div>
         </td>
         <td class="cell actions">
@@ -17,7 +15,7 @@
         </td>
       </tr>
     </table>
-    <div v-show="isNoFiles">Empty Content...</div>
+    <div class="empty-indicator" v-show="isNoFiles"><img src="@/assets/empty.png"><span class="text">Empty Content...</span></div>
   </div>
 </template>
 
@@ -231,6 +229,7 @@ export default {
     border-collapse: collapse;
     color: #555555;
     .folder {
+
       &.selected {
         color: black;
         background-color: #f0f0f0;
@@ -245,28 +244,42 @@ export default {
         vertical-align: middle;
         border-bottom: 1px solid #ddd;
         border-top: 1px solid #ddd;
-        &.icon {
-          width: 10%;
-          text-align: center;
-          img {
-            height: 1.4em;
-            display: block;
-            margin: 0 auto;
-          }
-        }
 
         &.name {
-          width: 80%;
+          width: 93%;
+          img {
+            height: 1.4em;
+            display: inline-block;
+            vertical-align: middle;
+            margin: 0 10px;
+          }
+          .text {
+            display: inline-block;
+            vertical-align: middle;
+          }
         }
 
         &.actions {
-          width: 10%;
-          text-align: center;
+          width: 7%;
+          text-align: right;
           .action-menu {
             cursor: pointer;
+            margin: 0 10px;
           }
         }
       }
+    }
+  }
+
+  .empty-indicator {
+    img {
+      height: 1.4em;
+      display: inline-block;
+      vertical-align: middle;
+      margin: 0 10px;
+    }
+    .text {
+      vertical-align: middle;
     }
   }
 }

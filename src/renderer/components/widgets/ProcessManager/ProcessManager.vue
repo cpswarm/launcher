@@ -111,7 +111,7 @@ export default {
       opacity: 0.4;
     }
 
-    .dropdown-btn {
+    &.dropdown-btn {
       &.expanded {
         transform: rotate(180deg);
       }
