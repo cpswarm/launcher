@@ -12,7 +12,11 @@
           <div>
             <div class="icon"><img v-bind:src="tab.config.icon"></div>
             <div class="text">{{tab.config.name}}</div>
-            <div class="status"><img v-if="tab.status.running" src="@/assets/running.png"><img v-if="tab.status.done" src="@/assets/finish.png"></div>
+            <div class="status">
+              <img v-if="tab.status.running" src="@/assets/running.png">
+              <img v-if="tab.status.done" src="@/assets/finish.png">
+              <img v-if="!tab.status.enabled" src="@/assets/lock.png">
+            </div>
           </div>
         </div>
         <div class="tab-button-filler"></div>
