@@ -1,5 +1,6 @@
 <template>
   <div class="tab-content">
+    <div class="overlay" v-show="!status.enabled"></div>
     <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
       <div :class="['label', {disabled: !widget.status.enabled}]">{{widget.label}}</div>
       <file-list v-if="widget.type === 'file-list'" :path="getFullPath(path, widget.watchPath)" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
@@ -119,8 +120,23 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/settings.scss";
+
 .tab-content {
   font-size: 0.9em;
+  padding: 0 $tab-container-padding;
+  position: relative;
+
+  .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    opacity: 0.5;
+  }
+
   .input-container {
     margin: 40px 0 20px 0;
 

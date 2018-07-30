@@ -240,7 +240,6 @@ export default {
       .tab-container {
         box-sizing: border-box;
         flex: 1 1 auto;
-        padding: $tab-container-padding $tab-container-padding;
         overflow: auto;
       }
     }
