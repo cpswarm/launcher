@@ -1,12 +1,14 @@
 {
-  "name": "cpswarm_launcher",
+  "name": "cpswarm-launcher",
   "version": "0.0.0",
   "author": "Junhong Liang <junhong.liang@fit.fraunhofer.de>",
   "description": "An electron-vue project",
+  "homepage": "http://fit.fraunhofer.de",
   "license": null,
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
+    "build:linux": "node .electron-vue/build.js && electron-builder --linux",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
     "build:web": "cross-env BUILD_TARGET=web node .electron-vue/build.js",
@@ -17,7 +19,7 @@
     "postinstall": ""
   },
   "build": {
-    "productName": "cpswarm_launcher",
+    "productName": "cpswarm-launcher",
     "appId": "org.simulatedgreg.electron-vue",
     "directories": {
       "output": "build"
@@ -47,6 +49,7 @@
       "icon": "build/icons/icon.ico"
     },
     "linux": {
+      "target": ["AppImage", "deb"],
       "icon": "build/icons"
     }
   },
@@ -78,7 +81,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.7.5",
-    "electron-builder": "^19.19.1",
+    "electron-builder": "^20.26.0",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "extract-text-webpack-plugin": "^3.0.0",
