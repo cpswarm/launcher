@@ -124,7 +124,8 @@ export default function (eventEmitter, types, validateCb) {
         _watcher = chokidar
             .watch(_watchPath, {
                 ignored: /(^|[\/\\])\../,
-                depth: 1
+                depth: 1,
+                ignorePermissionErrors: true  // Surpress a EPERM error in Windows
             })
             .on("add", change)
             .on("addDir", change)
