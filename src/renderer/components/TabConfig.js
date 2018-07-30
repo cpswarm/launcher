@@ -47,9 +47,9 @@ module.exports = function () {
 
             getCommandLine: function (component) {
                 var command = "";
-                command += component["execPath"];
+                command += '"' + component["execPath"] + '"';
                 if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) {
-                    command += " --src " + component["selectedInputFolder"][0].path;
+                    command += " --src " + '"' + component["selectedInputFolder"][0].path + '"';
                     if (!component["selectedInputFolder"][0].valid) {
                         command += " --create-project";
                     }
@@ -131,9 +131,9 @@ module.exports = function () {
 
             getCommandLine: function (component) {
                 var command = "";
-                command += component["execPath"];
-                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + component["selectedInputFolder"][0].path;
-                if (component["selectedOutputFolder"] && component["selectedOutputFolder"].length > 0) command += " --target " + component["selectedOutputFolder"][0].path;
+                command += '"' + component["execPath"] + '"';
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + '"' + component["selectedInputFolder"][0].path + '"';
+                if (component["selectedOutputFolder"] && component["selectedOutputFolder"].length > 0) command += " --target " + '"' + component["selectedOutputFolder"][0].path + '"';
                 return command;
             }
 
@@ -199,8 +199,8 @@ module.exports = function () {
 
             getCommandLine: function (component) {
                 var command = "";
-                command += component["execPath"];
-                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + component["selectedInputFolder"][0].path;
+                command += '"' + component["execPath"] + '"';
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + '"' + component["selectedInputFolder"][0].path + '"';
                 return command;
             }
         },
@@ -260,9 +260,9 @@ module.exports = function () {
 
             getCommandLine: function (component) {
                 var command = "";
-                command += component["execPath"];
+                command += '"' + component["execPath"] + '"';
                 if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) {
-                    command += " --src " + component["selectedInputFolder"][0].path;
+                    command += " --src " + '"' + component["selectedInputFolder"][0].path + '"';
                 }
                 return command;
             }
@@ -296,7 +296,7 @@ module.exports = function () {
 
             getCommandLine: function (component) {
                 var command = "";
-                command += component["execPath"];
+                command += '"' + component["execPath"] + '"';
                 return command;
             }
         }
