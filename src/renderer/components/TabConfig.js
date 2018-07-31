@@ -72,20 +72,10 @@ module.exports = function () {
                 },
                 {
                     type: "file-list",
-                    label: "Available Input",
+                    label: "Models",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
                     watchPath: "modelling"
-                },
-                {
-                    type: "file-list",
-                    label: "Existing Output",
-                    selectedFolder: "selectedOutputFolder",
-                    folders: "outputFolders",
-                    watchPath: "simulation",
-                    properties: {
-                        allowAdd: true
-                    }
                 },
                 {
                     type: "file-list",
@@ -102,8 +92,8 @@ module.exports = function () {
             defaultExec: "C:\\Modelio.exe",
             isDone: function (component) {
                 var done = false;
-                for (var i in component['outputFolders']) {
-                    if (component['outputFolders'][i].valid) {
+                for (var i in component['inputFolders']) {
+                    if (component['inputFolders'][i].valid) {
                         done = true;
                         break;
                     }
@@ -124,16 +114,22 @@ module.exports = function () {
 
             allowLaunch: function (component) {
                 return component["selectedInputFolder"]
-                    && component["selectedInputFolder"].length > 0
-                    && component["selectedOutputFolder"]
-                    && component["selectedOutputFolder"].length > 0;
+                    && component["selectedInputFolder"].length > 0;
             },
 
             getCommandLine: function (component) {
                 var command = "";
                 command += '"' + component["execPath"] + '"';
-                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) command += " --src " + '"' + component["selectedInputFolder"][0].path + '"';
-                if (component["selectedOutputFolder"] && component["selectedOutputFolder"].length > 0) command += " --target " + '"' + component["selectedOutputFolder"][0].path + '"';
+                if (component["selectedInputFolder"] && component["selectedInputFolder"].length > 0) {
+                    let selectedFilePath = component["selectedInputFolder"][0].path;
+                    command += " --src " + '"' + selectedFilePath + '"';
+                    command += " --target " + '"' + selectedFilePath + "Optimized" + '"';
+                } 
+                if (component["selectedSimulationConf"] && component["selectedSimulationConf"].length > 0) {
+                    let confPath = component["selectedSimulationConf"][0].path;
+                    command += " --conf " + '"' + confPath + '"';
+                } 
+                
                 return command;
             }
 
@@ -229,7 +225,7 @@ module.exports = function () {
                 },
                 {
                     type: "file-list",
-                    label: "Available Input",
+                    label: "Previous Versions",
                     selectedFolder: "selectedInputFolder",
                     folders: "inputFolders",
                     watchPath: "generation",
@@ -237,7 +233,7 @@ module.exports = function () {
                         return !component.useGeneratedCode;
                     },
                     properties: {
-                        allowAdd: true,
+                        allowAdd: false,
                     }
                 }
             ],
