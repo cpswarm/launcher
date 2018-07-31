@@ -116,6 +116,7 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/element-custom.scss";
 @import "@/settings.scss";
 html,
 body,

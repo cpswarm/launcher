@@ -11,6 +11,8 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
+
 /**
  * List of node_modules to include in webpack bundle
  *
@@ -32,14 +34,21 @@ let rendererConfig = {
     rules: [
       {
         test: /\.scss$/,
-        use: ['style-loader', 'css-loader', 'sass-loader']
+        use: process.env.NODE_ENV === 'production'
+          ? ExtractTextPlugin.extract({
+            fallback: 'style-loader',
+            use: ['css-loader', 'sass-loader']
+          })
+          : ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.css$/,
-        use: ExtractTextPlugin.extract({
+        use: process.env.NODE_ENV === 'production'
+        ? ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: 'css-loader'
         })
+        : ['style-loader', 'css-loader', 'sass-loader']
       },
       {
         test: /\.html$/,
@@ -57,14 +66,7 @@ let rendererConfig = {
       {
         test: /\.vue$/,
         use: {
-          loader: 'vue-loader',
-          options: {
-            extractCSS: process.env.NODE_ENV === 'production',
-            loaders: {
-              sass: 'vue-style-loader!css-loader!sass-loader?indentedSyntax=1',
-              scss: 'vue-style-loader!css-loader!sass-loader'
-            }
-          }
+          loader: 'vue-loader'
         }
       },
       {
@@ -102,6 +104,7 @@ let rendererConfig = {
     __filename: process.env.NODE_ENV !== 'production'
   },
   plugins: [
+    new VueLoaderPlugin(),
     new ExtractTextPlugin('styles.css'),
     new HtmlWebpackPlugin({
       filename: 'index.html',

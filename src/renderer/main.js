@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import axios from 'axios'
 import ElementUI from 'element-ui'
-import '@/element-custom.scss'
 import App from '@/App.vue'
 
 if (!process.env.IS_WEB) Vue.use(require('vue-electron'))
