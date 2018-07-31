@@ -32,27 +32,27 @@
 </template> 
 
 <script>
-import TabHeader from "@/components/TabHeader.vue";
-import GenericTab from "@/components/GenericTab.vue";
+import TabHeader from '@/components/TabHeader.vue'
+import GenericTab from '@/components/GenericTab.vue'
 
-var tabConfig = require("@/components/TabConfig.js");
+var tabConfig = require('@/components/TabConfig.js')
 
 export default {
   // The directory path of the launcher project
-  props: ["path"],
-  data() {
-    var tabConfigs = tabConfig();
+  props: ['path'],
+  data () {
+    var tabConfigs = tabConfig()
 
-    var tabs = [];
+    var tabs = []
     for (var i in tabConfigs) {
-      var status = {running: false, done: false, enabled: false};
-      tabs.push({id: tabConfigs[i].id, status: status, config: tabConfigs[i]});
+      var status = {running: false, done: false, enabled: false}
+      tabs.push({id: tabConfigs[i].id, status: status, config: tabConfigs[i]})
     }
 
     return {
       tabs: tabs,
       currentTab: tabs[0]
-    };
+    }
   },
   components: {
     TabHeader: TabHeader,
@@ -60,22 +60,22 @@ export default {
   },
 
   methods: {
-    selectTab: function(tab) {
+    selectTab: function (tab) {
       if (tab.status.enabled) {
-        this.currentTab = tab;
+        this.currentTab = tab
       }
     },
 
-    handleTabStateChange: function(id, status) {
+    handleTabStateChange: function (id, status) {
       for (var i in this.tabs) {
         if (this.tabs[i].id === id) {
-          this.tabs[i].status = Object.assign({}, status);
-          break;
+          this.tabs[i].status = Object.assign({}, status)
+          break
         }
       }
     }
   }
-};
+}
 </script>
 
 

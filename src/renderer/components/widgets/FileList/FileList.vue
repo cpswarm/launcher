@@ -20,14 +20,14 @@
 </template>
 
 <script>
-const rimraf = require("rimraf");
-const events = require("events");
-const path = require("path");
-const { shell } = require("electron");
-const fs = require("fs");
+import fw from '@/components/widgets/FileList/FileWatcher.js'
+import ActionMenu from '@/components/widgets/FileList/ActionMenu.vue'
 
-import fw from "@/components/widgets/FileList/FileWatcher.js";
-import ActionMenu from "@/components/widgets/FileList/ActionMenu.vue";
+const rimraf = require('rimraf')
+const events = require('events')
+const path = require('path')
+const { shell } = require('electron')
+const fs = require('fs')
 
 export default {
   // TODO: think whether it is necessary to propagate folder-deleted
@@ -42,37 +42,37 @@ export default {
   //    1) watchDir: boolean, whether to watch directory, default is true
   //    2) watchFile: boolean, whether to watch files, default is false
   //    3) multiSelect: boolean, whether to allow multiple selection, default is false
-  props: ["path", "enabled", "watchDir", "watchFile", "multiSelect"],
-  data() {
+  props: ['path', 'enabled', 'watchDir', 'watchFile', 'multiSelect'],
+  data () {
     // Determine the types of file (file/dir) to watch
     // Default is to watch dirs but not files
-    var watchTypes = [];
-    if (typeof this.watchDir === "undefined") {
-      watchTypes.push("dir");
+    var watchTypes = []
+    if (typeof this.watchDir === 'undefined') {
+      watchTypes.push('dir')
     } else {
-      if (this.watchDir) watchTypes.push("dir");
+      if (this.watchDir) watchTypes.push('dir')
     }
 
-    if (typeof this.watchFile !== "undefined") {
-      if (this.watchFile) watchTypes.push("file");
+    if (typeof this.watchFile !== 'undefined') {
+      if (this.watchFile) watchTypes.push('file')
     }
 
-    var eventEmitter = new events.EventEmitter();
+    var eventEmitter = new events.EventEmitter()
     // Initiallize watcher
-    var fileWatcher = fw(eventEmitter, watchTypes);
+    var fileWatcher = fw(eventEmitter, watchTypes)
     // Start watching
-    fileWatcher.watch(this.path);
+    fileWatcher.watch(this.path)
     // Catch file change event
-    eventEmitter.on("file", folders => {
+    eventEmitter.on('file', folders => {
       // Update file list
-      this.folders = folders;
+      this.folders = folders
       // Emit event
-      var availableFilesArr = [];
+      var availableFilesArr = []
       for (let key in this.folders) {
-        availableFilesArr.push(this.folders[key]);
+        availableFilesArr.push(this.folders[key])
       }
-      this.$emit("state-changed", availableFilesArr);
-    });
+      this.$emit('state-changed', availableFilesArr)
+    })
 
     return {
       // The data field contain data local to one tab,
@@ -80,7 +80,7 @@ export default {
       selectedFiles: {},
       fileWatcher: fileWatcher,
       folders: []
-    };
+    }
   },
 
   components: {
@@ -88,69 +88,67 @@ export default {
   },
 
   methods: {
-    selectFolder: function(fileStat) {
+    selectFolder: function (fileStat) {
       if (!fileStat) {
-        this.selectedFiles = {};
+        this.selectedFiles = {}
       } else {
         if (this.selectedFiles[fileStat.path]) {
           // Must use this.$delete to force update on list
-          this.$delete(this.selectedFiles, fileStat.path);
+          this.$delete(this.selectedFiles, fileStat.path)
         } else {
-          if(this.multiSelect) {
+          if (this.multiSelect) {
             // Must use this.$delete to force update on list
-            this.$set(this.selectedFiles, fileStat.path, fileStat);
+            this.$set(this.selectedFiles, fileStat.path, fileStat)
           } else {
-            this.selectedFiles = {};
-            this.selectedFiles[fileStat.path] = fileStat;
+            this.selectedFiles = {}
+            this.selectedFiles[fileStat.path] = fileStat
           }
-          
         }
       }
       // TODO: whether to expose an object or an array?
-      var selectedFilesArr = [];
+      var selectedFilesArr = []
       for (let key in this.selectedFiles) {
-        selectedFilesArr.push(this.selectedFiles[key]);
+        selectedFilesArr.push(this.selectedFiles[key])
       }
-      this.$emit("folder-selected", selectedFilesArr);
+      this.$emit('folder-selected', selectedFilesArr)
     },
 
-
-    deleteFolder: function(folder) {
+    deleteFolder: function (folder) {
       this.$confirm(
-        "This will delete the folder and all of its content. Continue?",
-        "Warning",
+        'This will delete the folder and all of its content. Continue?',
+        'Warning',
         {
-          confirmButtonText: "OK",
-          cancelButtonText: "Cancel",
-          type: "warning"
+          confirmButtonText: 'OK',
+          cancelButtonText: 'Cancel',
+          type: 'warning'
         }
       )
         .then(() => {
-          var folderPath = path.join(this.path, folder);
+          var folderPath = path.join(this.path, folder)
           rimraf(folderPath, err => {
             if (err) {
               // Emit error message
-              this.emitError(err);
-              return;
+              this.emitError(err)
+              return
             }
-            this.selectFolder(null);
-            this.$emit("folder-deleted", folderPath);
+            this.selectFolder(null)
+            this.$emit('folder-deleted', folderPath)
             this.$message({
-              type: "success",
-              message: "Folder " + folderPath + " deleted"
-            });
-          });
+              type: 'success',
+              message: 'Folder ' + folderPath + ' deleted'
+            })
+          })
         })
-        .catch(() => {});
+        .catch(() => {})
     },
 
-    renameFolder: function(folder) {
-      var originalFolderPath = path.join(this.path, folder);
+    renameFolder: function (folder) {
+      var originalFolderPath = path.join(this.path, folder)
       // TODO: implement the renaming
-      this.$prompt("Original Name: " + folder, "Rename Folder", {
-        confirmButtonText: "OK",
-        cancelButtonText: "Cancel",
-        inputErrorMessage: "Invalid Folder Name"
+      this.$prompt('Original Name: ' + folder, 'Rename Folder', {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        inputErrorMessage: 'Invalid Folder Name'
       })
         .then(value => {
           fs.rename(
@@ -159,49 +157,49 @@ export default {
             err => {
               if (err) {
                 // Emit error message
-                this.emitError(err);
-                return;
+                this.emitError(err)
+                return
               }
-              this.selectFolder(null);
+              this.selectFolder(null)
               this.$message({
-                type: "success",
-                message: "Folder rename successful!"
-              });
+                type: 'success',
+                message: 'Folder rename successful!'
+              })
             }
-          );
+          )
         })
-        .catch(() => {});
+        .catch(() => {})
     },
 
-    openExplorer: function(folder) {
-      var folderPath = path.join(this.path, folder);
-      var success = shell.showItemInFolder(folderPath);
+    openExplorer: function (folder) {
+      var folderPath = path.join(this.path, folder)
+      var success = shell.showItemInFolder(folderPath)
       if (!success) {
-        this.emitError("Unable to open folder in file explorer.");
+        this.emitError('Unable to open folder in file explorer.')
       }
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     }
   },
 
   watch: {
-    path: function(newPath, oldPath) {
+    path: function (newPath, oldPath) {
       if (newPath === oldPath) {
-        return;
+        return
       }
-      this.fileWatcher.unwatch();
-      this.fileWatcher.watch(newPath);
+      this.fileWatcher.unwatch()
+      this.fileWatcher.watch(newPath)
     }
   },
 
   computed: {
-    isNoFiles: function() {
-      return Object.keys(this.folders).length === 0;
+    isNoFiles: function () {
+      return Object.keys(this.folders).length === 0
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

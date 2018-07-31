@@ -1,77 +1,75 @@
 import { Menu } from 'electron'
 
 export default function (win) {
-
-    var startMenuTemplate = [
+  var startMenuTemplate = [
+    {
+      label: 'File',
+      submenu: [
         {
-            label: 'File',
-            submenu: [
-                { 
-                    label: 'New Project', 
-                    click() {
-                        win.webContents.send("create-project"); 
-                    } 
-                },
-                {
-                    label: 'Open Project...',
-                    click() {
-                        win.webContents.send("open-project");
-                    }
-                },
-                {type: 'separator'},
-                { label: 'Exit' }
-            ]
+          label: 'New Project',
+          click () {
+            win.webContents.send('create-project')
+          }
         },
         {
-            label: 'Help',
-            submenu: [{ label: "About CPSwarm Launcher" }]
-        }
-    ];
-
-    var operationMenuTemplate = [
-        {
-          label: 'File',
-          submenu: [
-            { 
-                label: 'New Project', 
-                click() {
-                    win.webContents.send("create-project"); 
-                }
-            },
-            {
-                label: 'Open Project...',
-                click() {
-                    win.webContents.send("open-project");
-                }
-            },
-            {type: 'separator'},
-            {
-              label: 'Close Project',
-              click() {
-                win.webContents.send("close-project");
-              }
-            },
-            {type: 'separator'},
-            { label: 'Exit' }
-          ]
+          label: 'Open Project...',
+          click () {
+            win.webContents.send('open-project')
+          }
         },
-        {
-          label: 'Help',
-          submenu: [{label: "About CPSwarm Launcher"}]
-        }
+        {type: 'separator'},
+        { label: 'Exit' }
       ]
+    },
+    {
+      label: 'Help',
+      submenu: [{ label: 'About CPSwarm Launcher' }]
+    }
+  ]
 
-      var getStartMenu = function() {
-          return Menu.buildFromTemplate(startMenuTemplate);
-      }
+  var operationMenuTemplate = [
+    {
+      label: 'File',
+      submenu: [
+        {
+          label: 'New Project',
+          click () {
+            win.webContents.send('create-project')
+          }
+        },
+        {
+          label: 'Open Project...',
+          click () {
+            win.webContents.send('open-project')
+          }
+        },
+        {type: 'separator'},
+        {
+          label: 'Close Project',
+          click () {
+            win.webContents.send('close-project')
+          }
+        },
+        {type: 'separator'},
+        { label: 'Exit' }
+      ]
+    },
+    {
+      label: 'Help',
+      submenu: [{label: 'About CPSwarm Launcher'}]
+    }
+  ]
 
-      var getOperationMenu = function() {
-        return Menu.buildFromTemplate(operationMenuTemplate);
-      }
+  var getStartMenu = function () {
+    return Menu.buildFromTemplate(startMenuTemplate)
+  }
 
-      return {
-          getStartMenu: getStartMenu,
-          getOperationMenu: getOperationMenu
-      }
+  var getOperationMenu = function () {
+    return Menu.buildFromTemplate(operationMenuTemplate)
+  }
 
+  return {
+    getStartMenu: getStartMenu,
+    getOperationMenu: getOperationMenu
+  }
 }

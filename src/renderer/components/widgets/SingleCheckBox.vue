@@ -7,31 +7,31 @@
 
 <script>
 export default {
-  props: ["default", "enabled", "properties"],
-  data() {
+  props: ['default', 'enabled', 'properties'],
+  data () {
     var properties = {
       default: false,
-      label: "Option"
-    };
+      label: 'Option'
+    }
 
     if (this.properties) {
       for (let key in this.properties) {
-        properties[key] = this.properties[key];
+        properties[key] = this.properties[key]
       }
     }
 
-    this.$emit("input", properties.default);
+    this.$emit('input', properties.default)
     return {
       checked: properties.default,
       label: properties.label
-    };
+    }
   },
   methods: {
-    change: function(value) {
-      this.$emit("input", value);
+    change: function (value) {
+      this.$emit('input', value)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

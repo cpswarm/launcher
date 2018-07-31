@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, Menu } from 'electron'
-import MenuBuilder from "./menu.js"
+import MenuBuilder from './menu.js'
 
 /**
  * Set `__static` path to static files in production
@@ -14,7 +14,7 @@ const winURL = process.env.NODE_ENV === 'development'
   ? `http://localhost:9080`
   : `file://${__dirname}/index.html`
 
-function createWindow() {
+function createWindow () {
   /**
    * Initial window options
    */
@@ -23,11 +23,11 @@ function createWindow() {
     useContentSize: true,
     width: 1000,
     resizable: true,
-    title: "CPSwarm Launcher",
+    title: 'CPSwarm Launcher',
     'minHeight': 535,
     'minWidth': 1000
   })
-  //mainWindow.setMenu(null);
+  // mainWindow.setMenu(null);
 
   mainWindow.loadURL(winURL)
 
@@ -35,8 +35,8 @@ function createWindow() {
     mainWindow = null
   })
 
-  var menuBuilder = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(menuBuilder.getStartMenu());
+  var menuBuilder = MenuBuilder(mainWindow)
+  Menu.setApplicationMenu(menuBuilder.getStartMenu())
 }
 
 app.on('ready', createWindow)
@@ -54,24 +54,23 @@ app.on('activate', () => {
 })
 
 ipcMain.on('set-title', (event, path) => {
-  mainWindow.setTitle("CPSwarm Launcher - " + path);
+  mainWindow.setTitle('CPSwarm Launcher - ' + path)
 })
 
 ipcMain.on('reset-title', (event, arg) => {
-  mainWindow.setTitle("CPSwarm Launcher");
-  console.log("reset!");
+  mainWindow.setTitle('CPSwarm Launcher')
+  console.log('reset!')
 })
 
 ipcMain.on('set-opt-menu', () => {
-  var menuBuilder = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(menuBuilder.getOperationMenu());
+  var menuBuilder = MenuBuilder(mainWindow)
+  Menu.setApplicationMenu(menuBuilder.getOperationMenu())
 })
 
 ipcMain.on('set-start-menu', () => {
-  var menuBuilder = MenuBuilder(mainWindow);
-  Menu.setApplicationMenu(menuBuilder.getStartMenu());
+  var menuBuilder = MenuBuilder(mainWindow)
+  Menu.setApplicationMenu(menuBuilder.getStartMenu())
 })
-
 
 /**
  * Auto Updater

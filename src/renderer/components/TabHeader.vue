@@ -13,34 +13,34 @@
 </template>
 
 <script>
-const { spawn } = require("child_process");
+const { spawn } = require('child_process')
 
 export default {
-  data() {
-    return {};
+  data () {
+    return {}
   },
-  props: ["tab", "path"],
+  props: ['tab', 'path'],
   methods: {
-    openTerminal: function() {
-      var shellExec = "";
-      if (process.platform === "win32") {
-        shellExec = "cmd.exe";
+    openTerminal: function () {
+      var shellExec = ''
+      if (process.platform === 'win32') {
+        shellExec = 'cmd.exe'
       }
 
-      if (process.platform === "linux" || process.platform === "darwin") {
-        shellExec = "/bin/sh";
+      if (process.platform === 'linux' || process.platform === 'darwin') {
+        shellExec = '/bin/sh'
       }
 
-      const sp = spawn(shellExec, [], {
+      spawn(shellExec, [], {
         cwd: this.path,
         shell: true,
         detached: true,
-        stdio: "ignore"
-      });
+        stdio: 'ignore'
+      })
     }
   },
   computed: {}
-};
+}
 </script>
 
 <style lang="scss" scoped>

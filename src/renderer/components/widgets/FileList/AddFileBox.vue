@@ -8,8 +8,8 @@
 </template>
 
 <script>
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs')
+const path = require('path')
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -17,53 +17,53 @@ export default {
 
   // This component receives 1 prop:
   // 1. path: the dir path to watch
-  props: ["path"],
-  data() {
+  props: ['path'],
+  data () {
     return {
       newFolder: null,
-      errMsg: ""
-    };
+      errMsg: ''
+    }
   },
   components: {},
   methods: {
-    createFolder: function() {
+    createFolder: function () {
       if (!this.newFolder) {
-        this.errMsg = "Folder name can't be empty!";
-        return;
+        this.errMsg = "Folder name can't be empty!"
+        return
       }
 
-      var newFolderPath = path.join(this.path, this.newFolder);
+      var newFolderPath = path.join(this.path, this.newFolder)
       if (fs.existsSync(newFolderPath)) {
-        this.errMsg = "Folder already exists!";
-        return;
+        this.errMsg = 'Folder already exists!'
+        return
       }
 
       fs.mkdir(newFolderPath, err => {
         if (err) {
           // This is a bigger error, so emit it to parent
           var errMsg =
-            "Error while creating folder in path " +
+            'Error while creating folder in path ' +
             newFolderPath +
-            ", cause: " +
-            err;
-          this.emitError(errMsg);
-          return;
+            ', cause: ' +
+            err
+          this.emitError(errMsg)
+          return
         }
-        this.errMsg = "";
-        this.newFolder = null;
-        this.$emit("folder-created", newFolderPath);
-      });
+        this.errMsg = ''
+        this.newFolder = null
+        this.$emit('folder-created', newFolderPath)
+      })
     },
 
-    clearError: function() {
-      this.errMsg = "";
+    clearError: function () {
+      this.errMsg = ''
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

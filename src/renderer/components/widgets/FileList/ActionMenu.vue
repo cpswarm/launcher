@@ -14,51 +14,30 @@
 </template>
 
 <script>
-const path = require("path");
-
 export default {
   // name: the name of the folder
-  props: ["name"],
-  data() {
-    return {};
+  props: ['name'],
+  data () {
+    return {}
   },
   methods: {
-    handleCommand: function(command) {
+    handleCommand: function (command) {
       switch (command) {
-        case "delete":
-          this.$emit("delete-folder", this.name);
-          break;
-        case "rename":
-          this.$emit("rename-folder", this.name);
-          break;
-        case "explorer":
-          this.$emit("open-explorer", this.name);
-          break;
+        case 'delete':
+          this.$emit('delete-folder', this.name)
+          break
+        case 'rename':
+          this.$emit('rename-folder', this.name)
+          break
+        case 'explorer':
+          this.$emit('open-explorer', this.name)
+          break
       }
-    },
-
-    deleteFolder: function() {
-      var folderPath = path.join(this.path, this.name);
-      rimraf(folderPath, err => {
-        if (err) {
-          // Emit error message
-          console.log(err);
-          return;
-        }
-        this.$emit("folder-deleted", folderPath);
-      });
-    },
-
-    renameFolder: function() {},
-
-    openInExplorer: function() {
-      var folderPath = path.join(this.path, this.name);
-      shell.showItemInFolder(folderPath);
     }
   },
 
   watch: {}
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -7,10 +7,10 @@
 </template>
 
 <script>
-const fs = require("fs");
-const path = require("path");
-import FileList from "@/components/widgets/FileList/FileList.vue";
-import AddFileBox from "@/components/widgets/FileList/AddFileBox.vue";
+import FileList from '@/components/widgets/FileList/FileList.vue'
+import AddFileBox from '@/components/widgets/FileList/AddFileBox.vue'
+const fs = require('fs')
+const path = require('path')
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -23,81 +23,81 @@ export default {
   //    2) watchFile: boolean, whether to watch files, default is false
   //    3) allowAdd: boolean, whether to allow creating new files on this widget
   //    4) multiSelect: boolean, whether to allow multiple selection, default is false
-  props: ["path", "enabled", "properties"],
-  data() {
+  props: ['path', 'enabled', 'properties'],
+  data () {
     // Default values for properties
     var properties = {
       allowAdd: false,
       watchDir: true,
       watchFile: false,
       multiSelect: false
-    };
+    }
 
     if (this.properties) {
       for (let key in this.properties) {
-        properties[key] = this.properties[key];
+        properties[key] = this.properties[key]
       }
     }
 
     return {
       listProperties: properties,
       newFolder: null,
-      errMsg: ""
-    };
+      errMsg: ''
+    }
   },
   components: {
     FileList: FileList,
     AddFileBox: AddFileBox
   },
   methods: {
-    stateChanged: function(folders) {
-      this.$emit("state-changed", folders);
+    stateChanged: function (folders) {
+      this.$emit('state-changed', folders)
     },
 
-    folderSelected: function(folder) {
-      this.$emit("folder-selected", folder);
+    folderSelected: function (folder) {
+      this.$emit('folder-selected', folder)
     },
 
-    folderDeleted: function(folder) {
-      this.$emit("folder-deleted", folder);
+    folderDeleted: function (folder) {
+      this.$emit('folder-deleted', folder)
     },
 
-    createFolder: function() {
+    createFolder: function () {
       if (!this.newFolder) {
-        this.errMsg = "Folder name can't be empty!";
-        return;
+        this.errMsg = "Folder name can't be empty!"
+        return
       }
 
-      var newFolderPath = path.join(this.path, this.newFolder);
+      var newFolderPath = path.join(this.path, this.newFolder)
       if (fs.existsSync(newFolderPath)) {
-        this.errMsg = "Folder already exists!";
-        return;
+        this.errMsg = 'Folder already exists!'
+        return
       }
 
       fs.mkdir(newFolderPath, err => {
         if (err) {
           this.errMsg =
-            "Error while creating folder in path " +
+            'Error while creating folder in path ' +
             newFolderPath +
-            ", cause: " +
-            err;
-          return;
+            ', cause: ' +
+            err
+          return
         }
-        this.errMsg = "";
-        this.newFolder = null;
-        this.$emit("folder-created", newFolderPath);
-      });
+        this.errMsg = ''
+        this.newFolder = null
+        this.$emit('folder-created', newFolderPath)
+      })
     },
 
-    clearError: function() {
-      this.errMsg = "";
+    clearError: function () {
+      this.errMsg = ''
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

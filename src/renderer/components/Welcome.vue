@@ -12,27 +12,23 @@
 </template>
 
 <script>
-import utils from "@/utils/utils.js";
-const { dialog } = require("electron").remote;
-
-
 export default {
-  data() {
+  data () {
     return {
       isLoading: false
-    };
+    }
   },
   methods: {
-    createProject: function() {
-      this.$emit("create-project");
+    createProject: function () {
+      this.$emit('create-project')
     },
 
-    openProject: function() {
-      this.$emit("open-project");
+    openProject: function () {
+      this.$emit('open-project')
     }
   },
   computed: {}
-};
+}
 </script>
 
 <style lang="scss" scoped>

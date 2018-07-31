@@ -6,29 +6,29 @@
 
 <script>
 export default {
-  props: ["enabled", "properties"],
-  data() {
+  props: ['enabled', 'properties'],
+  data () {
     var properties = {
-      default: ""
-    };
+      default: ''
+    }
 
     if (this.properties) {
       for (let key in this.properties) {
-        properties[key] = this.properties[key];
+        properties[key] = this.properties[key]
       }
     }
 
-    this.$emit("input", properties["default"]);
+    this.$emit('input', properties['default'])
     return {
-      textValue : properties["default"]
-    };
+      textValue: properties['default']
+    }
   },
   methods: {
-    input: function(value) {
-      this.$emit("input", value);
+    input: function (value) {
+      this.$emit('input', value)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

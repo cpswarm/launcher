@@ -11,27 +11,27 @@
 </template>
 
 <script>
-import FileList from "@/components/FileList/FileList.vue";
-import FileListWithAdd from "@/components/FileList/FileListWithAdd.vue";
-const path = require("path");
+import FileList from '@/components/FileList/FileList.vue'
+import FileListWithAdd from '@/components/FileList/FileListWithAdd.vue'
+const path = require('path')
 
 export default {
-  props: ["path"],
-    
-  data() {
+  props: ['path'],
+
+  data () {
     return {
-      inputPath: path.join(this.path, "modelling"),
-      outputPath: path.join(this.path, "generation"),
-      execPath: "C:\\Simulation_Orchestrator.exe",
+      inputPath: path.join(this.path, 'modelling'),
+      outputPath: path.join(this.path, 'generation'),
+      execPath: 'C:\\Simulation_Orchestrator.exe',
 
       // The status of this tab
       // enabled: it means the component in this tab has enough inputs to be launched
-      // running: it means the component has been launched and is still running 
+      // running: it means the component has been launched and is still running
       status: {
         enabled: true,
         done: false,
         allowLaunch: false,
-        commandLine: ""
+        commandLine: ''
       },
 
       // It holds all the available input folders
@@ -43,69 +43,69 @@ export default {
       // The following are variables that are required for formulating the execution command line
       selectedInputFolder: null,
       selectedOutputFolder: null
-    };
+    }
   },
   components: {
     FileList: FileList,
-    FileListWithAdd: FileListWithAdd,
+    FileListWithAdd: FileListWithAdd
   },
   methods: {
-    inputChanged: function(folders) {
-      this.inputFolders = folders;
-      this.emitStatus();
+    inputChanged: function (folders) {
+      this.inputFolders = folders
+      this.emitStatus()
     },
 
-    outputChanged: function(folders) {
-      this.outputFolders = folders;
-      this.emitStatus();
+    outputChanged: function (folders) {
+      this.outputFolders = folders
+      this.emitStatus()
     },
 
-    inputFolderSelected: function(folder) {
-      this.selectedInputFolder = folder;
-      this.emitStatus();
+    inputFolderSelected: function (folder) {
+      this.selectedInputFolder = folder
+      this.emitStatus()
     },
 
-    outputFolderSelected: function(folder) {
-      this.selectedOutputFolder = folder;
-      this.emitStatus();
+    outputFolderSelected: function (folder) {
+      this.selectedOutputFolder = folder
+      this.emitStatus()
     },
 
-    emitStatus: function() {
+    emitStatus: function () {
       // Update status and emit event to parent
-      this.status.done = false;
-      for (var i in this.outputFolders) {
+      this.status.done = false
+      for (let i in this.outputFolders) {
         if (!this.outputFolders[i].empty) {
-          this.status.done = true;
-          break;
-        } 
+          this.status.done = true
+          break
+        }
       }
 
-      this.status.enabled = false;
-      for (var i in this.inputFolders) {
+      this.status.enabled = false
+      for (let i in this.inputFolders) {
         if (!this.inputFolders[i].empty) {
-          this.status.enabled = true;
-          break;
-        } 
+          this.status.enabled = true
+          break
+        }
       }
-      this.status.allowLaunch = this.selectedInputFolder && this.selectedOutputFolder ? true : false;
-      this.status.commandLine = this.getCommandLine();
-      this.$emit("status-changed", this.status);
+      this.status.allowLaunch = !!(this.selectedInputFolder && this.selectedOutputFolder)
+      this.status.commandLine = this.getCommandLine()
+      this.$emit('status-changed', this.status)
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     },
 
-    getCommandLine: function(){
-      var command = "";
-      command += this.execPath;
-      if(this.selectedInputFolder) command += " --src " + this.selectedInputFolder.name;
-      if(this.selectedOutputFolder) command += " --target " + this.selectedOutputFolder.name;
-      return command;
+    getCommandLine: function () {
+      var command = ''
+      command += this.execPath
+      if (this.selectedInputFolder) command += ' --src ' + this.selectedInputFolder.name
+      if (this.selectedOutputFolder) command += ' --target ' + this.selectedOutputFolder.name
+      return command
     }
 
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

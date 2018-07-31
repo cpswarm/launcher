@@ -8,16 +8,16 @@
 </template>
 
 <script>
-import FileList from "@/components/FileList/FileListWithAdd.vue";
-const path = require("path");
+import FileList from '@/components/FileList/FileListWithAdd.vue'
+const path = require('path')
 
 export default {
-  props: ["path"],
+  props: ['path'],
 
-  data() {
+  data () {
     return {
-      inputPath: path.join(this.path, "modelling"),
-      execPath: "C:\\Modelio.exe",
+      inputPath: path.join(this.path, 'modelling'),
+      execPath: 'C:\\Modelio.exe',
 
       // The status of this tab
       // enabled: it means the component in this tab has enough inputs to be launched
@@ -25,7 +25,7 @@ export default {
         enabled: true,
         done: false,
         allowLaunch: false,
-        commandLine: ""
+        commandLine: ''
       },
 
       // It holds all the available input folders
@@ -33,7 +33,7 @@ export default {
 
       // The following are variables that are required for formulating the execution command line
       selectedInputFolder: null
-    };
+    }
   },
 
   components: {
@@ -41,48 +41,48 @@ export default {
   },
 
   methods: {
-    inputChanged: function(folders) {
-      this.inputFolders = folders;
-      this.emitStatus();
+    inputChanged: function (folders) {
+      this.inputFolders = folders
+      this.emitStatus()
     },
 
-    folderSelected: function(folder) {
-      this.selectedInputFolder = folder;
-      this.emitStatus();
+    folderSelected: function (folder) {
+      this.selectedInputFolder = folder
+      this.emitStatus()
     },
 
-    emitStatus: function() {
+    emitStatus: function () {
       // Update status and emit event to parent
-      this.status.done = false;
+      this.status.done = false
       for (var i in this.inputFolders) {
         if (!this.inputFolders[i].empty) {
-          this.status.done = true;
-          break;
+          this.status.done = true
+          break
         }
       }
-      this.status.enabled = true; // Always true
-      this.status.allowLaunch = this.selectedInputFolder ? true : false;
-      this.status.commandLine = this.getCommandLine();
-      this.$emit("status-changed", this.status);
+      this.status.enabled = true // Always true
+      this.status.allowLaunch = !!this.selectedInputFolder
+      this.status.commandLine = this.getCommandLine()
+      this.$emit('status-changed', this.status)
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     },
 
-    getCommandLine: function() {
-      var command = "";
-      command += this.execPath;
+    getCommandLine: function () {
+      var command = ''
+      command += this.execPath
       if (this.selectedInputFolder) {
-        command += " --src " + this.selectedInputFolder.name;
+        command += ' --src ' + this.selectedInputFolder.name
         if (this.selectedInputFolder.empty) {
-          command += " --create-project";
+          command += ' --create-project'
         }
       }
-      return command;
+      return command
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
