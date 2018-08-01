@@ -60,8 +60,12 @@ export default function (eventEmitter, types, validateCb) {
                 _validateCb(path, done)
               }
             ], function (err, isValid) {
-              item.valid = isValid
-              updateMap(item)
+              if (err) {
+                _emitter.emit('error', err)
+              } else {
+                item.valid = isValid
+                updateMap(item)
+              }
               singleItemScanDone()
             })
             return
@@ -69,7 +73,10 @@ export default function (eventEmitter, types, validateCb) {
           singleItemScanDone()
         }
       }, function (err) {
-        // TODO: handle error
+        if (err) {
+          _emitter.emit('error', err)
+          return
+        }
         _pendingForScan = {}
         emitEvent()
       })

@@ -1,8 +1,8 @@
 <template>
   <div class="whole-container">
     <div class="overlay" v-show="isLoading" v-loading="isLoading"></div>
-    <welcome v-if="currentActivity=='Welcome'" @open-project="openProject" @create-project="createProject" v-bind:path="path"></welcome>
-    <main-panel v-if="currentActivity=='MainPanel'" v-bind:path="path"></main-panel>
+    <welcome v-if="currentActivity=='Welcome'" v-bind:path="path" @open-project="openProject" @create-project="createProject" @error="showError"></welcome>
+    <main-panel v-if="currentActivity=='MainPanel'" v-bind:path="path" @error="showError"></main-panel>
   </div>
 </template> 
 
@@ -74,7 +74,10 @@ export default {
           this.startLoading()
           var structure = require('@/utils/FileStructure.json')
           utils.createProjectFolder(dirPath[0], structure, err => {
-            // TODO: handle error
+            if (err) {
+              this.showError(err)
+              return
+            }
             this.initMain(dirPath[0])
           })
         }
@@ -109,6 +112,10 @@ export default {
       setTimeout(() => {
         this.isLoading = false
       }, 1500)
+    },
+
+    showError: function (err) {
+      this.$message.error(err.toString())
     }
   },
   computed: {}

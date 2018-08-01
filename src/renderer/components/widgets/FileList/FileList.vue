@@ -73,6 +73,9 @@ export default {
       }
       this.$emit('state-changed', availableFilesArr)
     })
+    eventEmitter.on('error', err => {
+      this.emitError(err)
+    })
 
     return {
       // The data field contain data local to one tab,

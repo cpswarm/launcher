@@ -37,6 +37,10 @@ export default {
         detached: true,
         stdio: 'ignore'
       })
+    },
+
+    emitError: function (err) {
+      this.$emit('error', err)
     }
   },
   computed: {}

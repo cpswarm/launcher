@@ -112,7 +112,7 @@ export default {
     },
 
     emitError: function (err) {
-      this.$message.error(err.toString())
+      this.$emit('error', err)
     }
   },
   computed: {}
