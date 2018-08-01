@@ -2,9 +2,9 @@
   "name": "cpswarm-launcher",
   "version": "0.0.0",
   "author": "Junhong Liang <junhong.liang@fit.fraunhofer.de>",
-  "description": "An electron-vue project",
+  "description": "CPSwarm Launcher, a ElectronJS-based desktop GUI application which helps user to manage CPSwarm project",
   "homepage": "http://fit.fraunhofer.de",
-  "license": null,
+  "license": "Apache-2.0",
   "main": "./dist/electron/main.js",
   "scripts": {
     "build": "node .electron-vue/build.js && electron-builder",
