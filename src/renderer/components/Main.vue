@@ -8,7 +8,7 @@
           </span>
           <div class="image"><img src="@/assets/swarm.png"></div>
         </div>
-        <div v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { disabled: !tab.status.enabled  },{ selected: currentTab.id === tab.id  }]">
+        <div v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { selected: currentTab.id === tab.id  }]">
           <div>
             <div class="icon"><img v-bind:src="tab.config.icon"></div>
             <div class="text">{{tab.config.name}}</div>
@@ -61,9 +61,7 @@ export default {
 
   methods: {
     selectTab: function (tab) {
-      if (tab.status.enabled) {
-        this.currentTab = tab
-      }
+      this.currentTab = tab
     },
 
     handleTabStateChange: function (id, status) {
