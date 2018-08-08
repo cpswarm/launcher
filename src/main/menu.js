@@ -24,12 +24,17 @@ export default function (win) {
     {
       label: 'Help',
       submenu: [
-        { label: 'How To Use' },
+        {
+          label: 'How To Use',
+          click() {
+            win.webContents.send('open-help')
+          }
+        },
         { type: 'separator' },
         {
           label: 'About',
           click() {
-            dialog.showMessageBox(win, {type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon'})
+            dialog.showMessageBox(win, { type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon' })
           }
         }
       ]
@@ -66,12 +71,17 @@ export default function (win) {
     {
       label: 'Help',
       submenu: [
-        { label: 'How To Use' },
+        {
+          label: 'How To Use',
+          click() {
+            win.webContents.send('open-help')
+          }
+        },
         { type: 'separator' },
         {
           label: 'About',
           click() {
-            dialog.showMessageBox(win, {type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon'})
+            dialog.showMessageBox(win, { type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon' })
           }
         }
       ]

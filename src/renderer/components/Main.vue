@@ -22,7 +22,7 @@
         <div class="tab-button-filler"></div>
       </el-col>
       <el-col :span="18" class="whole-tab-container">
-        <tab-header :tab="currentTab" :path="path" class="tab-header" @error="emitError"></tab-header>
+        <tab-header :tab="currentTab" :path="path" class="tab-header" @open-help="openHelp" @error="emitError"></tab-header>
         <div class="tab-container">
           <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab.config" :path="path" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
         </div>
@@ -71,6 +71,10 @@ export default {
           break
         }
       }
+    },
+
+    openHelp: function () {
+      this.$emit('open-help')
     },
 
     emitError: function (err) {

@@ -5,7 +5,7 @@
         <td class="cell name"><img v-bind:src="tab.config.icon"><span>{{tab.config.name}}</span></td>
         <td class="cell user">
           <el-button type="primary" circle @click="openTerminal"><img src="@/assets/terminal.png"></el-button>
-          <el-button type="primary" circle><img src="@/assets/manual.png"></el-button>
+          <el-button type="primary" circle @click="openHelp"><img src="@/assets/manual.png"></el-button>
         </td>
       </tr>
     </table>
@@ -37,6 +37,10 @@ export default {
         detached: true,
         stdio: 'ignore'
       })
+    },
+
+    openHelp: function () {
+      this.$emit('open-help')
     },
 
     emitError: function (err) {

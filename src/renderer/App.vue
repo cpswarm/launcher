@@ -1,12 +1,14 @@
 <template>
   <div class="whole-container">
     <div class="overlay" v-show="isLoading" v-loading="isLoading"></div>
+    <help :visible.sync="showHelp" @close="showHelp = false"></help>
     <welcome v-if="currentActivity=='Welcome'" v-bind:path="path" @open-project="openProject" @create-project="createProject" @error="showError"></welcome>
-    <main-panel v-if="currentActivity=='MainPanel'" v-bind:path="path" @error="showError"></main-panel>
+    <main-panel v-if="currentActivity=='MainPanel'" v-bind:path="path"  @open-help="openHelp" @error="showError"></main-panel>
   </div>
 </template> 
 
 <script>
+import Help from '@/components/Help.vue'
 import Welcome from '@/components/Welcome.vue'
 import MainPanel from '@/components/Main.vue'
 import utils from '@/utils/utils.js'
@@ -28,15 +30,21 @@ export default {
       this.openProject()
     })
 
+    ipcRenderer.on('open-help', () => {
+      this.showHelp = true
+    })
+
     var activities = ['Welcome', 'MainPanel']
     return {
       activities: activities,
       currentActivity: 'Welcome',
       path: '',
-      isLoading: false
+      isLoading: false,
+      showHelp: false,
     }
   },
   components: {
+    Help: Help,
     Welcome: Welcome,
     MainPanel: MainPanel
   },
@@ -101,6 +109,10 @@ export default {
 
       // Ask main to set menu to start menu
       ipcRenderer.send('set-start-menu')
+    },
+
+    openHelp: function () {
+      this.showHelp = true
     },
 
     startLoading: function () {
