@@ -1,4 +1,4 @@
-import { Menu } from 'electron'
+import { Menu, dialog } from 'electron'
 
 export default function (win) {
   var startMenuTemplate = [
@@ -7,23 +7,32 @@ export default function (win) {
       submenu: [
         {
           label: 'New Project',
-          click () {
+          click() {
             win.webContents.send('create-project')
           }
         },
         {
           label: 'Open Project...',
-          click () {
+          click() {
             win.webContents.send('open-project')
           }
         },
-        {type: 'separator'},
+        { type: 'separator' },
         { label: 'Exit' }
       ]
     },
     {
       label: 'Help',
-      submenu: [{ label: 'About CPSwarm Launcher' }]
+      submenu: [
+        { label: 'How To Use' },
+        { type: 'separator' },
+        {
+          label: 'About',
+          click() {
+            dialog.showMessageBox(win, {type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon'})
+          }
+        }
+      ]
     }
   ]
 
@@ -33,30 +42,39 @@ export default function (win) {
       submenu: [
         {
           label: 'New Project',
-          click () {
+          click() {
             win.webContents.send('create-project')
           }
         },
         {
           label: 'Open Project...',
-          click () {
+          click() {
             win.webContents.send('open-project')
           }
         },
-        {type: 'separator'},
+        { type: 'separator' },
         {
           label: 'Close Project',
-          click () {
+          click() {
             win.webContents.send('close-project')
           }
         },
-        {type: 'separator'},
+        { type: 'separator' },
         { label: 'Exit' }
       ]
     },
     {
       label: 'Help',
-      submenu: [{label: 'About CPSwarm Launcher'}]
+      submenu: [
+        { label: 'How To Use' },
+        { type: 'separator' },
+        {
+          label: 'About',
+          click() {
+            dialog.showMessageBox(win, {type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon'})
+          }
+        }
+      ]
     }
   ]
 
