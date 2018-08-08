@@ -274,13 +274,14 @@ export default {
 
   .empty-indicator {
     img {
-      height: 1.4em;
+      height: 1.2em;
       display: inline-block;
       vertical-align: middle;
       margin: 0 10px;
     }
     .text {
       vertical-align: middle;
+      color: #555555;
     }
   }
 }
