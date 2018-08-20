@@ -17,8 +17,8 @@
       <p>On the right side is the operation panel for each design step. Each step has a specific designed panel to assist the user in a better way. User must specify the path to the software executable in the field "Executable Path" and provide other necessary information for launching the software components. The final command line, which will be executed to launch the component, will be displayed in the field "Command Line". </p>
       <p>There are a couple options in launching the software executable:</p>
       <p><b>"Launch"</b> button: by pressing this button, the software component will be launched against the shown command line as a subprocess of the launcher. However, the subprocess will be terminated, if the launcher exits. 
-      <p><img src="@/assets/external.png"><span> button: launch the software component as a detached sub-process, which could continue to run even after the launcher exits</span></p>
-      <p><img src="@/assets/close.png"><span> button: only appears when the subprocess is running. By pressing this button, the subprocess is killed</span></p>
+      <p><span><b>"Launch Detached"</b> button: launch the software component as a detached sub-process, which could continue to run even after the launcher exits</span></p>
+      <p><img src="@/assets/close.png"><span> button: only appears when the subprocess is running. By pressing this button, the subprocess is terminated</span></p>
       <p><img src="@/assets/down-arrow.png"><span> button: toggle the stdout textarea</span></p>
     </div>
     <span slot="footer" class="dialog-footer">

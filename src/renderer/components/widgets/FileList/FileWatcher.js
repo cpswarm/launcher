@@ -106,7 +106,14 @@ export default function (eventEmitter, types, validateCb) {
   }
 
   var unlink = function (path) {
-    if (pt.basename(path) in _map) delete _map[pt.basename(path)]
+    // Check if the file/folder is added in root watch path or in a sub dir
+    if (pt.relative(_watchPath, pt.dirname(path)) !== '') { // inside a sub dir
+      let subdirPath = pt.dirname(path)
+      _pendingForScan[subdirPath] = { path: subdirPath, type: 'dir' }
+    } else {
+      if (pt.basename(path) in _map) delete _map[pt.basename(path)]
+    }
+    
     scanList()
   }
 

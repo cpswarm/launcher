@@ -5,9 +5,9 @@
         <img src="@/assets/down-arrow.png">
       </span>
       <el-dropdown-menu slot="dropdown">
-        <el-dropdown-item command="delete">Delete</el-dropdown-item>
-        <el-dropdown-item command="rename">Rename</el-dropdown-item>
-        <el-dropdown-item command="explorer">Open In Explorer</el-dropdown-item>
+        <el-dropdown-item title="Delete this item" command="delete">Delete</el-dropdown-item>
+        <el-dropdown-item title="Rename this item" command="rename">Rename</el-dropdown-item>
+        <el-dropdown-item title="Reveal this item in explorer window" command="explorer">Open In Explorer</el-dropdown-item>
       </el-dropdown-menu>
     </el-dropdown>
   </div>

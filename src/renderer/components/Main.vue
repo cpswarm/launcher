@@ -13,9 +13,9 @@
             <div class="icon"><img v-bind:src="tab.config.icon"></div>
             <div class="text">{{tab.config.name}}</div>
             <div class="status">
-              <img v-if="tab.status.running" src="@/assets/running.png">
-              <img v-if="tab.status.done" src="@/assets/finish.png">
-              <img v-if="!tab.status.enabled" src="@/assets/lock.png">
+              <img v-if="tab.status.running" src="@/assets/running.png" title="An application is running as subprocess for this step">
+              <img v-if="tab.status.done" src="@/assets/finish.png" title="This step has successfully generated at least one output">
+              <img v-if="!tab.status.enabled" src="@/assets/lock.png" title="This step is disabled because no proper input is available">
             </div>
           </div>
         </div>
