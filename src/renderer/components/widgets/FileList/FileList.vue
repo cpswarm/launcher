@@ -60,8 +60,7 @@ export default {
     var eventEmitter = new events.EventEmitter()
     // Initiallize watcher
     var fileWatcher = fw(eventEmitter, watchTypes)
-    // Start watching
-    fileWatcher.watch(this.path)
+    
     // Catch file change event
     eventEmitter.on('file', folders => {
       // Update file list
@@ -76,6 +75,9 @@ export default {
     eventEmitter.on('error', err => {
       this.emitError(err)
     })
+
+    // Start watching
+    fileWatcher.watch(this.path)
 
     return {
       // The data field contain data local to one tab,

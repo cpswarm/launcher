@@ -7,9 +7,11 @@
       </file-list>
       <text-input v-if="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></text-input>
       <single-checkbox v-if="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></single-checkbox>
+      <explorer-button v-if="widget.type === 'explorer-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" @error="emitError"></explorer-button>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
+      <div class="description">The command line to be executed</div>
       <el-input size="small" :readonly="true" v-model="status.commandLine"></el-input>
     </div>
     <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded" @error="emitError"></process-manager>
@@ -17,20 +19,21 @@
 </template>
 
 <script>
-import ProcessManager from '@/components/widgets/ProcessManager/ProcessManager.vue'
-import FileList from '@/components/widgets/FileList/CompleteFileList.vue'
-import TextInput from '@/components/widgets/TextInput.vue'
-import SingleCheckbox from '@/components/widgets/SingleCheckBox.vue'
-const path = require('path')
+import ProcessManager from "@/components/widgets/ProcessManager/ProcessManager.vue";
+import FileList from "@/components/widgets/FileList/CompleteFileList.vue";
+import TextInput from "@/components/widgets/TextInput.vue";
+import SingleCheckbox from "@/components/widgets/SingleCheckBox.vue";
+import ExplorerButton from "@/components/widgets/ExplorerButton.vue";
+const path = require("path");
 
 export default {
-  props: ['config', 'path'],
+  props: ["config", "path"],
 
-  data () {
+  data() {
     // Initialize status of each widget
     for (let i in this.config.widgets) {
-      let widget = this.config.widgets[i]
-      widget.status = { visible: true, enabled: true }
+      let widget = this.config.widgets[i];
+      widget.status = { visible: true, enabled: true };
     }
 
     return {
@@ -43,80 +46,81 @@ export default {
         done: false,
         running: false,
         allowLaunch: false,
-        commandLine: ''
+        commandLine: ""
       }
-    }
+    };
   },
   components: {
     ProcessManager: ProcessManager,
     FileList: FileList,
     TextInput: TextInput,
-    SingleCheckbox: SingleCheckbox
+    SingleCheckbox: SingleCheckbox,
+    ExplorerButton: ExplorerButton
   },
   methods: {
-    processStarted: function () {
-      this.status.running = true
-      this.emitStatus()
+    processStarted: function() {
+      this.status.running = true;
+      this.emitStatus();
     },
 
-    processEnded: function () {
-      this.status.running = false
-      this.emitStatus()
+    processEnded: function() {
+      this.status.running = false;
+      this.emitStatus();
     },
 
-    handleEvent: function (varId, value) {
+    handleEvent: function(varId, value) {
       // TODO: do deep copy
-      this[varId] = value
-      this.updateStatus()
+      this[varId] = value;
+      this.updateStatus();
     },
 
-    updateStatus: function () {
+    updateStatus: function() {
       // Update tab status and emit it to parent
-      this.status.done = this.config.isDone(this)
-      this.status.enabled = this.config.isEnabled(this)
-      this.status.allowLaunch = this.config.allowLaunch(this)
-      this.status.commandLine = this.config.getCommandLine(this)
-      this.emitStatus()
+      this.status.done = this.config.isDone(this);
+      this.status.enabled = this.config.isEnabled(this);
+      this.status.allowLaunch = this.config.allowLaunch(this);
+      this.status.commandLine = this.config.getCommandLine(this);
+      this.emitStatus();
 
       // Update status of each widget
       for (let i in this.config.widgets) {
-        let widget = this.config.widgets[i]
-        let hasChanged = false
+        let widget = this.config.widgets[i];
+        let hasChanged = false;
         if (widget.isEnabled) {
-          let enabled = widget.isEnabled(this)
+          let enabled = widget.isEnabled(this);
           if (widget.status.enabled !== enabled) {
-            widget.status.enabled = enabled
-            hasChanged = true
+            widget.status.enabled = enabled;
+            hasChanged = true;
           }
         }
         if (widget.isVisible) {
-          let visible = widget.isVisible(this)
+          let visible = widget.isVisible(this);
           if (widget.status.visible !== visible) {
-            widget.status.visible = visible
-            hasChanged = true
+            widget.status.visible = visible;
+            hasChanged = true;
           }
         }
         // Must use this.$set, otherwise list item won't update
         if (hasChanged) {
-          this.$set(this.config.widgets, i, widget)
+          this.$set(this.config.widgets, i, widget);
         }
       }
     },
 
-    getFullPath: function (rootPath, relPath) {
-      return path.join(rootPath, relPath)
+    getFullPath: function(rootPath, relPath) {
+      return path.join(rootPath, relPath);
     },
 
-    emitStatus: function () {
-      this.$emit('status-changed', this.id, this.status)
+    emitStatus: function() {
+      this.$emit("status-changed", this.id, this.status);
     },
 
-    emitError: function (err) {
-      this.$emit('error', err)
+    emitError: function(err) {
+      this.$emit("error", err);
     }
   },
   computed: {}
-}
+};
 </script>
 
 <style lang="scss" scoped>
@@ -147,6 +151,12 @@ export default {
       &.disabled {
         color: #bbbbbb;
       }
+    }
+
+    .description {
+      margin-bottom: 5px;
+      color: #888888;
+      font-size: 0.9em;
     }
 
     &:first-of-type {

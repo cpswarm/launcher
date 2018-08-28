@@ -13,7 +13,7 @@
     <el-collapse-transition>
       <div class="textarea-container" v-show="showTextarea">
         <el-input class="output" ref="output" v-model="textarea" type="textarea" :rows="12" readonly></el-input>
-        <el-button title="Clear stdout messages" type="primary" class="clear-btn" @click="clearOutput">Clear</el-button>
+        <el-button title="Clear stdout messages" type="primary" class="clear-btn" @click="clearOutput">clear</el-button>
       </div>
     </el-collapse-transition>
   </div>

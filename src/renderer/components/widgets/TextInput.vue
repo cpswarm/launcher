@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <div class="description">{{info}}</div>
     <el-input size="small" @input="input" :disabled="!enabled" v-model="textValue"></el-input>
   </div>
 </template>
@@ -9,7 +10,8 @@ export default {
   props: ['enabled', 'properties'],
   data () {
     var properties = {
-      default: ''
+      default: '',
+      info: ''
     }
 
     if (this.properties) {
@@ -20,7 +22,8 @@ export default {
 
     this.$emit('input', properties['default'])
     return {
-      textValue: properties['default']
+      textValue: properties['default'],
+      info: properties['info']
     }
   },
   methods: {
@@ -32,4 +35,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.container {
+  .description {
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 0.9em;
+  }
+
+}
 </style>

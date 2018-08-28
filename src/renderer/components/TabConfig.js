@@ -8,10 +8,17 @@ module.exports = function () {
         {
           type: 'text',
           label: 'Executable Path',
-          info: 'The path to the executable',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Users\\liang\\Desktop\\test\\my.bat'
+            default: 'C:\\Users\\liang\\Desktop\\test\\my.bat',
+            info: 'The path to the executable'
+          }
+        },
+        {
+          type: 'explorer-button',
+          label: 'Model Directory',
+          properties: {
+            path: 'Models'
           }
         },
         {
@@ -19,40 +26,34 @@ module.exports = function () {
           label: 'Available Input',
           selectedFolder: 'selectedInputFolder',
           folders: 'inputFolders',
-          watchPath: 'modelling',
+          watchPath: 'Models',
           properties: {
-            allowAdd: true
+            allowAdd: true,
+            watchDir: true,
+            watchFile: true
+          },
+          isVisible: function (component) {
+            return false
           }
         }
       ],
       isDone: function (component) {
-        var done = false
-        for (var i in component['inputFolders']) {
-          if (component['inputFolders'][i].valid) {
-            done = true
-            break
-          }
-        }
-        return done
+        return (component['inputFolders'] && component['inputFolders'].length > 0)
       },
-      defaultExec: 'C:\\Modelio.exe',
       isEnabled: function (component) {
         return true
       },
 
       allowLaunch: function (component) {
-        if (!component['selectedInputFolder']) return false
-        return component['selectedInputFolder'].length > 0
+        return true
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += '"' + component['execPath'] + '"'
-        if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) {
-          command += ' --src ' + '"' + component['selectedInputFolder'][0].path + '"'
-          if (!component['selectedInputFolder'][0].valid) {
-            command += ' --create-project'
-          }
+        command += ' --src ' + '"' + component.path + '\\Models' + '"'
+        if (component['inputFolders'] && component['inputFolders'].length === 0) {
+          command += ' --create-project'
         }
         return command
       }
@@ -67,68 +68,88 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Simulation.exe'
+            default: 'C:\\Simulation.exe',
+            info: 'The path to the executable'
           }
         },
         {
-          type: 'file-list',
-          label: 'Models',
-          selectedFolder: 'selectedInputFolder',
-          folders: 'inputFolders',
-          watchPath: 'modelling'
-        },
-        {
-          type: 'file-list',
-          label: 'Simulation Configuration',
-          selectedFolder: 'selectedSimulationConf',
-          folders: 'simConfFiles',
-          watchPath: 'simulation',
+          type: 'text',
+          label: 'Optimization ID',
+          varId: 'optId',
           properties: {
-            watchDir: false,
+            info: 'The optimization ID, which is used to distinguish different optimization processes'
+          }
+        },
+        {
+          type: 'single-checkbox',
+          label: 'Simulator GUI',
+          checkboxLabel: 'Show the graphical interface of simulators',
+          varId: 'showGUI',
+          properties: {
+            default: false,
+            label: 'Show the graphical interface of simulators'
+          }
+        },
+        {
+          type: 'explorer-button',
+          label: 'Simulation Configuration',
+          properties: {
+            path: 'SimulationConf'
+          }
+        },
+        {
+          type: 'file-list',
+          label: 'Available Input',
+          selectedFolder: 'selectedInputFolder',
+          folders: 'inputFiles',
+          watchPath: 'Models',
+          properties: {
+            allowAdd: true,
+            watchDir: true,
             watchFile: true
+          },
+          isVisible: function (component) {
+            return false
+          }
+        },
+        {
+          type: 'file-list',
+          label: 'Available Input',
+          selectedFolder: 'selectedOutputFolder',
+          folders: 'outputFiles',
+          watchPath: 'Optimized',
+          properties: {
+            allowAdd: true,
+            watchDir: true,
+            watchFile: true
+          },
+          isVisible: function (component) {
+            return false
           }
         }
+        
       ],
-      defaultExec: 'C:\\Modelio.exe',
       isDone: function (component) {
-        var done = false
-        for (var i in component['inputFolders']) {
-          if (component['inputFolders'][i].valid) {
-            done = true
-            break
-          }
-        }
-        return done
+        return (component['outputFiles'] && component['outputFiles'].length > 0)
       },
 
       isEnabled: function (component) {
-        var enabled = false
-        for (var i in component['inputFolders']) {
-          if (component['inputFolders'][i].valid) {
-            enabled = true
-            break
-          }
-        }
-        return enabled
+        return (component['inputFiles'] && component['inputFiles'].length > 0)
       },
 
       allowLaunch: function (component) {
-        return component['selectedInputFolder'] &&
-                    component['selectedInputFolder'].length > 0
+        return component['optId'] &&
+                    component['optId'] !== ''
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += '"' + component['execPath'] + '"'
-        if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) {
-          let selectedFilePath = component['selectedInputFolder'][0].path
-          command += ' --src ' + '"' + selectedFilePath + '"'
-          command += ' --target ' + '"' + selectedFilePath + 'Optimized' + '"'
-        }
-        if (component['selectedSimulationConf'] && component['selectedSimulationConf'].length > 0) {
-          let confPath = component['selectedSimulationConf'][0].path
-          command += ' --conf ' + '"' + confPath + '"'
-        }
+        if (component['optId'] && component['optId'] !== '') command += ' --id ' + component['optId'] 
+        if (component['showGUI']) command += ' --gui'
+        command += ' --src ' + '"' + component['path'] + '\\Models' + '"'
+        command += ' --target ' + '"' + component['path'] + '\\Optimized' + '"'
+        command += ' --conf ' + '"' + component['path'] + '\\SimulationConf' + '"'
 
         return command
       }
@@ -145,7 +166,8 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Code Generation.exe'
+            default: 'C:\\Code Generation.exe',
+            info: 'The path to the executable'
           }
         },
         {
@@ -210,7 +232,8 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Deployment.exe'
+            default: 'C:\\Deployment.exe',
+            info: 'The path to the executable'
           }
         },
         {
@@ -237,7 +260,6 @@ module.exports = function () {
           }
         }
       ],
-      defaultExec: 'C:\\Deployment.exe',
       isDone: function (component) {
         return false
       },
@@ -273,11 +295,11 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Monitoring.exe'
+            default: 'C:\\Monitoring.exe',
+            info: 'The path to the executable'
           }
         }
       ],
-      defaultExec: 'C:\\Monitoring.exe',
       isDone: function (component) {
         return false
       },

@@ -140,6 +140,9 @@ export default function (eventEmitter, types, validateCb) {
       .on('change', change)
       .on('unlink', unlink)
       .on('unlinkDir', unlink)
+
+    // Emit event here to prevent no event being emitted, if folder is empty
+    emitEvent()
   }
 
   var unwatch = function () {

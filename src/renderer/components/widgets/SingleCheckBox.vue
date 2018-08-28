@@ -7,7 +7,7 @@
 
 <script>
 export default {
-  props: ['default', 'enabled', 'properties'],
+  props: ['enabled', 'properties'],
   data () {
     var properties = {
       default: false,
