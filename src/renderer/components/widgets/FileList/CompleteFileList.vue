@@ -1,8 +1,9 @@
 <template>
   <div class="container">
     <div class="overlay" v-show="!enabled"></div>
-    <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
+    <div class="path-indicator">{{path}}</div>
     <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="path" @error="emitError"></add-file-box>
+    <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
   </div>
 </template>
 

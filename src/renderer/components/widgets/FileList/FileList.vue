@@ -1,7 +1,7 @@
 <template>
   <div class="folder-container">
     
-    <div class="path-indicator">{{path}}</div>
+    
     <table>
       <tr v-for="(stat, fileName) in folders" v-bind:key="fileName" v-bind:class="['folder', { selected: selectedFiles[stat.path] === stat }]">
         <td class="cell name" @click="selectFolder(stat)">

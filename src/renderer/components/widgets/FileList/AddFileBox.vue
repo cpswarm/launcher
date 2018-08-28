@@ -1,6 +1,6 @@
 <template>
     <div class="new-folder-container">
-      <el-button title="Create new folder" class="create-button" @click="createFolder()" size="small">New Folder</el-button>
+      <el-button type="primary" title="Create new folder" class="create-button" @click="createFolder()" size="small">New Folder</el-button>
       <el-input class="folder-name-input" placeholder="New Folder Name" v-model="newFolder" size="small"></el-input>
       <el-alert class="error-msg" :title="errMsg" v-show="errMsg" type="error" @close="clearError">
       </el-alert>
@@ -68,7 +68,8 @@ export default {
 
 <style lang="scss" scoped>
 .new-folder-container {
-  
+  margin-bottom: 15px;
+
   .create-button {
     vertical-align: middle;
   }
@@ -79,8 +80,9 @@ export default {
   }
   .error-msg {
     display: inline-block;
-    width : 300px;
+    width : auto;
     vertical-align: middle;
+    padding: 8px 30px 8px 16px;
   }
 }
 </style>
