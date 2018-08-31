@@ -1,3 +1,5 @@
+const pt = require('path')
+
 module.exports = function () {
   return [
     {
@@ -50,8 +52,8 @@ module.exports = function () {
 
       getCommandLine: function (component) {
         var command = ''
-        command += '"' + component['execPath'] + '"'
-        command += ' --src ' + '"' + component.path + '\\Models' + '"'
+        command += component['execPath']
+        command += ' --src ' + '"' + pt.join(component.path, 'Models') + '"'
         if (component['inputFolders'] && component['inputFolders'].length === 0) {
           command += ' --create-project'
         }
@@ -144,12 +146,12 @@ module.exports = function () {
 
       getCommandLine: function (component) {
         var command = ''
-        command += '"' + component['execPath'] + '"'
+        command += component['execPath']
         if (component['optId'] && component['optId'] !== '') command += ' --id ' + component['optId'] 
         if (component['showGUI']) command += ' --gui'
-        command += ' --src ' + '"' + component['path'] + '\\Models' + '"'
-        command += ' --target ' + '"' + component['path'] + '\\Optimized' + '"'
-        command += ' --conf ' + '"' + component['path'] + '\\SimulationConf' + '"'
+        command += ' --src ' + '"' + pt.join(component['path'], 'Models') + '"'
+        command += ' --target ' + '"' + pt.join(component['path'], 'Optimized') + '"'
+        command += ' --conf ' + '"' + pt.join(component['path'], 'SimulationConf') + '"'
 
         return command
       }
@@ -217,7 +219,7 @@ module.exports = function () {
 
       getCommandLine: function (component) {
         var command = ''
-        command += '"' + component['execPath'] + '"'
+        command += component['execPath']
         if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) command += ' --src ' + '"' + component['selectedInputFolder'][0].path + '"'
         return command
       }
@@ -278,7 +280,7 @@ module.exports = function () {
 
       getCommandLine: function (component) {
         var command = ''
-        command += '"' + component['execPath'] + '"'
+        command += component['execPath']
         if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) {
           command += ' --src ' + '"' + component['selectedInputFolder'][0].path + '"'
         }
