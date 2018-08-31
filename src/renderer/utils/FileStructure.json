@@ -1,15 +1,10 @@
 {
-    "europe": {
-        "poland": {},
-        "france": {},
-        "spain": {},
-        "greece": {},
-        "UK": {},
-        "germany": "txt",
-        "US": ["1.txt", "2.txt"]
-    },
-    "Asia": {
-        "india": "xml"
-    },
-    "Africa": null
+    "Models": {},
+    "Optimized": {},
+    "SimulationConf": {},
+    "GeneratedCode": {},
+    "Deployment": {
+        "Workspaces": {},
+        "Registry": {}
+    }
 }
