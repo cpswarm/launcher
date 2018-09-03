@@ -13,6 +13,7 @@ After you have finished installing Node.js, go into the root directory of this p
 ``` bash
 npm install
 ```
+Notice: user of Ubuntu may experience errors while running the above command, saying that node-sass installation failed. In this case, please refer to [this post](https://github.com/sass/node-sass/issues/1601#issuecomment-229083157) for solution.
 
 #### Development
 Run development mode (A [Webpack](https://webpack.js.org/) development server is run and content is served with hot reload at localhost:9080). This will enable automatic change/reload during development.
@@ -41,4 +42,3 @@ P. S.: currently, only ``deb`` and ``AppImage`` could be built from Windows. Bui
 ---
 
 This project was generated with [electron-vue](https://github.com/SimulatedGREG/electron-vue)@[7c4e3e9](https://github.com/SimulatedGREG/electron-vue/tree/7c4e3e90a772bd4c27d2dd4790f61f09bae0fcef) using [vue-cli](https://github.com/vuejs/vue-cli). Documentation about the original structure can be found [here](https://simulatedgreg.gitbooks.io/electron-vue/content/index.html).
-```

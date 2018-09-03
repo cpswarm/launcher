@@ -55,7 +55,7 @@ module.exports = function () {
         command += component['execPath']
         command += ' --src ' + '"' + pt.join(component.path, 'Models') + '"'
         if (component['inputFolders'] && component['inputFolders'].length === 0) {
-          command += ' --create-project'
+          command += ' --create'
         }
         return command
       }
