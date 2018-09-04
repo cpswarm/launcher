@@ -168,23 +168,38 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Code Generation.exe',
+            default: 'C:\\CodeGeneration.exe',
             info: 'The path to the executable'
+          }
+        },
+        {
+          type: 'select-file-button',
+          label: 'State Machine XML',
+          varId: 'stateMachineXML',
+          properties: {
+            path: 'Models'
           }
         },
         {
           type: 'file-list',
           label: 'Available Input',
-          selectedFolder: 'selectedInputFolder',
-          folders: 'inputFolders',
-          watchPath: 'modelling'
+          selectedFolder: 'selectedInputFiles',
+          folders: 'inputFiles',
+          watchPath: 'Models',
+          properties: {
+            watchDir: true,
+            watchFile: true
+          },
+          isVisible: function (component) {
+            return false
+          }
         },
         {
           type: 'file-list',
           label: '',
           selectedFolder: 'selectedFiles',
           folders: 'genFiles',
-          watchPath: 'generation',
+          watchPath: 'GeneratedFiles',
           properties: {
             watchDir: true,
             watchFile: true
@@ -195,32 +210,22 @@ module.exports = function () {
         }
       ],
       isDone: function (component) {
-        var done = false
-        if (component['genFiles'] && component['genFiles'].length > 0) {
-          done = true
-        }
-        return done
+        return (component['genFiles'] && component['genFiles'].length > 0)
       },
 
       isEnabled: function (component) {
-        var enabled = false
-        for (var i in component['inputFolders']) {
-          if (component['inputFolders'][i].valid) {
-            enabled = true
-            break
-          }
-        }
-        return enabled
+        return (component['inputFiles'] && component['inputFiles'].length > 0)
       },
 
       allowLaunch: function (component) {
-        return component['selectedInputFolder'] && component['selectedInputFolder'].length > 0
+        return component['stateMachineXML'] && component['stateMachineXML'] !== ''
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) command += ' --src ' + '"' + component['selectedInputFolder'][0].path + '"'
+        if (component['stateMachineXML'] && component['stateMachineXML'] !== '') command += ' --src "' + component['stateMachineXML'] + '"'
+        command += ' --target ' + '"' + pt.join(component['path'], 'GeneratedCode') + '"'
         return command
       }
     },
