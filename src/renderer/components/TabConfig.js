@@ -83,9 +83,37 @@ module.exports = function () {
           }
         },
         {
+          type: 'dropdown-box',
+          label: 'Simulation Dimension',
+          varId: 'dimension',
+          properties: {
+            items: [{ 
+              label: '2D', 
+              value: '2d' 
+            }, { 
+              label: '3D', 
+              value: '3d' 
+            }, { 
+              label: 'Any', 
+              value: 'any' 
+            }],
+            default: 'any',
+            info: 'number of dimension required for the simulation'
+          }
+        },
+        {
+          type: 'text',
+          label: 'Maximum Agent',
+          varId: 'maxAgent',
+          properties: {
+            info: 'Maximum number of agents required for the simulation',
+            number: true,
+            default: 0
+          }
+        },
+        {
           type: 'single-checkbox',
           label: 'Simulator GUI',
-          checkboxLabel: 'Show the graphical interface of simulators',
           varId: 'showGUI',
           properties: {
             default: false,
@@ -129,7 +157,7 @@ module.exports = function () {
             return false
           }
         }
-        
+
       ],
       isDone: function (component) {
         return (component['outputFiles'] && component['outputFiles'].length > 0)
@@ -141,13 +169,15 @@ module.exports = function () {
 
       allowLaunch: function (component) {
         return component['optId'] &&
-                    component['optId'] !== ''
+          component['optId'] !== ''
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        if (component['optId'] && component['optId'] !== '') command += ' --id ' + component['optId'] 
+        if (component['optId'] && component['optId'] !== '') command += ' --id ' + component['optId']
+        if (component['dimension'] && component['dimension'] !== '') command += ' --dim ' + component['dimension']
+        if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
         if (component['showGUI']) command += ' --gui'
         command += ' --src ' + '"' + pt.join(component['path'], 'Models') + '"'
         command += ' --target ' + '"' + pt.join(component['path'], 'Optimized') + '"'

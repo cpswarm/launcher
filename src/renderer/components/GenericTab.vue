@@ -9,6 +9,7 @@
       <single-checkbox v-if="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></single-checkbox>
       <explorer-button v-if="widget.type === 'explorer-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" @error="emitError"></explorer-button>
       <select-file-button v-if="widget.type === 'select-file-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></select-file-button>
+      <dropdown-box v-if="widget.type === 'dropdown-box'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></dropdown-box>
     </div>
     <div class="input-container">
       <div class="label">Command Line</div>
@@ -26,6 +27,7 @@ import TextInput from "@/components/widgets/TextInput.vue";
 import SingleCheckbox from "@/components/widgets/SingleCheckBox.vue";
 import ExplorerButton from "@/components/widgets/ExplorerButton.vue";
 import SelectFileButton from "@/components/widgets/SelectFileButton.vue";
+import DropdownBox from "@/components/widgets/DropdownBox.vue";
 const path = require("path");
 
 export default {
@@ -58,7 +60,8 @@ export default {
     TextInput: TextInput,
     SingleCheckbox: SingleCheckbox,
     ExplorerButton: ExplorerButton,
-    SelectFileButton: SelectFileButton
+    SelectFileButton: SelectFileButton,
+    DropdownBox: DropdownBox
   },
   methods: {
     processStarted: function() {
@@ -73,8 +76,6 @@ export default {
 
     handleEvent: function(varId, value) {
       // TODO: do deep copy
-      console.log(varId)
-      console.log(value)
       this[varId] = value;
       this.updateStatus();
     },

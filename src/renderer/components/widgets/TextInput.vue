@@ -1,7 +1,8 @@
 <template>
   <div class="container">
     <div class="description">{{info}}</div>
-    <el-input size="small" @input="input" :disabled="!enabled" v-model="textValue"></el-input>
+    <el-input v-if="!number" size="small" @input="input" :disabled="!enabled" v-model="textValue"></el-input>
+    <el-input-number v-if="number" size="small" @input="input" :disabled="!enabled" v-model="textValue" :min="min" :max="max"></el-input-number>
   </div>
 </template>
 
@@ -11,7 +12,10 @@ export default {
   data () {
     var properties = {
       default: '',
-      info: ''
+      info: '',
+      number: false,
+      min: 0,
+      max: 9999999
     }
 
     if (this.properties) {
@@ -23,7 +27,10 @@ export default {
     this.$emit('input', properties['default'])
     return {
       textValue: properties['default'],
-      info: properties['info']
+      info: properties['info'],
+      number: properties['number'],
+      min: properties['min'],
+      max: properties['max']
     }
   },
   methods: {
