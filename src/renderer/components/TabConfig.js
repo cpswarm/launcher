@@ -98,7 +98,7 @@ module.exports = function () {
               value: 'any' 
             }],
             default: 'any',
-            info: 'number of dimension required for the simulation'
+            info: 'Number of dimension required for the simulation'
           }
         },
         {

@@ -12,8 +12,7 @@ import Help from '@/components/Help.vue'
 import Welcome from '@/components/Welcome.vue'
 import MainPanel from '@/components/Main.vue'
 import utils from '@/utils/utils.js'
-const { ipcRenderer } = require('electron')
-const { dialog } = require('electron').remote
+const { ipcRenderer, remote } = require('electron')
 
 export default {
   data () {
@@ -71,7 +70,8 @@ export default {
     },
 
     createProject: function () {
-      dialog.showOpenDialog(
+      remote.dialog.showOpenDialog(
+        remote.getCurrentWindow(),
         {
           title: 'Select a folder as the root directory of your new project',
           properties: ['openDirectory']
@@ -93,7 +93,7 @@ export default {
     },
 
     openProject: function () {
-      dialog.showOpenDialog({ properties: ['openDirectory'] }, dirPath => {
+      remote.dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['openDirectory'] }, dirPath => {
         if (!dirPath) return
         this.startLoading()
         this.initMain(dirPath[0])

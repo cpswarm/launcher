@@ -6,7 +6,7 @@
 </template>
 
 <script>
-const { dialog } = require('electron').remote
+const { remote } = require('electron')
 const pt = require('path')
 
 export default {
@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     open: function () {
-      dialog.showOpenDialog({ defaultPath:this.path , properties: ['openFile'] }, dirPath => {
+      remote.dialog.showOpenDialog(remote.getCurrentWindow(), { defaultPath:this.path , properties: ['openFile'] }, dirPath => {
         if (!dirPath || dirPath.length === 0) return
         this.selectedPath = dirPath[0]
         this.$emit('input', this.selectedPath)

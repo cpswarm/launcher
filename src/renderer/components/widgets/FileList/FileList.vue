@@ -26,7 +26,8 @@ import ActionMenu from '@/components/widgets/FileList/ActionMenu.vue'
 const rimraf = require('rimraf')
 const events = require('events')
 const path = require('path')
-const { shell } = require('electron')
+// We use remote.shell to open file explorer, so that it will be in focus, instead of being opened in background
+const { shell } = require('electron').remote
 const fs = require('fs')
 
 export default {

@@ -6,7 +6,8 @@
 </template>
 
 <script>
-const { shell } = require('electron')
+// We use remote.shell to open file explorer, so that it will be in focus, instead of being opened in background
+const { shell } = require('electron').remote
 const pt = require('path')
 
 export default {
