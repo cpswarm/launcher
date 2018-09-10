@@ -13,7 +13,7 @@ module.exports = function () {
           varId: 'execPath',
           properties: {
             default: 'C:\\Users\\liang\\Desktop\\test\\my.bat',
-            info: 'The path to the executable'
+            info: 'The path to the Modelling Tool executable'
           }
         },
         {
@@ -71,15 +71,15 @@ module.exports = function () {
           varId: 'execPath',
           properties: {
             default: 'C:\\Simulation.exe',
-            info: 'The path to the executable'
+            info: 'The path to the Simulation & Optimization Orchestrator executable'
           }
         },
         {
           type: 'text',
-          label: 'Optimization ID',
-          varId: 'optId',
+          label: 'Task ID',
+          varId: 'taskId',
           properties: {
-            info: 'The optimization ID, which is used to distinguish different optimization processes'
+            info: 'The task ID, which is used to distinguish different optimization processes'
           }
         },
         {
@@ -118,6 +118,15 @@ module.exports = function () {
           properties: {
             default: false,
             label: 'Show the graphical interface of simulators'
+          }
+        },
+        {
+          type: 'single-checkbox',
+          label: 'Optimization Enabled',
+          varId: 'optEnabled',
+          properties: {
+            default: false,
+            label: 'Require the use of the Optimization Tool'
           }
         },
         {
@@ -168,17 +177,18 @@ module.exports = function () {
       },
 
       allowLaunch: function (component) {
-        return component['optId'] &&
-          component['optId'] !== ''
+        return component['taskId'] &&
+          component['taskId'] !== ''
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        if (component['optId'] && component['optId'] !== '') command += ' --id ' + component['optId']
+        if (component['taskId'] && component['taskId'] !== '') command += ' --id ' + component['taskId']
         if (component['dimension'] && component['dimension'] !== '') command += ' --dim ' + component['dimension']
         if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
         if (component['showGUI']) command += ' --gui'
+        if (component['optEnabled']) command += ' --opt'
         command += ' --src ' + '"' + pt.join(component['path'], 'Models') + '"'
         command += ' --target ' + '"' + pt.join(component['path'], 'Optimized') + '"'
         command += ' --conf ' + '"' + pt.join(component['path'], 'SimulationConf') + '"'
@@ -199,7 +209,7 @@ module.exports = function () {
           varId: 'execPath',
           properties: {
             default: 'C:\\CodeGeneration.exe',
-            info: 'The path to the executable'
+            info: 'The path to the Code Generator executable'
           }
         },
         {
@@ -229,7 +239,7 @@ module.exports = function () {
           label: '',
           selectedFolder: 'selectedFiles',
           folders: 'genFiles',
-          watchPath: 'GeneratedFiles',
+          watchPath: 'GeneratedCode',
           properties: {
             watchDir: true,
             watchFile: true
@@ -270,7 +280,7 @@ module.exports = function () {
           varId: 'execPath',
           properties: {
             default: 'C:\\Deployment.exe',
-            info: 'The path to the executable'
+            info: 'The path to the Deployment Tool executable'
           }
         },
         {
@@ -286,9 +296,25 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Previous Versions',
-          selectedFolder: 'selectedInputFolder',
-          folders: 'inputFolders',
-          watchPath: 'generation',
+          selectedFolder: 'selectedGenFile',
+          folders: 'genFiles',
+          watchPath: 'GeneratedCode',
+          isEnabled: function (component) {
+            return !component.useGeneratedCode
+          },
+          properties: {
+            allowAdd: false
+          },
+          isVisible: function (component) {
+            return false
+          }
+        },
+        {
+          type: 'file-list',
+          label: 'Previous Versions',
+          selectedFolder: 'selectedArchFile',
+          folders: 'archFiles',
+          watchPath: pt.join('Deployment', 'Workspaces'),
           isEnabled: function (component) {
             return !component.useGeneratedCode
           },
@@ -302,22 +328,23 @@ module.exports = function () {
       },
 
       isEnabled: function (component) {
-        var enabled = false
-        if (component['inputFolders'] && component['inputFolders'].length > 0) {
-          enabled = true
-        }
-        return enabled
+        return (component['genFiles'] && component['genFiles'].length > 0) 
+          || (component['archFiles'] && component['archFiles'].length > 0)
       },
 
       allowLaunch: function (component) {
-        return (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) || component['useGeneratedCode']
+        return (component['selectedArchFile'] && component['selectedArchFile'].length > 0) || component['useGeneratedCode']
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        if (component['selectedInputFolder'] && component['selectedInputFolder'].length > 0) {
-          command += ' --src ' + '"' + component['selectedInputFolder'][0].path + '"'
+        if (component['useGeneratedCode']) {
+          command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode')
+        } else {
+          if (component['selectedArchFile'] && component['selectedArchFile'].length > 0) {
+            command += ' --src ' + '"' + component['selectedArchFile'][0].path + '"'
+          }
         }
         return command
       }
@@ -333,7 +360,7 @@ module.exports = function () {
           varId: 'execPath',
           properties: {
             default: 'C:\\Monitoring.exe',
-            info: 'The path to the executable'
+            info: 'The path to the Monitoring Tool executable'
           }
         }
       ],

@@ -116,6 +116,12 @@ export default {
     z-index: 1;
   }
 
+  .path-indicator {
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 0.9em;
+  }
+
   .add-file-box {
     margin-top: 15px;
   }
