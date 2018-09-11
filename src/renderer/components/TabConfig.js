@@ -79,7 +79,7 @@ module.exports = function () {
           label: 'Task ID',
           varId: 'taskId',
           properties: {
-            info: 'The task ID, which is used to distinguish different optimization processes'
+            info: 'The task ID, which is used to distinguish different processes'
           }
         },
         {
