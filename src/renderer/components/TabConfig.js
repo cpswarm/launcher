@@ -284,16 +284,6 @@ module.exports = function () {
           }
         },
         {
-          type: 'single-checkbox',
-          label: 'Use Generated Code',
-          checkboxLabel: 'Use Generated Code',
-          varId: 'useGeneratedCode',
-          properties: {
-            default: true,
-            label: 'Use Generated Code'
-          }
-        },
-        {
           type: 'file-list',
           label: 'Previous Versions',
           selectedFolder: 'selectedGenFile',
@@ -309,43 +299,36 @@ module.exports = function () {
             return false
           }
         },
-        {
-          type: 'file-list',
-          label: 'Previous Versions',
-          selectedFolder: 'selectedArchFile',
-          folders: 'archFiles',
-          watchPath: pt.join('Deployment', 'Workspaces'),
-          isEnabled: function (component) {
-            return !component.useGeneratedCode
-          },
-          properties: {
-            allowAdd: false
-          }
-        }
+        // {
+        //   type: 'file-list',
+        //   label: 'Previous Versions',
+        //   selectedFolder: 'selectedArchFile',
+        //   folders: 'archFiles',
+        //   watchPath: pt.join('Deployment', 'Workspaces'),
+        //   isEnabled: function (component) {
+        //     return !component.useGeneratedCode
+        //   },
+        //   properties: {
+        //     allowAdd: false
+        //   }
+        // }
       ],
       isDone: function (component) {
         return false
       },
 
       isEnabled: function (component) {
-        return (component['genFiles'] && component['genFiles'].length > 0) 
-          || (component['archFiles'] && component['archFiles'].length > 0)
+        return (component['genFiles'] && component['genFiles'].length > 0)
       },
 
       allowLaunch: function (component) {
-        return (component['selectedArchFile'] && component['selectedArchFile'].length > 0) || component['useGeneratedCode']
+        return (component['genFiles'] && component['genFiles'].length > 0)
       },
 
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        if (component['useGeneratedCode']) {
-          command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode')
-        } else {
-          if (component['selectedArchFile'] && component['selectedArchFile'].length > 0) {
-            command += ' --src ' + '"' + component['selectedArchFile'][0].path + '"'
-          }
-        }
+        command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode')
         return command
       }
     },
