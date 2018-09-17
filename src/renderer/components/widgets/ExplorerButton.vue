@@ -1,41 +1,57 @@
 <template>
   <div class="container">
-    <div class="description">Reveal {{path}} in explorer</div>
+    <div class="description" v-if="!openUrl">Reveal {{path}} in file explorer</div>
+    <div class="description" v-if="openUrl">Open {{path}} in browser</div>
     <el-button title="Open directory in explorer" type="primary" size="medium" :disabled="!enabled" @click="open">Open</el-button>
   </div>
 </template>
 
 <script>
 // We use remote.shell to open file explorer, so that it will be in focus, instead of being opened in background
-const { shell } = require('electron').remote
-const pt = require('path')
+const { shell } = require("electron").remote;
+const pt = require("path");
 
 export default {
-  props: ['enabled', 'rootPath', 'properties'],
-  data () {
+  props: ["enabled", "rootPath", "properties"],
+  data() {
     var properties = {
-      path: ''
-    }
+      path: "",
+      openUrl: false
+    };
 
     if (this.properties) {
       for (let key in this.properties) {
-        properties[key] = this.properties[key]
+        properties[key] = this.properties[key];
       }
     }
 
     return {
-      path: pt.join(this.rootPath, properties['path'])
-    }
+      path: properties['path'],
+      openUrl: properties['openUrl']
+    };
   },
   methods: {
-    open: function () {
-      var success = shell.showItemInFolder(this.path)
-      if (!success) {
-        this.$emit('error', 'Unable to open folder in file explorer on path ' + this.path)
+    open: function() {
+      if (!this.openUrl) {
+        var success = shell.showItemInFolder(pt.join(this.rootPath, this.path));
+        if (!success) {
+          this.$emit(
+            "error",
+            "Unable to open folder in file explorer on path " + this.path
+          );
+        }
+      } else {
+        var success = shell.openExternal(this.path)
+        if (!success) {
+          this.$emit(
+            "error",
+            "Unable to open external URL " + this.path
+          );
+        }
       }
     }
-  },
-}
+  }
+};
 </script>
 
 <style lang="scss" scoped>

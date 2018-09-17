@@ -137,6 +137,17 @@ module.exports = function () {
           }
         },
         {
+          type: 'explorer-button',
+          label: 'Monitor Interface',
+          properties: {
+            path: 'http://130.192.86.237:8080/dashboards/',
+            openUrl: true
+          },
+          isEnabled: function(component) {
+            return component.status.running
+          }
+        },
+        {
           type: 'file-list',
           label: 'Available Input',
           selectedFolder: 'selectedInputFolder',

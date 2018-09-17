@@ -66,12 +66,12 @@ export default {
   methods: {
     processStarted: function() {
       this.status.running = true;
-      this.emitStatus();
+      this.updateStatus();
     },
 
     processEnded: function() {
       this.status.running = false;
-      this.emitStatus();
+      this.updateStatus();
     },
 
     handleEvent: function(varId, value) {
