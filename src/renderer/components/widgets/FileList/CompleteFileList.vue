@@ -4,7 +4,7 @@
     <div class="path-indicator">{{path}}</div>
     <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="path" @error="emitError"></add-file-box>
     <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
-    <el-button title="Execute command against selected file" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!enabled" @click="exec">Send Task</el-button>
+    <el-button title="Execute command against selected file" class="exec-btn" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!enabled" @click="exec">Send Task</el-button>
   </div>
 </template>
 
@@ -148,6 +148,10 @@ export default {
   }
 
   .add-file-box {
+    margin-top: 15px;
+  }
+
+  .exec-btn {
     margin-top: 15px;
   }
 }
