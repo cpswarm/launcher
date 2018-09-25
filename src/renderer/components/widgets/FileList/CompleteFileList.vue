@@ -4,6 +4,7 @@
     <div class="path-indicator">{{path}}</div>
     <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="path" @error="emitError"></add-file-box>
     <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
+    <el-button title="Execute command against selected file" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!enabled" @click="exec">Send Task</el-button>
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import FileList from '@/components/widgets/FileList/FileList.vue'
 import AddFileBox from '@/components/widgets/FileList/AddFileBox.vue'
 const fs = require('fs')
 const path = require('path')
+const { spawn } = require("child_process");
 
 export default {
   // This component emits the three events of FileList and an extra one:
@@ -31,7 +33,8 @@ export default {
       allowAdd: false,
       watchDir: true,
       watchFile: false,
-      multiSelect: false
+      multiSelect: false,
+      execCommand: null
     }
 
     if (this.properties) {
@@ -43,7 +46,8 @@ export default {
     return {
       listProperties: properties,
       newFolder: null,
-      errMsg: ''
+      errMsg: '',
+      command: ''
     }
   },
   components: {
@@ -57,6 +61,8 @@ export default {
 
     folderSelected: function (folder) {
       this.$emit('folder-selected', folder)
+      this.command = this.listProperties.execCommand(folder[0].path)
+      console.log(this.command)
     },
 
     folderDeleted: function (folder) {
@@ -88,6 +94,25 @@ export default {
         this.newFolder = null
         this.$emit('folder-created', newFolderPath)
       })
+    },
+
+    exec: function() {
+      if (!this.command) {
+        this.emitError('No file selected yet.');
+        return
+      }
+      const sp = spawn(this.command, {
+        shell: true,
+        detached: false,
+        stdio: "pipe"
+      });
+
+      if (sp.stderr) {
+        sp.stderr.on("data", data => {
+          console.log("error")
+          this.emitError(data.toString());
+        });
+      }
     },
 
     clearError: function () {

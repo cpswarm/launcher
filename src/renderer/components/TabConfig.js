@@ -310,6 +310,32 @@ module.exports = function () {
             return false
           }
         },
+        {
+          type: 'explorer-button',
+          label: 'Deployment Manager Interface',
+          properties: {
+            path: 'http://localhost:8080/static/',
+            openUrl: true
+          }
+        },
+        {
+          type: 'file-list',
+          label: 'Task File',
+          selectedFolder: 'selectedGenFile',
+          folders: 'genFiles',
+          watchPath: 'Deployment/Tasks',
+          isEnabled: function (component) {
+            return !component.useGeneratedCode
+          },
+          properties: {
+            allowAdd: false,
+            watchDir: false,
+            watchFile: true,
+            execCommand: function (filePath) {
+              return 'curl -s -X PUT -T "' + filePath + '" localhost:8080/tasks'
+            }
+          }
+        },
         // {
         //   type: 'file-list',
         //   label: 'Previous Versions',
