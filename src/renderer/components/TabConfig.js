@@ -290,7 +290,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Deployment.exe',
+            default: '~/workspace/deployment-tool/manager',
             info: 'The path to the Deployment Tool executable'
           }
         },
@@ -339,7 +339,7 @@ module.exports = function () {
       getCommandLine: function (component) {
         var command = ''
         command += component['execPath']
-        command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode')
+        command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode') + '"'
         return command
       }
     },
