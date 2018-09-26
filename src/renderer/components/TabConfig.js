@@ -12,7 +12,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Users\\liang\\Desktop\\test\\my.bat',
+            default: '/home/liang/workspace/modelio/start.sh',
             info: 'The path to the Modelling Tool executable'
           }
         },
@@ -40,7 +40,8 @@ module.exports = function () {
         }
       ],
       isDone: function (component) {
-        return (component['inputFolders'] && component['inputFolders'].length > 0)
+        // return (component['inputFolders'] && component['inputFolders'].length > 0)
+        return false
       },
       isEnabled: function (component) {
         return true
@@ -70,7 +71,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Simulation.exe',
+            default: '/home/liang/workspace/soo/start.sh',
             info: 'The path to the Simulation & Optimization Orchestrator executable'
           }
         },
@@ -180,11 +181,13 @@ module.exports = function () {
 
       ],
       isDone: function (component) {
-        return (component['outputFiles'] && component['outputFiles'].length > 0)
+        //return (component['outputFiles'] && component['outputFiles'].length > 0)
+        return false
       },
 
       isEnabled: function (component) {
-        return (component['inputFiles'] && component['inputFiles'].length > 0)
+        // return (component['inputFiles'] && component['inputFiles'].length > 0)
+        return true
       },
 
       allowLaunch: function (component) {
@@ -219,7 +222,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\CodeGeneration.exe',
+            default: '/home/liang/workspace/code-generator/start.sh',
             info: 'The path to the Code Generator executable'
           }
         },
@@ -261,11 +264,13 @@ module.exports = function () {
         }
       ],
       isDone: function (component) {
-        return (component['genFiles'] && component['genFiles'].length > 0)
+        // return (component['genFiles'] && component['genFiles'].length > 0)
+        return false
       },
 
       isEnabled: function (component) {
-        return (component['inputFiles'] && component['inputFiles'].length > 0)
+        // return (component['inputFiles'] && component['inputFiles'].length > 0)
+        return true
       },
 
       allowLaunch: function (component) {
@@ -379,7 +384,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:\\Monitoring.exe',
+            default: '/home/liang/workspace/monitoring/start.sh',
             info: 'The path to the Monitoring Tool executable'
           }
         }
