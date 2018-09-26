@@ -3,8 +3,8 @@
 
     <div class="btn-container">
       <el-button-group>
-        <el-button title="Launch the application by executing the command line" type="primary" @click="launchUndetached" :disabled="!allowLaunch">Launch</el-button>
-        <el-button title="Launch the application as detached process" type="primary" @click="launchDetached" :disabled="!allowLaunch">Launch Detached</el-button>
+        <el-button title="Launch the application by executing the command line" type="primary" @click="launchUndetached" :disabled="!allowLaunch || currentSubProcess">Launch</el-button>
+        <el-button title="Launch the application as detached process" type="primary" @click="launchDetached" :disabled="!allowLaunch || currentSubProcess">Launch Detached</el-button>
         <el-button title="Terminate the subprocess" type="primary" @click="killSubProcess" v-show="currentSubProcess">Terminate Sub-process</el-button>
         <el-button title="Toggle subprocess stdout display" type="primary" @click="toggleTextAreaVisibility"><img :class="['icon-btn', 'dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
       </el-button-group>
