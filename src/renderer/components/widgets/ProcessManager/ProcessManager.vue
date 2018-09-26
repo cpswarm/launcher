@@ -58,7 +58,15 @@ export default {
 
       if (sp.stderr) {
         sp.stderr.on("data", data => {
-          this.emitError(data.toString());
+          //this.emitError(data.toString());
+          this.textarea += data.toString();
+          if (this.textarea.length > 3000) {
+            this.textarea = this.textarea.substring(2000, this.textarea.length);
+          }
+          setImmediate(() => {
+            var outTextArea = this.$refs.output.$refs.textarea;
+            outTextArea.scrollTop = outTextArea.scrollHeight;
+          });
         });
       }
 

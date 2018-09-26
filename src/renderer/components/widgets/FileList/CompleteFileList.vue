@@ -103,7 +103,7 @@ export default {
       }
       const sp = spawn(this.command, {
         shell: true,
-        detached: false,
+        detached: true,
         stdio: "pipe"
       });
 

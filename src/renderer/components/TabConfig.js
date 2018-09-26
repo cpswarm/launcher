@@ -12,7 +12,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/modelio/start.sh',
+            default: '/home/liang/workspace/modelling-tool/start.sh',
             info: 'The path to the Modelling Tool executable'
           }
         },
@@ -319,7 +319,7 @@ module.exports = function () {
           type: 'explorer-button',
           label: 'Deployment Manager Interface',
           properties: {
-            path: 'http://localhost:8080/static/',
+            path: 'http://localhost:8080/ui/',
             openUrl: true
           }
         },
@@ -337,7 +337,7 @@ module.exports = function () {
             watchDir: false,
             watchFile: true,
             execCommand: function (filePath) {
-              return 'curl -s -X PUT -T "' + filePath + '" localhost:8080/tasks'
+              return 'curl -X PUT -T "' + filePath + '" localhost:8080/tasks'
             }
           }
         },
@@ -384,7 +384,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/monitoring/start.sh',
+            default: '/home/liang/workspace/monitoring-tool/start.sh',
             info: 'The path to the Monitoring Tool executable'
           }
         }
