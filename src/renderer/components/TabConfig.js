@@ -337,7 +337,7 @@ module.exports = function () {
             watchDir: false,
             watchFile: true,
             execCommand: function (filePath) {
-              return 'curl -X PUT -T "' + filePath + '" localhost:8080/tasks'
+              return 'curl -s -X POST -T "' + filePath + '" localhost:8080/tasks'
             }
           }
         },
