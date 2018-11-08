@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="description">{{message}}</div>
-    <el-button title="Browse folder to select file" type="primary" size="medium" :disabled="!isEnabled" @click="open">Browse</el-button>
+    <el-button title="Browse folder to select file" type="primary" size="medium" :disabled="!enabled" @click="open">Browse</el-button>
   </div>
 </template>
 
@@ -10,28 +10,20 @@ const { remote } = require("electron");
 const pt = require("path");
 
 export default {
-  props: ["rootPath", "properties", "varId", "tabId"],
+  props: ["rootPath", 'enabled', 'properties'],
   data() {
-    var properties = {
-      path: ""
-    };
-
-    if (this.properties) {
-      for (let key in this.properties) {
-        properties[key] = this.properties[key];
-      }
-    }
+    var { path = "" } = this.properties;
 
     // Emit event when initializing component
     var selectedPath = null;
 
     return {
-      path: pt.join(this.rootPath, properties["path"]),
+      path: pt.join(this.rootPath, path),
       selectedPath: selectedPath
     };
   },
   methods: {
-    open: function() {
+    open() {
       remote.dialog.showOpenDialog(
         remote.getCurrentWindow(),
         { defaultPath: this.path, properties: ["openFile"] },
@@ -48,19 +40,12 @@ export default {
     }
   },
   computed: {
-    message: function() {
+    message() {
       if (!this.selectedPath) {
         return "Select a file from " + this.path;
       } else {
         return "Selected file: " + this.selectedPath;
       }
-    },
-    isEnabled: function() {
-      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId);
-    },
-
-    isVisible: function() {
-      return this.$store.getters.getWidgetVisible(this.tabId, this.varId);
     }
   }
 };

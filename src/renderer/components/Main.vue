@@ -12,9 +12,9 @@
         <div class="tab-button-filler"></div>
       </el-col>
       <el-col :span="18" class="whole-tab-container">
-        <tab-header :tab="selectedTab" :path="path" class="tab-header" @open-help="openHelp" @error="emitError"></tab-header>
+        <tab-header :tab="selectedTab" class="tab-header" @error="emitError"></tab-header>
         <div class="tab-container">
-          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" :tab="tab" :path="path" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
+          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" :tab="tab" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
         </div>
       </el-col>
     </el-row>
@@ -30,10 +30,8 @@ var tabConfig = require('@/components/TabConfig.js')
 
 export default {
   // The directory path of the launcher project
-  props: ['path'],
-  data () {
-    var tabConfigs = tabConfig()
-
+  props: [],
+  data() {
     var tabs = tabConfig()
 
     return {
@@ -48,7 +46,7 @@ export default {
 
   methods: {
 
-    handleTabStateChange: function (id, status) {
+    handleTabStateChange(id, status) {
       for (var i in this.tabs) {
         if (this.tabs[i].id === id) {
           this.tabs[i].status = Object.assign({}, status)
@@ -57,17 +55,13 @@ export default {
       }
     },
 
-    openHelp: function () {
-      this.$emit('open-help')
-    },
-
-    emitError: function (err) {
+    emitError(err) {
       this.$emit('error', err)
     }
   },
-  
+
   computed: {
-    selectedTab: function() {
+    selectedTab() {
       return this.$store.state.selectedTab
     }
   }
@@ -76,7 +70,7 @@ export default {
 
 
 <style lang="scss" scoped>
-@import "@/settings.scss";
+@import '@/settings.scss';
 /* Variables are defined in the imported .scss */
 #app {
   height: 100%;
@@ -127,7 +121,6 @@ export default {
         }
       }
 
-
       .tab-button {
         display: flex;
         align-items: center;
@@ -148,7 +141,6 @@ export default {
         & ~ .tab-button {
           border-top: 1px solid $secondary-color-darker;
         }
-
 
         &::before {
           @include pseudo-shadow;
@@ -171,7 +163,7 @@ export default {
           &::after {
             background: white;
             opacity: 0.5;
-            content: "";
+            content: '';
             position: absolute;
             top: -1px; // This is to compensate the border width
             bottom: 0;
@@ -210,7 +202,7 @@ export default {
           right: 10px;
           img {
             height: 1em;
-            margin-left: 0.5em;;
+            margin-left: 0.5em;
           }
         }
       }

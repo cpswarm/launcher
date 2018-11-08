@@ -1,44 +1,28 @@
 <template>
   <div class="container">
     <!-- `checked` should be true or false -->
-    <el-checkbox v-model="checked" :disabled="!isEnabled" @change="change">{{label}}</el-checkbox>
+    <el-checkbox v-model="checked" :disabled="!enabled" @change="change">{{label}}</el-checkbox>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['properties', 'tabId', 'varId'],
+  props: ['enabled', 'properties'],
   data () {
-    var properties = {
-      default: false,
-      label: 'Option'
-    }
+    var {
+      defaultValue = false,
+      label = 'Option'
+    } = this.properties
 
-    if (this.properties) {
-      for (let key in this.properties) {
-        properties[key] = this.properties[key]
-      }
-    }
-
-    this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: properties['default']})
+    this.$emit('change', defaultValue)
     return {
-      checked: properties.default,
-      label: properties.label
+      checked: defaultValue,
+      label
     }
   },
   methods: {
-    change: function (value) {
-      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: value})
-    }
-  },
-
-  computed: {
-    isEnabled: function () {
-      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
-    },
-
-    isVisible: function () {
-      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
+    change(value) {
+      this.$emit('change', value)
     }
   }
 }

@@ -12,7 +12,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: 'C:/Users/liang/Desktop/launcher-project/test.bat',
+            defaultValue: 'C:/Users/liang/Desktop/launcher-project/test.bat',
             info: 'The path to the Modelling Tool executable'
           }
         },
@@ -26,22 +26,19 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Available Input',
-          selectedFolder: 'selectedInputFolder',
-          folders: 'inputFolders',
           varId: 'modelDir',
-          watchPath: 'Models',
           properties: {
+            watchPath: 'Models',
             allowAdd: true,
             watchDir: true,
             watchFile: true
           },
           isVisible: function (component) {
-            return false
+            return true
           }
         }
       ],
       isDone: function (component) {
-        // return (component['inputFolders'] && component['inputFolders'].length > 0)
         if (component.modelDir && component.modelDir.files) {
           return component.modelDir.files.length > 0
         }
@@ -56,10 +53,11 @@ module.exports = function () {
       },
 
       getCommandLine: function (component, path) {
+        console.log(component.modelDir)
         var command = ''
         command += component['execPath']
         command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
-        if (component['inputFolders'] && component['inputFolders'].length === 0) {
+        if ('selectedFile' in component.modelDir && component.modelDir.selectedFile.length === 0) {
           command += ' --create'
         }
         return command
@@ -75,7 +73,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/soo/start.sh',
+            defaultValue: '/home/liang/workspace/soo/start.sh',
             info: 'The path to the Simulation & Optimization Orchestrator executable'
           }
         },
@@ -102,7 +100,7 @@ module.exports = function () {
               label: 'Any', 
               value: 'any' 
             }],
-            default: 'any',
+            defaultValue: 'any',
             info: 'Number of dimension required for the simulation'
           }
         },
@@ -113,7 +111,7 @@ module.exports = function () {
           properties: {
             info: 'Maximum number of agents required for the simulation',
             number: true,
-            default: 0
+            defaultValue: 0
           }
         },
         {
@@ -121,7 +119,7 @@ module.exports = function () {
           label: 'Simulator GUI',
           varId: 'showGUI',
           properties: {
-            default: false,
+            defaultValue: false,
             label: 'Show the graphical interface of simulators'
           }
         },
@@ -130,7 +128,7 @@ module.exports = function () {
           label: 'Optimization Enabled',
           varId: 'optEnabled',
           properties: {
-            default: false,
+            defaultValue: false,
             label: 'Require the use of the Optimization Tool'
           }
         },
@@ -149,17 +147,15 @@ module.exports = function () {
             openUrl: true
           },
           isEnabled: function(component) {
-            return component.status.running
+            return true
           }
         },
         {
           type: 'file-list',
           label: 'Available Input',
-          selectedFolder: 'selectedInputFolder',
-          folders: 'inputFiles',
           varId: 'modelDir',
-          watchPath: 'Models',
           properties: {
+            watchPath: 'Models',
             allowAdd: true,
             watchDir: true,
             watchFile: true
@@ -171,11 +167,9 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Available Input',
-          selectedFolder: 'selectedOutputFolder',
-          folders: 'outputFiles',
           varId: 'optimizedDir',
-          watchPath: 'Optimized',
           properties: {
+            watchPath: 'Optimized',
             allowAdd: true,
             watchDir: true,
             watchFile: true
@@ -228,7 +222,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/code-generator/start.sh',
+            defaultValue: '/home/liang/workspace/code-generator/start.sh',
             info: 'The path to the Code Generator executable'
           }
         },
@@ -243,11 +237,9 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Available Input',
-          selectedFolder: 'selectedInputFiles',
-          folders: 'inputFiles',
           varId: 'modelDir',
-          watchPath: 'Models',
           properties: {
+            watchPath: 'Models',
             watchDir: true,
             watchFile: true
           },
@@ -258,11 +250,9 @@ module.exports = function () {
         {
           type: 'file-list',
           label: '',
-          selectedFolder: 'selectedFiles',
-          folders: 'genFiles',
-          varId: 'genDir',
-          watchPath: 'GeneratedCode',
+          varId: 'genDir',         
           properties: {
+            watchPath: 'GeneratedCode',
             watchDir: true,
             watchFile: true
           },
@@ -303,21 +293,19 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '~/workspace/deployment-tool/manager',
+            defaultValue: '~/workspace/deployment-tool/manager',
             info: 'The path to the Deployment Tool executable'
           }
         },
         {
           type: 'file-list',
           label: 'Previous Versions',
-          selectedFolder: 'selectedGenFile',
-          folders: 'genFiles',
-          varId: 'genDir',
-          watchPath: 'GeneratedCode',
+          varId: 'genDir',          
           isEnabled: function (component) {
             return !component.useGeneratedCode
           },
           properties: {
+            watchPath: 'GeneratedCode',
             allowAdd: false
           },
           isVisible: function (component) {
@@ -335,14 +323,12 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Task File',
-          selectedFolder: 'selectedGenFile',
-          folders: 'genFiles',
-          varId: 'genDir',
-          watchPath: 'Deployment/Tasks',
+          varId: 'genDir',    
           isEnabled: function (component) {
             return !component.useGeneratedCode
           },
           properties: {
+            watchPath: 'Deployment/Tasks',
             allowAdd: false,
             watchDir: false,
             watchFile: true,
@@ -354,13 +340,11 @@ module.exports = function () {
         // {
         //   type: 'file-list',
         //   label: 'Previous Versions',
-        //   selectedFolder: 'selectedArchFile',
-        //   folders: 'archFiles',
-        //   watchPath: pt.join('Deployment', 'Workspaces'),
         //   isEnabled: function (component) {
         //     return !component.useGeneratedCode
         //   },
         //   properties: {
+        //   watchPath: pt.join('Deployment', 'Workspaces'),
         //     allowAdd: false
         //   }
         // }
@@ -394,7 +378,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/monitoring-tool/start.sh',
+            defaultValue: '/home/liang/workspace/monitoring-tool/start.sh',
             info: 'The path to the Monitoring Tool executable'
           }
         }

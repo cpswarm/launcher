@@ -2,7 +2,7 @@
   <div class="container">
     <div class="description" v-if="!openUrl">Reveal {{path}} in file explorer</div>
     <div class="description" v-if="openUrl">Open {{path}} in browser</div>
-    <el-button title="Open directory in explorer" type="primary" size="medium" :disabled="!isEnabled" @click="open">Open</el-button>
+    <el-button title="Open directory in explorer" type="primary" size="medium" :disabled="!enabled" @click="open">Open</el-button>
   </div>
 </template>
 
@@ -12,26 +12,17 @@ const { shell } = require("electron").remote;
 const pt = require("path");
 
 export default {
-  props: ["rootPath", "properties"],
+  props: ["rootPath", "properties", 'enabled'],
   data() {
-    var properties = {
-      path: "",
-      openUrl: false
-    };
+    var {
+      path = "",
+      openUrl = false
+    } = this.properties;
 
-    if (this.properties) {
-      for (let key in this.properties) {
-        properties[key] = this.properties[key];
-      }
-    }
-
-    return {
-      path: properties['path'],
-      openUrl: properties['openUrl']
-    };
+    return { path, openUrl };
   },
   methods: {
-    open: function() {
+    open() {
       if (!this.openUrl) {
         var success = shell.showItemInFolder(pt.join(this.rootPath, this.path));
         if (!success) {
@@ -49,16 +40,6 @@ export default {
           );
         }
       }
-    }
-  },
-
-  computed: {
-    isEnabled: function () {
-      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
-    },
-
-    isVisible: function () {
-      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
     }
   }
 };

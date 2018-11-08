@@ -1,87 +1,112 @@
 var tabConfig = require('@/components/TabConfig.js')()
 
 // Make the tabConfig into a map for easier query
-// TODO: simplify this
 var tabConfigMap = {}
 for (let i in tabConfig) {
-    let id = tabConfig[i].id
-    tabConfigMap[id] = tabConfig[i]
-    tabConfigMap[id]['widgetMap'] = {}
-    for (let j in tabConfigMap[id]['widgets']) {
-        let widgetId = tabConfigMap[id]['widgets'][j]['varId']
-        tabConfigMap[id]['widgetMap'][widgetId] = tabConfigMap[id]['widgets'][j]
-    }
+  let id = tabConfig[i].id
+  let config = (tabConfigMap[id] = tabConfig[i])
+  let widgets = config.widgets
+  config['widgetMap'] = {}
+  for (let j in widgets) {
+    let widgetId = widgets[j].varId
+    config['widgetMap'][widgetId] = widgets[j]
+  }
 }
 
-var state = {}
-// TODO: make 'path' a state
 // Initialize state
-state.selectedTab = tabConfig[0]
-for (let i in tabConfig) {
-    let id = tabConfig[i].id
-    state[id] = {
-        enabled: true,
-        done: true,
-        running: false,
-        vars: {}
-    }
-    let widgets = tabConfig[i].widgets
-    for (let j in widgets) {
-        let widgetId = widgets[j]['varId']
-        if (widgetId !== undefined) {
-            state[id].vars[widgetId] = null
-        }
-    }
+var state = {
+  rootPath: '',
+  showHelp: false,
+  isLoading: false,
+  currentActivity: 'welcome',
+  selectedTab: tabConfig[0]
+}
+
+for (let id in tabConfigMap) {
+  state[id] = {
+    enabled: true,
+    done: true,
+    running: false,
+    vars: {}
+  }
+  let widgets = tabConfigMap[id].widgetMap
+  for (let widgetId in widgets) {
+    state[id].vars[widgetId] = null
+  }
 }
 
 var getters = {
-    getDoneByTabId: (state) => (tabId) => {
-        return tabConfigMap[tabId].isDone(state[tabId].vars)
-    },
+  getRootPath (state) {
+    return state.rootPath
+  },
 
-    getEnabledByTabId: (state) => (tabId) => {
-        return tabConfigMap[tabId].isEnabled(state[tabId].vars)
-    },
+  getDoneByTabId: state => tabId => {
+    return tabConfigMap[tabId].isDone(state[tabId].vars)
+  },
 
-    getRunningByTabId: (state) => (tabId) => {
-        return state[tabId].running
-    },
+  getEnabledByTabId: state => tabId => {
+    return tabConfigMap[tabId].isEnabled(state[tabId].vars)
+  },
 
-    getAllowLaunchByTabId: (state) => (tabId) => {
-        return tabConfigMap[tabId].allowLaunch(state[tabId].vars)
-    },
+  getRunningByTabId: state => tabId => {
+    return state[tabId].running
+  },
 
-    getCmdLineByTabId: (state) => (tabId, path) => {
-        return tabConfigMap[tabId].getCommandLine(state[tabId].vars, path)
-    },
+  getAllowLaunchByTabId: state => tabId => {
+    return tabConfigMap[tabId].allowLaunch(state[tabId].vars)
+  },
 
-    getWidgetEnabled: (state) => (tabId, widgetId) => {
-        if ('isEnabled' in tabConfigMap[tabId]['widgetMap'][widgetId]) {
-            return tabConfigMap[tabId]['widgetMap'][widgetId].isEnabled(state[tabId].vars)
-        }
-        return true
-    },
+  getCmdLineByTabId: state => (tabId, path) => {
+    return tabConfigMap[tabId].getCommandLine(state[tabId].vars, path)
+  },
 
-    getWidgetVisible: (state) => (tabId, widgetId) => {
-        if ('isVisible' in tabConfigMap[tabId]['widgetMap'][widgetId]) {
-            return tabConfigMap[tabId]['widgetMap'][widgetId].isVisible(state[tabId].vars)
-        }
-        return true
+  getWidgetEnabled: state => (tabId, widgetId) => {
+    if ('isEnabled' in tabConfigMap[tabId]['widgetMap'][widgetId]) {
+      return tabConfigMap[tabId]['widgetMap'][widgetId].isEnabled(
+        state[tabId].vars
+      )
     }
+    return true
+  },
+
+  getWidgetVisible: state => (tabId, widgetId) => {
+    if ('isVisible' in tabConfigMap[tabId]['widgetMap'][widgetId]) {
+      return tabConfigMap[tabId]['widgetMap'][widgetId].isVisible(
+        state[tabId].vars
+      )
+    }
+    return true
+  }
 }
 
 var mutations = {
-    updateVar(state, payload) {
-        state[payload.tabId]['vars'][payload.varId] = payload.value
-    },
+  changeRootPath (state, path) {
+    state.rootPath = path
+  },
 
-    selectTab(state, tabId) {
-        state.selectedTab = tabConfigMap[tabId]
-    },
+  setShowHelp (state, visible) {
+    state.showHelp = visible
+  },
 
-    setRunning(state, payload) {
-        state[payload.tabId].running = payload.value
-    }
+  setIsLoading (state, isLoading) {
+    state.isLoading = isLoading
+  },
+
+  setCurrentActivity(state, activity) {
+    state.currentActivity = activity
+  },
+
+  updateVar (state, payload) {
+    state[payload.tabId]['vars'][payload.varId] = payload.value
+  },
+
+  selectTab (state, tabId) {
+    state.selectedTab = tabConfigMap[tabId]
+  },
+
+  setRunning (state, payload) {
+    state[payload.tabId].running = payload.value
+  }
 }
 
 export default { state, getters, mutations }

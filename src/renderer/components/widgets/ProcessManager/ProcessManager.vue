@@ -32,7 +32,7 @@ export default {
   // 2 Props:
   // 1. execPath: the command line to be executed
   // 2. allowLaunch: whether launching is allowed
-  props: ["tabId", "path"],
+  props: ["tabId"],
   data() {
     return {
       textarea: "",
@@ -119,6 +119,10 @@ export default {
   },
 
   computed: {
+    rootPath: function() {
+      return this.$store.getters.getRootPath
+    },
+
     allowLaunch: function() {
       return this.$store.getters.getAllowLaunchByTabId(this.tabId)
     },
@@ -128,7 +132,7 @@ export default {
     },
 
     execPath: function() {
-      return this.$store.getters.getCmdLineByTabId(this.tabId, this.path)
+      return this.$store.getters.getCmdLineByTabId(this.tabId, this.rootPath)
     }
   }
 };

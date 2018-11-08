@@ -1,9 +1,9 @@
 <template>
   <div class="whole-container">
     <div class="overlay" v-show="isLoading" v-loading="isLoading"></div>
-    <help :visible.sync="showHelp" @close="showHelp = false"></help>
-    <welcome v-if="currentActivity=='Welcome'" v-bind:path="path" @open-project="openProject" @create-project="createProject" @error="showError"></welcome>
-    <main-panel v-if="currentActivity=='MainPanel'" v-bind:path="path"  @open-help="openHelp" @error="showError"></main-panel>
+    <help :visible.sync="showHelp"></help>
+    <welcome v-if="currentActivity=='welcome'" @open-project="openProject" @create-project="createProject" @error="showError"></welcome>
+    <main-panel v-if="currentActivity=='main'" @error="showError"></main-panel>
   </div>
 </template> 
 
@@ -15,7 +15,7 @@ import utils from '@/utils/utils.js'
 const { ipcRenderer, remote } = require('electron')
 
 export default {
-  data () {
+  data() {
     // Initialize ipcRenderer listener
     ipcRenderer.on('close-project', () => {
       this.closeProject()
@@ -30,35 +30,28 @@ export default {
     })
 
     ipcRenderer.on('open-help', () => {
-      this.showHelp = true
+      this.$store.commit('setShowHelp', true)
     })
 
-    var activities = ['Welcome', 'MainPanel']
-    return {
-      activities: activities,
-      currentActivity: 'Welcome',
-      path: '',
-      isLoading: false,
-      showHelp: false,
-    }
+    return {}
   },
   components: {
-    Help: Help,
-    Welcome: Welcome,
-    MainPanel: MainPanel
+    Help,
+    Welcome,
+    MainPanel
   },
   methods: {
     // The initialization method, which should be used to set up filewatcher, etc.
-    initMain (path) {
+    initMain(path) {
       // Start file watching
-      this.path = path
+      this.$store.commit('changeRootPath', path)
 
-      // Switch to main panel
-      this.currentActivity = 'Welcome'
+      // Switch to welcome temporarily to trigger loading screen
+      this.$store.commit('setCurrentActivity', 'welcome')
 
       // A hacky way to force the main panel to reload
       setImmediate(() => {
-        this.currentActivity = 'MainPanel'
+        this.$store.commit('setCurrentActivity', 'main')
         this.stopLoadingDelayed()
       })
 
@@ -69,7 +62,7 @@ export default {
       ipcRenderer.send('set-opt-menu')
     },
 
-    createProject: function () {
+    createProject() {
       remote.dialog.showOpenDialog(
         remote.getCurrentWindow(),
         {
@@ -92,7 +85,7 @@ export default {
       )
     },
 
-    openProject: function () {
+    openProject() {
       remote.dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['openDirectory'] }, dirPath => {
         if (!dirPath) return
         this.startLoading()
@@ -100,9 +93,9 @@ export default {
       })
     },
 
-    closeProject: function () {
+    closeProject() {
       // Switch to main panel
-      this.currentActivity = 'Welcome'
+      this.$store.commit('setCurrentActivity', 'welcome')
 
       // Ask main to reset window title
       ipcRenderer.send('reset-title')
@@ -111,32 +104,40 @@ export default {
       ipcRenderer.send('set-start-menu')
     },
 
-    openHelp: function () {
-      this.showHelp = true
-    },
-
-    startLoading: function () {
-      this.isLoading = true
+    startLoading() {
+      this.$store.commit('setIsLoading', true)
     },
 
     // Delayed stop loading (A lazy hack to hide the short moment in which the main panel will be viewed before it is ready)
-    stopLoadingDelayed: function () {
+    stopLoadingDelayed() {
       setTimeout(() => {
-        this.isLoading = false
+        this.$store.commit('setIsLoading', false)
       }, 1500)
     },
 
-    showError: function (err) {
+    showError(err) {
       this.$message.error(err.toString())
     }
   },
-  computed: {}
+  computed: {
+    showHelp() {
+      return this.$store.state.showHelp
+    },
+
+    isLoading() {
+      return this.$store.state.isLoading
+    },
+
+    currentActivity() {
+      return this.$store.state.currentActivity
+    }
+  }
 }
 </script>
 
 <style lang="scss">
-@import "@/element-custom.scss";
-@import "@/settings.scss";
+@import '@/element-custom.scss';
+@import '@/settings.scss';
 html,
 body,
 .whole-container {

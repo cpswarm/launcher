@@ -35,7 +35,7 @@ export default {
   },
   methods: {
     handleClose: function() {
-      this.$emit("close");
+      this.$store.commit('setShowHelp', false);
     }
   }
 };

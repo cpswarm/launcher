@@ -4,7 +4,7 @@
       <tr>
         <td class="cell name"><img v-bind:src="tab.icon"><span>{{tab.name}}</span></td>
         <td class="cell user">
-          <el-button title="Open terminal"  type="primary" circle @click="openTerminal"><img src="@/assets/terminal.png"></el-button>
+          <el-button title="Open terminal" type="primary" circle @click="openTerminal"><img src="@/assets/terminal.png"></el-button>
           <el-button title="Open help page" type="primary" circle @click="openHelp"><img src="@/assets/info.png"></el-button>
         </td>
       </tr>
@@ -16,10 +16,10 @@
 const { spawn } = require('child_process')
 
 export default {
-  data () {
+  data() {
     return {}
   },
-  props: ['tab', 'path'],
+  props: ['tab'],
   methods: {
     openTerminal: function () {
       var shellExec = ''
@@ -32,7 +32,7 @@ export default {
       }
 
       spawn(shellExec, [], {
-        cwd: this.path,
+        cwd: this.rootPath,
         shell: true,
         detached: true,
         stdio: 'ignore'
@@ -40,19 +40,23 @@ export default {
     },
 
     openHelp: function () {
-      this.$emit('open-help')
+      this.$store.commit('setShowHelp', true)
     },
 
     emitError: function (err) {
       this.$emit('error', err)
     }
   },
-  computed: {}
+  computed: {
+    rootPath: function () {
+      return this.$store.getters.getRootPath
+    }
+  }
 }
 </script>
 
 <style lang="scss" scoped>
-@import "@/settings.scss";
+@import '@/settings.scss';
 .container {
   padding: 0 20px;
   background-color: $secondary-color;
@@ -76,7 +80,7 @@ export default {
         }
         img {
           vertical-align: middle;
-          height:  1.5em;
+          height: 1.5em;
           margin-right: 15px;
         }
       }

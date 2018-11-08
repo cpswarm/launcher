@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="overlay" v-show="!isEnabled"></div>
-    <div class="path-indicator">{{path}}</div>
-    <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="path" @error="emitError"></add-file-box>
-    <file-list class="file-list" :path="path" :enabled="isEnabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @error="emitError"></file-list>
-    <el-button title="Execute command against selected file" class="exec-btn" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!isEnabled" @click="exec">Send Task</el-button>
+    <div class="overlay" v-show="!enabled"></div>
+    <div class="path-indicator">{{listProperties.watchPath}}</div>
+    <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="listProperties.watchPath" @error="emitError"></add-file-box>
+    <file-list class="file-list" :path="listProperties.watchPath" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @error="emitError"></file-list>
+    <el-button title="Execute command against selected file" class="exec-btn" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!enabled" @click="exec">Send Task</el-button>
   </div>
 </template>
 
@@ -13,9 +13,10 @@ import FileList from '@/components/widgets/FileList/FileList.vue'
 import AddFileBox from '@/components/widgets/FileList/AddFileBox.vue'
 const fs = require('fs')
 const path = require('path')
-const { spawn } = require("child_process");
+const { spawn } = require('child_process');
 
 export default {
+  // TODO: update this comment
   // This component emits the three events of FileList and an extra one:
   // 1. folder-created: when a new folder is created with this component; args: the complete path of the newly created folder
 
@@ -26,28 +27,27 @@ export default {
   //    2) watchFile: boolean, whether to watch files, default is false
   //    3) allowAdd: boolean, whether to allow creating new files on this widget
   //    4) multiSelect: boolean, whether to allow multiple selection, default is false
-  props: ['path', 'properties', 'varId', 'tabId'],
-  data () {
+  props: ['rootPath', 'properties', 'enabled'],
+  data() {
     // Default values for properties
-    var properties = {
-      allowAdd: false,
-      watchDir: true,
-      watchFile: false,
-      multiSelect: false,
-      execCommand: null
-    }
+    var {
+      watchPath = '',
+      allowAdd = false,
+      watchDir = true,
+      watchFile = false,
+      multiSelect = false,
+      execCommand = null
+    } = this.properties
 
-    if (this.properties) {
-      for (let key in this.properties) {
-        properties[key] = this.properties[key]
-      }
-    }
+    watchPath = path.join(this.rootPath, watchPath)
 
     return {
-      listProperties: properties,
+      listProperties: { watchPath, allowAdd, watchDir, watchFile, multiSelect, execCommand },
       newFolder: null,
       errMsg: '',
-      command: ''
+      command: '',
+      files: [],
+      selectedFile: []
     }
   },
   components: {
@@ -55,23 +55,23 @@ export default {
     AddFileBox: AddFileBox
   },
   methods: {
-    stateChanged: function (folders) {
-      var prevState = this.$store.state[this.tabId]['vars'][this.varId] || {}
-      prevState.files = folders
-      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: prevState})
+    stateChanged(files) {
+      this.files = files
+      var state = { files: files, selectedFile: this.selectedFile }
+      this.$emit('change', state)
     },
 
-    folderSelected: function (folder) {
-      var prevState = this.$store.state[this.tabId]['vars'][this.varId] || {}
-      prevState.selectedFile = folder
-      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: prevState})
+    folderSelected(file) {
+      this.selectedFile = file
+      var state = { files: this.files, selectedFile: file }
+      this.$emit('change', state)
       if (this.listProperties.execCommand) {
         this.command = this.listProperties.execCommand(folder[0].path)
         console.log(this.command)
       }
     },
 
-    createFolder: function () {
+    createFolder() {
       if (!this.newFolder) {
         this.errMsg = "Folder name can't be empty!"
         return
@@ -98,7 +98,7 @@ export default {
       })
     },
 
-    exec: function() {
+    exec() {
       if (!this.command) {
         this.emitError('No file selected yet.');
         return
@@ -117,22 +117,12 @@ export default {
       }
     },
 
-    clearError: function () {
+    clearError() {
       this.errMsg = ''
     },
 
-    emitError: function (err) {
+    emitError(err) {
       this.$emit('error', err)
-    }
-  },
-
-  computed: {
-    isEnabled: function () {
-      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
-    },
-
-    isVisible: function () {
-      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
     }
   }
 }
