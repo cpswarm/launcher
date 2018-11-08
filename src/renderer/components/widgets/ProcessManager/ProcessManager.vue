@@ -1,10 +1,15 @@
 <template>
   <div>
+    <div class="input-container">
+      <div class="label">Command Line</div>
+      <div class="description">The command line to be executed</div>
+      <el-input size="small" :readonly="true" v-model="execPath"></el-input>
+    </div>
 
     <div class="btn-container">
       <el-button-group>
-        <el-button title="Launch the application by executing the command line" type="primary" @click="launchUndetached" :disabled="!allowLaunch || currentSubProcess">Launch</el-button>
-        <el-button title="Launch the application as detached process" type="primary" @click="launchDetached" :disabled="!allowLaunch || currentSubProcess">Launch Detached</el-button>
+        <el-button title="Launch the application by executing the command line" type="primary" @click="launchUndetached" :disabled="!allowLaunch || isRunning">Launch</el-button>
+        <el-button title="Launch the application as detached process" type="primary" @click="launchDetached" :disabled="!allowLaunch || isRunning">Launch Detached</el-button>
         <el-button title="Terminate the subprocess" type="primary" @click="killSubProcess" v-show="currentSubProcess">Terminate Sub-process</el-button>
         <el-button title="Toggle subprocess stdout display" type="primary" @click="toggleTextAreaVisibility"><img :class="['icon-btn', 'dropdown-btn', {expanded: showTextarea}]" src="@/assets/down-arrow.png"></el-button>
       </el-button-group>
@@ -27,7 +32,7 @@ export default {
   // 2 Props:
   // 1. execPath: the command line to be executed
   // 2. allowLaunch: whether launching is allowed
-  props: ["execPath", "allowLaunch"],
+  props: ["tabId", "path"],
   data() {
     return {
       textarea: "",
@@ -74,13 +79,13 @@ export default {
         // Update tab state
         console.log(`Child exited with code ${code}`);
         this.currentSubProcess = null;
-        this.$emit("process-ended", code);
+        this.$store.commit('setRunning', {tabId: this.tabId, value: false})
       });
 
       this.currentSubProcess = sp;
 
       // Emit event
-      this.$emit("process-started", "");
+      this.$store.commit('setRunning', {tabId: this.tabId, value: true})
     },
 
     launchDetached: function() {
@@ -113,11 +118,45 @@ export default {
     }
   },
 
-  watch: {}
+  computed: {
+    allowLaunch: function() {
+      return this.$store.getters.getAllowLaunchByTabId(this.tabId)
+    },
+
+    isRunning: function() {
+      return this.$store.getters.getRunningByTabId(this.tabId)
+    },
+
+    execPath: function() {
+      return this.$store.getters.getCmdLineByTabId(this.tabId, this.path)
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
+.input-container {
+  margin: 40px 0 20px 0;
+
+  .label {
+    margin-bottom: 10px;
+    font-size: 1.3em;
+
+    &.disabled {
+      color: #bbbbbb;
+    }
+  }
+
+  .description {
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 0.9em;
+  }
+
+  &:first-of-type {
+    margin-top: 0px;
+  }
+}
 
 .btn-container {
   margin-top: 40px;

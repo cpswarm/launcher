@@ -2,7 +2,7 @@
   <div class="container">
     <table>
       <tr>
-        <td class="cell name"><img v-bind:src="tab.config.icon"><span>{{tab.config.name}}</span></td>
+        <td class="cell name"><img v-bind:src="tab.icon"><span>{{tab.name}}</span></td>
         <td class="cell user">
           <el-button title="Open terminal"  type="primary" circle @click="openTerminal"><img src="@/assets/terminal.png"></el-button>
           <el-button title="Open help page" type="primary" circle @click="openHelp"><img src="@/assets/info.png"></el-button>

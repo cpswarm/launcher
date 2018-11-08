@@ -1,10 +1,10 @@
 <template>
   <div class="container">
-    <div class="overlay" v-show="!enabled"></div>
+    <div class="overlay" v-show="!isEnabled"></div>
     <div class="path-indicator">{{path}}</div>
     <add-file-box class="add-file-box" v-if="listProperties.allowAdd" :path="path" @error="emitError"></add-file-box>
-    <file-list class="file-list" :path="path" :enabled="enabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @folder-deleted="folderDeleted" @error="emitError"></file-list>
-    <el-button title="Execute command against selected file" class="exec-btn" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!enabled" @click="exec">Send Task</el-button>
+    <file-list class="file-list" :path="path" :enabled="isEnabled" @state-changed="stateChanged" :watchFile="listProperties.watchFile" :watchDir="listProperties.watchDir" :multiSelect="listProperties.multiSelect" @folder-selected="folderSelected" @error="emitError"></file-list>
+    <el-button title="Execute command against selected file" class="exec-btn" v-if="listProperties.execCommand" type="primary" size="medium" :disabled="!isEnabled" @click="exec">Send Task</el-button>
   </div>
 </template>
 
@@ -26,7 +26,7 @@ export default {
   //    2) watchFile: boolean, whether to watch files, default is false
   //    3) allowAdd: boolean, whether to allow creating new files on this widget
   //    4) multiSelect: boolean, whether to allow multiple selection, default is false
-  props: ['path', 'enabled', 'properties'],
+  props: ['path', 'properties', 'varId', 'tabId'],
   data () {
     // Default values for properties
     var properties = {
@@ -56,17 +56,19 @@ export default {
   },
   methods: {
     stateChanged: function (folders) {
-      this.$emit('state-changed', folders)
+      var prevState = this.$store.state[this.tabId]['vars'][this.varId] || {}
+      prevState.files = folders
+      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: prevState})
     },
 
     folderSelected: function (folder) {
-      this.$emit('folder-selected', folder)
-      this.command = this.listProperties.execCommand(folder[0].path)
-      console.log(this.command)
-    },
-
-    folderDeleted: function (folder) {
-      this.$emit('folder-deleted', folder)
+      var prevState = this.$store.state[this.tabId]['vars'][this.varId] || {}
+      prevState.selectedFile = folder
+      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: prevState})
+      if (this.listProperties.execCommand) {
+        this.command = this.listProperties.execCommand(folder[0].path)
+        console.log(this.command)
+      }
     },
 
     createFolder: function () {
@@ -121,6 +123,16 @@ export default {
 
     emitError: function (err) {
       this.$emit('error', err)
+    }
+  },
+
+  computed: {
+    isEnabled: function () {
+      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
+    },
+
+    isVisible: function () {
+      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
     }
   }
 }

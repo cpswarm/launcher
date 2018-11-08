@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import Vuex from 'vuex'
 import axios from 'axios'
 import ElementUI from 'element-ui'
 import App from '@/App.vue'
@@ -8,9 +9,15 @@ Vue.http = Vue.prototype.$http = axios
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
+Vue.use(Vuex)
+
+import storeConf from '@/stores/store.js'
+
+const store = new Vuex.Store(storeConf)
 
 /* eslint-disable no-new */
 new Vue({
   components: { App },
-  template: '<App/>'
+  template: '<App/>',
+  store
 }).$mount('#app')

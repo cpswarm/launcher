@@ -2,7 +2,7 @@
   <div class="container">
     <!-- `checked` should be true or false -->
     <div class="description">{{info}}</div>
-    <el-select v-model="selectedItem" placeholder="Select" :disabled="!enabled" @change="change">
+    <el-select v-model="selectedItem" placeholder="Select" :disabled="!isEnabled" @change="change">
       <el-option v-for="item in items" :key="item.value" :label="item.label" :value="item.value">
       </el-option>
     </el-select>
@@ -11,7 +11,7 @@
 
 <script>
 export default {
-  props: ["enabled", "properties"],
+  props: ["properties", 'varId', 'tabId'],
   data() {
     var properties = {
       default: null,
@@ -25,7 +25,7 @@ export default {
       }
     }
 
-    this.$emit("input", properties.default);
+    this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: properties['default']})
     return {
       label: properties.label,
       items: properties.items,
@@ -35,7 +35,17 @@ export default {
   },
   methods: {
     change: function(value) {
-      this.$emit("input", value);
+      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: value})
+    }
+  },
+
+  computed: {
+    isEnabled: function () {
+      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
+    },
+
+    isVisible: function () {
+      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
     }
   }
 };

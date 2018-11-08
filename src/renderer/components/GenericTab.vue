@@ -1,26 +1,21 @@
 <template>
-  <div class="tab-content">
-    <div class="overlay" v-show="!status.enabled"></div>
-    <div class="input-container" v-for="(widget, index) in config.widgets" :key="index" v-show="widget.status.visible">
+  <div class="tab-content" v-show="isVisible" >
+    <div class="overlay" v-show="!isEnabled"></div>
+    <div class="input-container" v-for="(widget, index) in tab.widgets" :key="index" v-show="widget.status.visible">
       <div :class="['label', {disabled: !widget.status.enabled}]">{{widget.label}}</div>
-      <file-list v-if="widget.type === 'file-list'" :path="getFullPath(path, widget.watchPath)" :enabled="widget.status.enabled" :properties="widget.properties" @folder-selected="handleEvent(widget.selectedFolder, $event)" @state-changed="handleEvent(widget.folders, $event)" @error="emitError">
-      </file-list>
-      <text-input v-if="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></text-input>
-      <single-checkbox v-if="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></single-checkbox>
+      <file-list v-if="widget.type === 'file-list'" :path="getFullPath(path, widget.watchPath)" :enabled="widget.status.enabled" :properties="widget.properties" :varId="widget.varId" :tabId="tab.id"  @error="emitError"></file-list>
+      <text-input v-if="widget.type === 'text'" :properties="widget.properties" :enabled="widget.status.enabled" :varId="widget.varId" :tabId="tab.id" @error="emitError"></text-input>
+      <single-checkbox v-if="widget.type === 'single-checkbox'" :properties="widget.properties" :enabled="widget.status.enabled" :varId="widget.varId" :tabId="tab.id"  @error="emitError"></single-checkbox>
       <explorer-button v-if="widget.type === 'explorer-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" @error="emitError"></explorer-button>
-      <select-file-button v-if="widget.type === 'select-file-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></select-file-button>
-      <dropdown-box v-if="widget.type === 'dropdown-box'" :properties="widget.properties" :enabled="widget.status.enabled" @input="handleEvent(widget.varId, $event)" @error="emitError"></dropdown-box>
+      <select-file-button v-if="widget.type === 'select-file-button'" :rootPath="path" :properties="widget.properties" :enabled="widget.status.enabled" :varId="widget.varId" :tabId="tab.id" @error="emitError"></select-file-button>
+      <dropdown-box v-if="widget.type === 'dropdown-box'" :properties="widget.properties" :enabled="widget.status.enabled" :varId="widget.varId" :tabId="tab.id" @error="emitError"></dropdown-box>
     </div>
-    <div class="input-container">
-      <div class="label">Command Line</div>
-      <div class="description">The command line to be executed</div>
-      <el-input size="small" :readonly="true" v-model="status.commandLine"></el-input>
-    </div>
-    <process-manager :execPath="status.commandLine" :allowLaunch="status.allowLaunch" @process-started="processStarted" @process-ended="processEnded" @error="emitError"></process-manager>
+    <process-manager :tabId="tab.id" :path="path" @error="emitError"></process-manager>
   </div>
 </template>
 
 <script>
+// TODO: make a wrapper for all widgets
 import ProcessManager from "@/components/widgets/ProcessManager/ProcessManager.vue";
 import FileList from "@/components/widgets/FileList/CompleteFileList.vue";
 import TextInput from "@/components/widgets/TextInput.vue";
@@ -31,12 +26,12 @@ import DropdownBox from "@/components/widgets/DropdownBox.vue";
 const path = require("path");
 
 export default {
-  props: ["config", "path"],
+  props: ["path", "tab"],
 
   data() {
     // Initialize status of each widget
-    for (let i in this.config.widgets) {
-      let widget = this.config.widgets[i];
+    for (let i in this.tab.widgets) {
+      let widget = this.tab.widgets[i];
       widget.status = { visible: true, enabled: true };
     }
 
@@ -44,14 +39,7 @@ export default {
       // The status of this tab
       // enabled: it means the component in this tab has enough inputs to be launched
       // running: it means the component has been launched and is still running
-      id: this.config.id,
-      status: {
-        enabled: true,
-        done: false,
-        running: false,
-        allowLaunch: false,
-        commandLine: ""
-      }
+      id: this.tab.id
     };
   },
   components: {
@@ -64,68 +52,24 @@ export default {
     DropdownBox: DropdownBox
   },
   methods: {
-    processStarted: function() {
-      this.status.running = true;
-      this.updateStatus();
-    },
-
-    processEnded: function() {
-      this.status.running = false;
-      this.updateStatus();
-    },
-
-    handleEvent: function(varId, value) {
-      // TODO: do deep copy
-      this[varId] = value;
-      this.updateStatus();
-    },
-
-    updateStatus: function() {
-      // Update tab status and emit it to parent
-      this.status.done = this.config.isDone(this);
-      this.status.enabled = this.config.isEnabled(this);
-      this.status.allowLaunch = this.config.allowLaunch(this);
-      this.status.commandLine = this.config.getCommandLine(this);
-      this.emitStatus();
-
-      // Update status of each widget
-      for (let i in this.config.widgets) {
-        let widget = this.config.widgets[i];
-        let hasChanged = false;
-        if (widget.isEnabled) {
-          let enabled = widget.isEnabled(this);
-          if (widget.status.enabled !== enabled) {
-            widget.status.enabled = enabled;
-            hasChanged = true;
-          }
-        }
-        if (widget.isVisible) {
-          let visible = widget.isVisible(this);
-          if (widget.status.visible !== visible) {
-            widget.status.visible = visible;
-            hasChanged = true;
-          }
-        }
-        // Must use this.$set, otherwise list item won't update
-        if (hasChanged) {
-          this.$set(this.config.widgets, i, widget);
-        }
-      }
-    },
 
     getFullPath: function(rootPath, relPath) {
       return path.join(rootPath, relPath);
-    },
-
-    emitStatus: function() {
-      this.$emit("status-changed", this.id, this.status);
     },
 
     emitError: function(err) {
       this.$emit("error", err);
     }
   },
-  computed: {}
+  computed: {
+    isEnabled: function() {
+      return this.$store.getters.getEnabledByTabId(this.tab.id)
+    },
+
+    isVisible: function() {
+      return this.$store.state.selectedTab.id === this.tab.id
+    }
+  }
 };
 </script>
 

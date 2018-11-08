@@ -12,7 +12,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            default: '/home/liang/workspace/modelling-tool/start.sh',
+            default: 'C:/Users/liang/Desktop/launcher-project/test.bat',
             info: 'The path to the Modelling Tool executable'
           }
         },
@@ -28,6 +28,7 @@ module.exports = function () {
           label: 'Available Input',
           selectedFolder: 'selectedInputFolder',
           folders: 'inputFolders',
+          varId: 'modelDir',
           watchPath: 'Models',
           properties: {
             allowAdd: true,
@@ -41,6 +42,9 @@ module.exports = function () {
       ],
       isDone: function (component) {
         // return (component['inputFolders'] && component['inputFolders'].length > 0)
+        if (component.modelDir && component.modelDir.files) {
+          return component.modelDir.files.length > 0
+        }
         return false
       },
       isEnabled: function (component) {
@@ -51,10 +55,10 @@ module.exports = function () {
         return true
       },
 
-      getCommandLine: function (component) {
+      getCommandLine: function (component, path) {
         var command = ''
         command += component['execPath']
-        command += ' --src ' + '"' + pt.join(component.path, 'Models') + '"'
+        command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
         if (component['inputFolders'] && component['inputFolders'].length === 0) {
           command += ' --create'
         }
@@ -153,6 +157,7 @@ module.exports = function () {
           label: 'Available Input',
           selectedFolder: 'selectedInputFolder',
           folders: 'inputFiles',
+          varId: 'modelDir',
           watchPath: 'Models',
           properties: {
             allowAdd: true,
@@ -168,6 +173,7 @@ module.exports = function () {
           label: 'Available Input',
           selectedFolder: 'selectedOutputFolder',
           folders: 'outputFiles',
+          varId: 'optimizedDir',
           watchPath: 'Optimized',
           properties: {
             allowAdd: true,
@@ -195,7 +201,7 @@ module.exports = function () {
           component['taskId'] !== ''
       },
 
-      getCommandLine: function (component) {
+      getCommandLine: function (component, path) {
         var command = ''
         command += component['execPath']
         if (component['taskId'] && component['taskId'] !== '') command += ' --id ' + component['taskId']
@@ -203,9 +209,9 @@ module.exports = function () {
         if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
         if (component['showGUI']) command += ' --gui'
         if (component['optEnabled']) command += ' --opt'
-        command += ' --src ' + '"' + pt.join(component['path'], 'Models') + '"'
-        command += ' --target ' + '"' + pt.join(component['path'], 'Optimized') + '"'
-        command += ' --conf ' + '"' + pt.join(component['path'], 'SimulationConf') + '"'
+        command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
+        command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
+        command += ' --conf ' + '"' + pt.join(path, 'SimulationConf') + '"'
 
         return command
       }
@@ -239,6 +245,7 @@ module.exports = function () {
           label: 'Available Input',
           selectedFolder: 'selectedInputFiles',
           folders: 'inputFiles',
+          varId: 'modelDir',
           watchPath: 'Models',
           properties: {
             watchDir: true,
@@ -253,6 +260,7 @@ module.exports = function () {
           label: '',
           selectedFolder: 'selectedFiles',
           folders: 'genFiles',
+          varId: 'genDir',
           watchPath: 'GeneratedCode',
           properties: {
             watchDir: true,
@@ -277,11 +285,11 @@ module.exports = function () {
         return component['stateMachineXML'] && component['stateMachineXML'] !== ''
       },
 
-      getCommandLine: function (component) {
+      getCommandLine: function (component, path) {
         var command = ''
         command += component['execPath']
         if (component['stateMachineXML'] && component['stateMachineXML'] !== '') command += ' --src "' + component['stateMachineXML'] + '"'
-        command += ' --target ' + '"' + pt.join(component['path'], 'GeneratedCode') + '"'
+        command += ' --target ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
     },
@@ -304,6 +312,7 @@ module.exports = function () {
           label: 'Previous Versions',
           selectedFolder: 'selectedGenFile',
           folders: 'genFiles',
+          varId: 'genDir',
           watchPath: 'GeneratedCode',
           isEnabled: function (component) {
             return !component.useGeneratedCode
@@ -328,6 +337,7 @@ module.exports = function () {
           label: 'Task File',
           selectedFolder: 'selectedGenFile',
           folders: 'genFiles',
+          varId: 'genDir',
           watchPath: 'Deployment/Tasks',
           isEnabled: function (component) {
             return !component.useGeneratedCode
@@ -367,10 +377,10 @@ module.exports = function () {
         return (component['genFiles'] && component['genFiles'].length > 0)
       },
 
-      getCommandLine: function (component) {
+      getCommandLine: function (component, path) {
         var command = ''
         command += component['execPath']
-        command += ' --src ' + '"' + pt.join(component['path'], 'GeneratedCode') + '"'
+        command += ' --src ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
     },

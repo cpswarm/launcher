@@ -1,14 +1,14 @@
 <template>
   <div class="container">
     <div class="description">{{info}}</div>
-    <el-input v-if="!number" size="small" @input="input" :disabled="!enabled" v-model="textValue"></el-input>
-    <el-input-number v-if="number" size="small" @input="input" :disabled="!enabled" v-model="textValue" :min="min" :max="max"></el-input-number>
+    <el-input v-if="!number" size="small" @input="input" :disabled="!isEnabled" v-model="textValue"></el-input>
+    <el-input-number v-if="number" size="small" @input="input" :disabled="!isEnabled" v-model="textValue" :min="min" :max="max"></el-input-number>
   </div>
 </template>
 
 <script>
 export default {
-  props: ['enabled', 'properties'],
+  props: ['properties', 'varId', 'tabId'],
   data () {
     var properties = {
       default: '',
@@ -24,7 +24,8 @@ export default {
       }
     }
 
-    this.$emit('input', properties['default'])
+    this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: properties['default']})
+
     return {
       textValue: properties['default'],
       info: properties['info'],
@@ -35,7 +36,17 @@ export default {
   },
   methods: {
     input: function (value) {
-      this.$emit('input', value)
+      this.$store.commit('updateVar', {tabId: this.tabId, varId: this.varId, value: value})
+    }
+  },
+
+  computed: {
+    isEnabled: function () {
+      return this.$store.getters.getWidgetEnabled(this.tabId, this.varId)
+    },
+
+    isVisible: function () {
+      return this.$store.getters.getWidgetVisible(this.tabId, this.varId)
     }
   }
 }

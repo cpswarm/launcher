@@ -8,23 +8,13 @@
           </span>
           <div class="image"><img src="@/assets/swarm.png"></div>
         </div>
-        <div v-for="tab in tabs" v-bind:key="tab.id" v-on:click="selectTab(tab)" v-bind:class="['tab-button', { selected: currentTab.id === tab.id  }]">
-          <div>
-            <div class="icon"><img v-bind:src="tab.config.icon"></div>
-            <div class="text">{{tab.config.name}}</div>
-            <div class="status">
-              <img v-if="tab.status.running" src="@/assets/running.png" title="An application is running as subprocess for this step">
-              <img v-if="tab.status.done" src="@/assets/finish.png" title="This step has successfully generated at least one output">
-              <img v-if="!tab.status.enabled" src="@/assets/lock.png" title="This step is disabled because no proper input is available">
-            </div>
-          </div>
-        </div>
+        <tab-button v-for="tab in tabs" v-bind:key="tab.id" :tab="tab"></tab-button>
         <div class="tab-button-filler"></div>
       </el-col>
       <el-col :span="18" class="whole-tab-container">
-        <tab-header :tab="currentTab" :path="path" class="tab-header" @open-help="openHelp" @error="emitError"></tab-header>
+        <tab-header :tab="selectedTab" :path="path" class="tab-header" @open-help="openHelp" @error="emitError"></tab-header>
         <div class="tab-container">
-          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" v-show="currentTab.id === tab.id" :config="tab.config" :path="path" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
+          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" :tab="tab" :path="path" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
         </div>
       </el-col>
     </el-row>
@@ -33,6 +23,7 @@
 
 <script>
 import TabHeader from '@/components/TabHeader.vue'
+import TabButton from '@/components/TabButton.vue'
 import GenericTab from '@/components/GenericTab.vue'
 
 var tabConfig = require('@/components/TabConfig.js')
@@ -43,26 +34,19 @@ export default {
   data () {
     var tabConfigs = tabConfig()
 
-    var tabs = []
-    for (var i in tabConfigs) {
-      var status = {running: false, done: false, enabled: false}
-      tabs.push({id: tabConfigs[i].id, status: status, config: tabConfigs[i]})
-    }
+    var tabs = tabConfig()
 
     return {
-      tabs: tabs,
-      currentTab: tabs[0]
+      tabs: tabs
     }
   },
   components: {
     TabHeader: TabHeader,
-    GenericTab: GenericTab
+    GenericTab: GenericTab,
+    TabButton: TabButton
   },
 
   methods: {
-    selectTab: function (tab) {
-      this.currentTab = tab
-    },
 
     handleTabStateChange: function (id, status) {
       for (var i in this.tabs) {
@@ -79,6 +63,12 @@ export default {
 
     emitError: function (err) {
       this.$emit('error', err)
+    }
+  },
+  
+  computed: {
+    selectedTab: function() {
+      return this.$store.state.selectedTab
     }
   }
 }
