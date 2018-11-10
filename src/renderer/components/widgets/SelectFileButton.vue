@@ -6,49 +6,49 @@
 </template>
 
 <script>
-const { remote } = require("electron");
-const pt = require("path");
+const { remote } = require('electron')
+const pt = require('path')
 
 export default {
-  props: ["rootPath", 'enabled', 'properties'],
-  data() {
-    var { path = "" } = this.properties;
+  props: ['rootPath', 'enabled', 'properties'],
+  data () {
+    var { path = '' } = this.properties
 
     // Emit event when initializing component
-    var selectedPath = null;
+    var selectedPath = null
 
     return {
       path: pt.join(this.rootPath, path),
       selectedPath: selectedPath
-    };
+    }
   },
   methods: {
-    open() {
+    open () {
       remote.dialog.showOpenDialog(
         remote.getCurrentWindow(),
-        { defaultPath: this.path, properties: ["openFile"] },
+        { defaultPath: this.path, properties: ['openFile'] },
         dirPath => {
-          if (!dirPath || dirPath.length === 0) return;
-          this.selectedPath = dirPath[0];
-          this.$store.commit("updateVar", {
+          if (!dirPath || dirPath.length === 0) return
+          this.selectedPath = dirPath[0]
+          this.$store.commit('updateVar', {
             tabId: this.tabId,
             varId: this.varId,
             value: this.selectedPath
-          });
+          })
         }
-      );
+      )
     }
   },
   computed: {
-    message() {
+    message () {
       if (!this.selectedPath) {
-        return "Select a file from " + this.path;
+        return 'Select a file from ' + this.path
       } else {
-        return "Selected file: " + this.selectedPath;
+        return 'Selected file: ' + this.selectedPath
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

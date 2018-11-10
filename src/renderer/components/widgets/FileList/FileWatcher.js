@@ -113,7 +113,7 @@ export default function (eventEmitter, types, validateCb) {
     } else {
       if (pt.basename(path) in _map) delete _map[pt.basename(path)]
     }
-    
+
     scanList()
   }
 

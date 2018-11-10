@@ -29,16 +29,16 @@
 
 <script>
 export default {
-  props: ["visible"],
-  data() {
-    return {};
+  props: ['visible'],
+  data () {
+    return {}
   },
   methods: {
-    handleClose: function() {
-      this.$store.commit('setShowHelp', false);
+    handleClose: function () {
+      this.$store.commit('setShowHelp', false)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

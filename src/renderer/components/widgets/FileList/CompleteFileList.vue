@@ -13,7 +13,7 @@ import FileList from '@/components/widgets/FileList/FileList.vue'
 import AddFileBox from '@/components/widgets/FileList/AddFileBox.vue'
 const fs = require('fs')
 const path = require('path')
-const { spawn } = require('child_process');
+const { spawn } = require('child_process')
 
 export default {
   // TODO: update this comment
@@ -28,7 +28,7 @@ export default {
   //    3) allowAdd: boolean, whether to allow creating new files on this widget
   //    4) multiSelect: boolean, whether to allow multiple selection, default is false
   props: ['rootPath', 'properties', 'enabled'],
-  data() {
+  data () {
     // Default values for properties
     var {
       watchPath = '',
@@ -55,23 +55,23 @@ export default {
     AddFileBox: AddFileBox
   },
   methods: {
-    stateChanged(files) {
+    stateChanged (files) {
       this.files = files
       var state = { files: files, selectedFile: this.selectedFile }
       this.$emit('change', state)
     },
 
-    folderSelected(file) {
+    folderSelected (file) {
       this.selectedFile = file
       var state = { files: this.files, selectedFile: file }
       this.$emit('change', state)
       if (this.listProperties.execCommand) {
-        this.command = this.listProperties.execCommand(folder[0].path)
+        this.command = this.listProperties.execCommand(file[0].path)
         console.log(this.command)
       }
     },
 
-    createFolder() {
+    createFolder () {
       if (!this.newFolder) {
         this.errMsg = "Folder name can't be empty!"
         return
@@ -98,30 +98,30 @@ export default {
       })
     },
 
-    exec() {
+    exec () {
       if (!this.command) {
-        this.emitError('No file selected yet.');
+        this.emitError('No file selected yet.')
         return
       }
       const sp = spawn(this.command, {
         shell: true,
         detached: true,
-        stdio: "pipe"
-      });
+        stdio: 'pipe'
+      })
 
       if (sp.stderr) {
-        sp.stderr.on("data", data => {
-          console.log("error")
-          this.emitError(data.toString());
-        });
+        sp.stderr.on('data', data => {
+          console.log('error')
+          this.emitError(data.toString())
+        })
       }
     },
 
-    clearError() {
+    clearError () {
       this.errMsg = ''
     },
 
-    emitError(err) {
+    emitError (err) {
       this.$emit('error', err)
     }
   }

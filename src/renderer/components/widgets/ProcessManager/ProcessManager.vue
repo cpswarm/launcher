@@ -25,117 +25,117 @@
 </template>
 
 <script>
-const { spawn } = require("child_process");
-const kill = require("tree-kill");
+const { spawn } = require('child_process')
+const kill = require('tree-kill')
 
 export default {
   // 2 Props:
   // 1. execPath: the command line to be executed
   // 2. allowLaunch: whether launching is allowed
-  props: ["tabId"],
-  data() {
+  props: ['tabId'],
+  data () {
     return {
-      textarea: "",
+      textarea: '',
       showTextarea: false,
       currentSubProcess: null
-    };
+    }
   },
   methods: {
-    launch: function(isDetached) {
+    launch: function (isDetached) {
       const sp = spawn(this.execPath, {
         shell: true,
         detached: isDetached,
-        stdio: isDetached ? "ignore" : "pipe"
-      });
+        stdio: isDetached ? 'ignore' : 'pipe'
+      })
 
       if (sp.stdout) {
-        sp.stdout.on("data", data => {
-          this.textarea += data.toString();
+        sp.stdout.on('data', data => {
+          this.textarea += data.toString()
           if (this.textarea.length > 3000) {
-            this.textarea = this.textarea.substring(2000, this.textarea.length);
+            this.textarea = this.textarea.substring(2000, this.textarea.length)
           }
           setImmediate(() => {
-            var outTextArea = this.$refs.output.$refs.textarea;
-            outTextArea.scrollTop = outTextArea.scrollHeight;
-          });
-        });
+            var outTextArea = this.$refs.output.$refs.textarea
+            outTextArea.scrollTop = outTextArea.scrollHeight
+          })
+        })
       }
 
       if (sp.stderr) {
-        sp.stderr.on("data", data => {
-          //this.emitError(data.toString());
-          this.textarea += data.toString();
+        sp.stderr.on('data', data => {
+          // this.emitError(data.toString());
+          this.textarea += data.toString()
           if (this.textarea.length > 3000) {
-            this.textarea = this.textarea.substring(2000, this.textarea.length);
+            this.textarea = this.textarea.substring(2000, this.textarea.length)
           }
           setImmediate(() => {
-            var outTextArea = this.$refs.output.$refs.textarea;
-            outTextArea.scrollTop = outTextArea.scrollHeight;
-          });
-        });
+            var outTextArea = this.$refs.output.$refs.textarea
+            outTextArea.scrollTop = outTextArea.scrollHeight
+          })
+        })
       }
 
-      sp.on("exit", code => {
+      sp.on('exit', code => {
         // Update tab state
-        console.log(`Child exited with code ${code}`);
-        this.currentSubProcess = null;
+        console.log(`Child exited with code ${code}`)
+        this.currentSubProcess = null
         this.$store.commit('setRunning', {tabId: this.tabId, value: false})
-      });
+      })
 
-      this.currentSubProcess = sp;
+      this.currentSubProcess = sp
 
       // Emit event
       this.$store.commit('setRunning', {tabId: this.tabId, value: true})
     },
 
-    launchDetached: function() {
-      this.launch(true);
+    launchDetached: function () {
+      this.launch(true)
     },
 
-    killSubProcess: function() {
+    killSubProcess: function () {
       if (this.currentSubProcess) {
-        kill(this.currentSubProcess.pid);
-        this.currentSubProcess = null;
+        kill(this.currentSubProcess.pid)
+        this.currentSubProcess = null
       }
     },
 
-    launchUndetached: function() {
+    launchUndetached: function () {
       // Dispaly the textarea
-      this.showTextarea = true;
-      this.launch(false);
+      this.showTextarea = true
+      this.launch(false)
     },
 
-    emitError: function(err) {
-      this.$emit("error", err);
+    emitError: function (err) {
+      this.$emit('error', err)
     },
 
-    toggleTextAreaVisibility: function() {
-      this.showTextarea = !this.showTextarea;
+    toggleTextAreaVisibility: function () {
+      this.showTextarea = !this.showTextarea
     },
 
-    clearOutput: function() {
-      this.textarea = "";
+    clearOutput: function () {
+      this.textarea = ''
     }
   },
 
   computed: {
-    rootPath: function() {
+    rootPath: function () {
       return this.$store.getters.getRootPath
     },
 
-    allowLaunch: function() {
+    allowLaunch: function () {
       return this.$store.getters.getAllowLaunchByTabId(this.tabId)
     },
 
-    isRunning: function() {
+    isRunning: function () {
       return this.$store.getters.getRunningByTabId(this.tabId)
     },
 
-    execPath: function() {
+    execPath: function () {
       return this.$store.getters.getCmdLineByTabId(this.tabId, this.rootPath)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

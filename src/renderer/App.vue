@@ -15,7 +15,10 @@ import utils from '@/utils/utils.js'
 const { ipcRenderer, remote } = require('electron')
 
 export default {
-  data() {
+  data () {
+    return {}
+  },
+  created () {
     // Initialize ipcRenderer listener
     ipcRenderer.on('close-project', () => {
       this.closeProject()
@@ -32,9 +35,8 @@ export default {
     ipcRenderer.on('open-help', () => {
       this.$store.commit('setShowHelp', true)
     })
-
-    return {}
   },
+
   components: {
     Help,
     Welcome,
@@ -42,7 +44,7 @@ export default {
   },
   methods: {
     // The initialization method, which should be used to set up filewatcher, etc.
-    initMain(path) {
+    initMain (path) {
       // Start file watching
       this.$store.commit('changeRootPath', path)
 
@@ -62,7 +64,7 @@ export default {
       ipcRenderer.send('set-opt-menu')
     },
 
-    createProject() {
+    createProject () {
       remote.dialog.showOpenDialog(
         remote.getCurrentWindow(),
         {
@@ -85,7 +87,7 @@ export default {
       )
     },
 
-    openProject() {
+    openProject () {
       remote.dialog.showOpenDialog(remote.getCurrentWindow(), { properties: ['openDirectory'] }, dirPath => {
         if (!dirPath) return
         this.startLoading()
@@ -93,7 +95,7 @@ export default {
       })
     },
 
-    closeProject() {
+    closeProject () {
       // Switch to main panel
       this.$store.commit('setCurrentActivity', 'welcome')
 
@@ -104,31 +106,31 @@ export default {
       ipcRenderer.send('set-start-menu')
     },
 
-    startLoading() {
+    startLoading () {
       this.$store.commit('setIsLoading', true)
     },
 
     // Delayed stop loading (A lazy hack to hide the short moment in which the main panel will be viewed before it is ready)
-    stopLoadingDelayed() {
+    stopLoadingDelayed () {
       setTimeout(() => {
         this.$store.commit('setIsLoading', false)
       }, 1500)
     },
 
-    showError(err) {
+    showError (err) {
       this.$message.error(err.toString())
     }
   },
   computed: {
-    showHelp() {
+    showHelp () {
       return this.$store.state.showHelp
     },
 
-    isLoading() {
+    isLoading () {
       return this.$store.state.isLoading
     },
 
-    currentActivity() {
+    currentActivity () {
       return this.$store.state.currentActivity
     }
   }

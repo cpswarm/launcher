@@ -14,34 +14,34 @@
 
 <script>
 export default {
-  props: ["tab"],
-  data() {
+  props: ['tab'],
+  data () {
     return {}
   },
   methods: {
     selectTab: function () {
       this.$store.commit('selectTab', this.tab.id)
-    },
+    }
 
   },
   computed: {
-    isSelected: function() {
+    isSelected: function () {
       return this.$store.state.selectedTab.id === this.tab.id
     },
 
-    isEnabled: function() {
+    isEnabled: function () {
       return this.$store.getters.getEnabledByTabId(this.tab.id)
     },
 
-    isDone: function() {
+    isDone: function () {
       return this.$store.getters.getDoneByTabId(this.tab.id)
     },
 
-    isRunning: function() {
+    isRunning: function () {
       return this.$store.state[this.tab.id].running
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

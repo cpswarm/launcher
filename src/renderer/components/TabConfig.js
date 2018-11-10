@@ -53,7 +53,6 @@ module.exports = function () {
       },
 
       getCommandLine: function (component, path) {
-        console.log(component.modelDir)
         var command = ''
         command += component['execPath']
         command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
@@ -90,15 +89,15 @@ module.exports = function () {
           label: 'Simulation Dimension',
           varId: 'dimension',
           properties: {
-            items: [{ 
-              label: '2D', 
-              value: '2d' 
-            }, { 
-              label: '3D', 
-              value: '3d' 
-            }, { 
-              label: 'Any', 
-              value: 'any' 
+            items: [{
+              label: '2D',
+              value: '2d'
+            }, {
+              label: '3D',
+              value: '3d'
+            }, {
+              label: 'Any',
+              value: 'any'
             }],
             defaultValue: 'any',
             info: 'Number of dimension required for the simulation'
@@ -146,7 +145,7 @@ module.exports = function () {
             path: 'http://130.192.86.237:8080/dashboards/',
             openUrl: true
           },
-          isEnabled: function(component) {
+          isEnabled: function (component) {
             return true
           }
         },
@@ -181,7 +180,7 @@ module.exports = function () {
 
       ],
       isDone: function (component) {
-        //return (component['outputFiles'] && component['outputFiles'].length > 0)
+        // return (component['outputFiles'] && component['outputFiles'].length > 0)
         return false
       },
 
@@ -250,7 +249,7 @@ module.exports = function () {
         {
           type: 'file-list',
           label: '',
-          varId: 'genDir',         
+          varId: 'genDir',
           properties: {
             watchPath: 'GeneratedCode',
             watchDir: true,
@@ -300,7 +299,7 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Previous Versions',
-          varId: 'genDir',          
+          varId: 'genDir',
           isEnabled: function (component) {
             return !component.useGeneratedCode
           },
@@ -323,7 +322,7 @@ module.exports = function () {
         {
           type: 'file-list',
           label: 'Task File',
-          varId: 'genDir',    
+          varId: 'genDir',
           isEnabled: function (component) {
             return !component.useGeneratedCode
           },
@@ -336,7 +335,7 @@ module.exports = function () {
               return 'curl -s -X POST -T "' + filePath + '" localhost:8080/tasks'
             }
           }
-        },
+        }
         // {
         //   type: 'file-list',
         //   label: 'Previous Versions',

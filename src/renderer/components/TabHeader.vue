@@ -16,7 +16,7 @@
 const { spawn } = require('child_process')
 
 export default {
-  data() {
+  data () {
     return {}
   },
   props: ['tab'],

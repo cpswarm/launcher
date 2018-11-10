@@ -8,41 +8,42 @@
 
 <script>
 // We use remote.shell to open file explorer, so that it will be in focus, instead of being opened in background
-const { shell } = require("electron").remote;
-const pt = require("path");
+const { shell } = require('electron').remote
+const pt = require('path')
 
 export default {
-  props: ["rootPath", "properties", 'enabled'],
-  data() {
+  props: ['rootPath', 'properties', 'enabled'],
+  data () {
     var {
-      path = "",
+      path = '',
       openUrl = false
-    } = this.properties;
+    } = this.properties
 
-    return { path, openUrl };
+    return { path, openUrl }
   },
   methods: {
-    open() {
+    open () {
+      var success
       if (!this.openUrl) {
-        var success = shell.showItemInFolder(pt.join(this.rootPath, this.path));
+        success = shell.showItemInFolder(pt.join(this.rootPath, this.path))
         if (!success) {
           this.$emit(
-            "error",
-            "Unable to open folder in file explorer on path " + this.path
-          );
+            'error',
+            'Unable to open folder in file explorer on path ' + this.path
+          )
         }
       } else {
-        var success = shell.openExternal(this.path)
+        success = shell.openExternal(this.path)
         if (!success) {
           this.$emit(
-            "error",
-            "Unable to open external URL " + this.path
-          );
+            'error',
+            'Unable to open external URL ' + this.path
+          )
         }
       }
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

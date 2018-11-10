@@ -21,7 +21,7 @@ export default {
     }
   },
   methods: {
-    change(value) {
+    change (value) {
       this.$emit('change', value)
     }
   }

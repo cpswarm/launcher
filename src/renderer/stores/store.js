@@ -19,7 +19,8 @@ var state = {
   showHelp: false,
   isLoading: false,
   currentActivity: 'welcome',
-  selectedTab: tabConfig[0]
+  selectedTab: tabConfig[0],
+  config: tabConfig
 }
 
 for (let id in tabConfigMap) {
@@ -92,7 +93,7 @@ var mutations = {
     state.isLoading = isLoading
   },
 
-  setCurrentActivity(state, activity) {
+  setCurrentActivity (state, activity) {
     state.currentActivity = activity
   },
 

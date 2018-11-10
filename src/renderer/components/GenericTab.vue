@@ -7,18 +7,17 @@
 </template>
 
 <script>
-import ProcessManager from "@/components/widgets/ProcessManager/ProcessManager.vue";
-import WidgetWrapper from "@/components/WidgetWrapper.vue";
-const path = require("path");
+import ProcessManager from '@/components/widgets/ProcessManager/ProcessManager.vue'
+import WidgetWrapper from '@/components/WidgetWrapper.vue'
 
 export default {
-  props: ["tab"],
+  props: ['tab'],
 
-  data() {
+  data () {
     // Initialize status of each widget
     for (let i in this.tab.widgets) {
-      let widget = this.tab.widgets[i];
-      widget.status = { visible: true, enabled: true };
+      let widget = this.tab.widgets[i]
+      widget.status = { visible: true, enabled: true }
     }
 
     return {
@@ -26,28 +25,29 @@ export default {
       // enabled: it means the component in this tab has enough inputs to be launched
       // running: it means the component has been launched and is still running
       id: this.tab.id
-    };
+    }
   },
+
   components: {
     ProcessManager,
     WidgetWrapper
   },
-  methods: {
 
-    emitError: function(err) {
-      this.$emit("error", err);
+  methods: {
+    emitError (err) {
+      this.$emit('error', err)
     }
   },
   computed: {
-    isEnabled: function() {
+    isEnabled () {
       return this.$store.getters.getEnabledByTabId(this.tab.id)
     },
 
-    isVisible: function() {
+    isVisible () {
       return this.$store.state.selectedTab.id === this.tab.id
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>

@@ -14,7 +14,7 @@
       <el-col :span="18" class="whole-tab-container">
         <tab-header :tab="selectedTab" class="tab-header" @error="emitError"></tab-header>
         <div class="tab-container">
-          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" :tab="tab" @status-changed="handleTabStateChange" @error="emitError"></generic-tab>
+          <generic-tab v-for="tab in tabs" v-bind:key="tab.id" :tab="tab" @error="emitError"></generic-tab>
         </div>
       </el-col>
     </el-row>
@@ -26,42 +26,28 @@ import TabHeader from '@/components/TabHeader.vue'
 import TabButton from '@/components/TabButton.vue'
 import GenericTab from '@/components/GenericTab.vue'
 
-var tabConfig = require('@/components/TabConfig.js')
-
 export default {
   // The directory path of the launcher project
   props: [],
-  data() {
-    var tabs = tabConfig()
-
+  data () {
     return {
-      tabs: tabs
+      tabs: this.$store.state.config
     }
   },
   components: {
-    TabHeader: TabHeader,
-    GenericTab: GenericTab,
-    TabButton: TabButton
+    TabHeader,
+    GenericTab,
+    TabButton
   },
 
   methods: {
-
-    handleTabStateChange(id, status) {
-      for (var i in this.tabs) {
-        if (this.tabs[i].id === id) {
-          this.tabs[i].status = Object.assign({}, status)
-          break
-        }
-      }
-    },
-
-    emitError(err) {
+    emitError (err) {
       this.$emit('error', err)
     }
   },
 
   computed: {
-    selectedTab() {
+    selectedTab () {
       return this.$store.state.selectedTab
     }
   }

@@ -7,13 +7,13 @@ export default function (win) {
       submenu: [
         {
           label: 'New Project',
-          click() {
+          click () {
             win.webContents.send('create-project')
           }
         },
         {
           label: 'Open Project...',
-          click() {
+          click () {
             win.webContents.send('open-project')
           }
         },
@@ -26,14 +26,14 @@ export default function (win) {
       submenu: [
         {
           label: 'How To Use',
-          click() {
+          click () {
             win.webContents.send('open-help')
           }
         },
         { type: 'separator' },
         {
           label: 'About',
-          click() {
+          click () {
             dialog.showMessageBox(win, { type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon' })
           }
         }
@@ -47,20 +47,20 @@ export default function (win) {
       submenu: [
         {
           label: 'New Project',
-          click() {
+          click () {
             win.webContents.send('create-project')
           }
         },
         {
           label: 'Open Project...',
-          click() {
+          click () {
             win.webContents.send('open-project')
           }
         },
         { type: 'separator' },
         {
           label: 'Close Project',
-          click() {
+          click () {
             win.webContents.send('close-project')
           }
         },
@@ -73,14 +73,14 @@ export default function (win) {
       submenu: [
         {
           label: 'How To Use',
-          click() {
+          click () {
             win.webContents.send('open-help')
           }
         },
         { type: 'separator' },
         {
           label: 'About',
-          click() {
+          click () {
             dialog.showMessageBox(win, { type: 'info', buttons: ['OK'], title: 'CPSwarm Launcher', message: 'CPSwarm Launcher', detail: 'Version: 1.0.0' + require('os').EOL + 'Credits: Icons used in this application are made by Flaticon' })
           }
         }

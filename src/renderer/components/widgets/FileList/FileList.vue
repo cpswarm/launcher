@@ -61,7 +61,7 @@ export default {
     var eventEmitter = new events.EventEmitter()
     // Initiallize watcher
     var fileWatcher = fw(eventEmitter, watchTypes)
-    
+
     // Catch file change event
     eventEmitter.on('file', folders => {
       // Update file list

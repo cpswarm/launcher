@@ -9,13 +9,13 @@
 <script>
 export default {
   props: ['enabled', 'properties'],
-  data() {
+  data () {
     var {
-      defaultValue = '', 
-      info = '',  
-      number = false,  
-      min = 0,  
-      max = 9999999 
+      defaultValue = '',
+      info = '',
+      number = false,
+      min = 0,
+      max = 9999999
     } = this.properties
 
     this.$emit('change', defaultValue)
@@ -29,7 +29,7 @@ export default {
     }
   },
   methods: {
-    input(value) {
+    input (value) {
       this.$emit('change', value)
     }
   }

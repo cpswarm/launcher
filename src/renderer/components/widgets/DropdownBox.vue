@@ -11,13 +11,13 @@
 
 <script>
 export default {
-  props: ["properties", 'enabled'],
-  data() {
+  props: ['properties', 'enabled'],
+  data () {
     var {
       defaultValue = null,
       items = [],
       info = ''
-    } = this.properties;
+    } = this.properties
 
     this.$emit('change', defaultValue)
 
@@ -25,14 +25,14 @@ export default {
       items,
       selectedItem: defaultValue,
       info
-    };
+    }
   },
   methods: {
-    change(value) {
+    change (value) {
       this.$emit('change', value)
     }
   }
-};
+}
 </script>
 
 <style lang="scss" scoped>
