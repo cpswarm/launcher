@@ -353,11 +353,13 @@ module.exports = function () {
       },
 
       isEnabled: function (component) {
-        return (component['genFiles'] && component['genFiles'].length > 0)
+       //return (component['genFiles'] && component['genFiles'].length > 0)
+       return true
       },
 
       allowLaunch: function (component) {
-        return (component['genFiles'] && component['genFiles'].length > 0)
+        //return (component['genFiles'] && component['genFiles'].length > 0)
+        return true
       },
 
       getCommandLine: function (component, path) {
