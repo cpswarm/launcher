@@ -77,11 +77,32 @@ module.exports = function () {
           }
         },
         {
+          type: 'single-checkbox',
+          label: 'Running Mode',
+          varId: 'runningMode',
+          properties: {
+            defaultValue: false,
+            label: 'Run in Running mode'
+          }
+        },
+        {
+          type: 'single-checkbox',
+          label: 'Deployment Mode',
+          varId: 'deploymentMode',
+          properties: {
+            defaultValue: false,
+            label: 'Run in deployment mode'
+          }
+        },
+        {
           type: 'text',
           label: 'Task ID',
           varId: 'taskId',
           properties: {
             info: 'The task ID, which is used to distinguish different processes'
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -101,6 +122,9 @@ module.exports = function () {
             }],
             defaultValue: 'any',
             info: 'Number of dimension required for the simulation'
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -111,6 +135,9 @@ module.exports = function () {
             info: 'Maximum number of agents required for the simulation',
             number: true,
             defaultValue: 0
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -120,6 +147,35 @@ module.exports = function () {
           properties: {
             defaultValue: false,
             label: 'Show the graphical interface of simulators'
+          },
+          isVisible: function (component) {
+            return component['runningMode']
+          }
+        },
+        {
+          type: 'text',
+          label: 'Candidate Count',
+          varId: 'candidateCount',
+          properties: {
+            info: 'The number of candidates',
+            number: true,
+            defaultValue: 0
+          },
+          isVisible: function (component) {
+            return component['runningMode']
+          }
+        },
+        {
+          type: 'text',
+          label: 'Generation Count',
+          varId: 'generationCount',
+          properties: {
+            info: 'The number of generations',
+            number: true,
+            defaultValue: 0
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -129,6 +185,35 @@ module.exports = function () {
           properties: {
             defaultValue: false,
             label: 'Require the use of the Optimization Tool'
+          },
+          isVisible: function (component) {
+            return component['runningMode']
+          }
+        },
+        {
+          type: 'text',
+          label: 'Optimization Seed',
+          varId: 'optimizationSeed',
+          properties: {
+            info: 'The seed to be used in optimization',
+            number: true,
+            defaultValue: 0
+          },
+          isVisible: function (component) {
+            return component['runningMode']
+          }
+        },
+        {
+          type: 'text',
+          label: 'Simulation Timeout (in seconds)',
+          varId: 'simulationTimeout',
+          properties: {
+            info: 'The simulation timeout in seconds',
+            number: true,
+            defaultValue: 0
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -147,6 +232,9 @@ module.exports = function () {
           },
           isEnabled: function (component) {
             return true
+          },
+          isVisible: function (component) {
+            return component['runningMode']
           }
         },
         {
@@ -190,20 +278,27 @@ module.exports = function () {
       },
 
       allowLaunch: function (component) {
-        return component['taskId'] &&
-          component['taskId'] !== ''
+        return (!component['deploymentMode'] && component['taskId'] &&
+          component['taskId'] !== '') || component['deploymentMode']
       },
 
       getCommandLine: function (component, path) {
         var command = ''
         command += component['execPath']
-        if (component['taskId'] && component['taskId'] !== '') command += ' --id ' + component['taskId']
-        if (component['dimension'] && component['dimension'] !== '') command += ' --dim ' + component['dimension']
-        if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
-        if (component['showGUI']) command += ' --gui'
-        if (component['optEnabled']) command += ' --opt'
-        command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
-        command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
+        if (component['runningMode']) {
+          if (component['taskId'] && component['taskId'] !== '') command += ' --id ' + component['taskId']
+          if (component['dimension'] && component['dimension'] !== '') command += ' --dim ' + component['dimension']
+          if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
+          if (!isNaN(component['candidateCount'])) command += ' --can ' + component['candidateCount']
+          if (!isNaN(component['generationCount'])) command += ' --gen ' + component['generationCount']
+          if (!isNaN(component['optimizationSeed'])) command += ' --seed ' + component['optimizationSeed']
+          if (!isNaN(component['simulationTimeout'])) command += ' --sim ' + component['simulationTimeout']
+          if (component['showGUI']) command += ' --gui'
+          if (component['optEnabled']) command += ' --opt'
+          command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
+          command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
+        }
+
         command += ' --conf ' + '"' + pt.join(path, 'SimulationConf') + '"'
 
         return command
@@ -353,12 +448,12 @@ module.exports = function () {
       },
 
       isEnabled: function (component) {
-       //return (component['genFiles'] && component['genFiles'].length > 0)
-       return true
+        // return (component['genFiles'] && component['genFiles'].length > 0)
+        return true
       },
 
       allowLaunch: function (component) {
-        //return (component['genFiles'] && component['genFiles'].length > 0)
+        // return (component['genFiles'] && component['genFiles'].length > 0)
         return true
       },
 
