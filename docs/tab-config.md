@@ -24,7 +24,7 @@ Each tab object contains the following properties:
 ### Widget Object
 
 Widget objects are contained in the `widgets` field in the tab object. It has the following properties:
-- `type`: the type of widget, must match one of those imported in `src/component/GenericTab.vue`;
+- `type`: the type of widget, must match one of those imported in `src/component/WidgetWrapper.vue`;
 - `label`: the text that appears on top of the widget as label;
 - `varId`: the variable name to associate the value of this widget to;
 - `properties`: properties of the widget object, different according to types of widget. See each component to find out what properties it has;

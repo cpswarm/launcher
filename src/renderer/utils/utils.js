@@ -56,6 +56,7 @@ export default
         fs.ensureDir(item.path, next)
       }
     }, callback)
+
     return list
   }
 

@@ -34,30 +34,30 @@ module.exports = function () {
             watchDir: true,
             watchFile: true
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return true
           }
         }
       ],
-      isDone: function (component) {
-        if (component.modelDir && component.modelDir.files) {
-          return component.modelDir.files.length > 0
+      isDone: function (tab) {
+        if (tab.modelDir && tab.modelDir.files) {
+          return tab.modelDir.files.length > 0
         }
         return false
       },
-      isEnabled: function (component) {
+      isEnabled: function (tab) {
         return true
       },
 
-      allowLaunch: function (component) {
+      allowLaunch: function (tab) {
         return true
       },
 
-      getCommandLine: function (component, path) {
+      getCommandLine: function (tab, path) {
         var command = ''
-        command += component['execPath']
+        command += tab['execPath']
         command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
-        if ('selectedFile' in component.modelDir && component.modelDir.selectedFile.length === 0) {
+        if ('selectedFile' in tab.modelDir && tab.modelDir.selectedFile.length === 0) {
           command += ' --create'
         }
         return command
@@ -102,8 +102,8 @@ module.exports = function () {
           properties: {
             info: 'The task ID, which is used to distinguish different processes'
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -124,8 +124,8 @@ module.exports = function () {
             defaultValue: 'any',
             info: 'Number of dimension required for the simulation'
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -137,8 +137,8 @@ module.exports = function () {
             number: true,
             defaultValue: 0
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -149,8 +149,8 @@ module.exports = function () {
             defaultValue: false,
             label: 'Show the graphical interface of simulators'
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -162,8 +162,8 @@ module.exports = function () {
             number: true,
             defaultValue: 0
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -175,8 +175,8 @@ module.exports = function () {
             number: true,
             defaultValue: 0
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -187,8 +187,8 @@ module.exports = function () {
             defaultValue: false,
             label: 'Require the use of the Optimization Tool'
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -200,8 +200,8 @@ module.exports = function () {
             number: true,
             defaultValue: 0
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -213,8 +213,8 @@ module.exports = function () {
             number: true,
             defaultValue: 0
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -233,11 +233,11 @@ module.exports = function () {
             path: 'http://130.192.86.237:8080/dashboards/',
             openUrl: true
           },
-          isEnabled: function (component) {
+          isEnabled: function (tab) {
             return true
           },
-          isVisible: function (component) {
-            return component['runningMode']
+          isVisible: function (tab) {
+            return tab['runningMode']
           }
         },
         {
@@ -250,7 +250,7 @@ module.exports = function () {
             watchDir: true,
             watchFile: true
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return false
           }
         },
@@ -264,40 +264,40 @@ module.exports = function () {
             watchDir: true,
             watchFile: true
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return false
           }
         }
 
       ],
-      isDone: function (component) {
-        // return (component['outputFiles'] && component['outputFiles'].length > 0)
+      isDone: function (tab) {
+        // return (tab['outputFiles'] && tab['outputFiles'].length > 0)
         return false
       },
 
-      isEnabled: function (component) {
-        // return (component['inputFiles'] && component['inputFiles'].length > 0)
+      isEnabled: function (tab) {
+        // return (tab['inputFiles'] && tab['inputFiles'].length > 0)
         return true
       },
 
-      allowLaunch: function (component) {
-        return (!component['deploymentMode'] && component['taskId'] &&
-          component['taskId'] !== '') || component['deploymentMode']
+      allowLaunch: function (tab) {
+        return (!tab['deploymentMode'] && tab['taskId'] &&
+          tab['taskId'] !== '') || tab['deploymentMode']
       },
 
-      getCommandLine: function (component, path) {
+      getCommandLine: function (tab, path) {
         var command = ''
-        command += component['execPath']
-        if (component['runningMode']) {
-          if (component['taskId'] && component['taskId'] !== '') command += ' --id ' + component['taskId']
-          if (component['dimension'] && component['dimension'] !== '') command += ' --dim ' + component['dimension']
-          if (!isNaN(component['maxAgent'])) command += ' --max ' + component['maxAgent']
-          if (!isNaN(component['candidateCount'])) command += ' --can ' + component['candidateCount']
-          if (!isNaN(component['generationCount'])) command += ' --gen ' + component['generationCount']
-          if (!isNaN(component['optimizationSeed'])) command += ' --seed ' + component['optimizationSeed']
-          if (!isNaN(component['simulationTimeout'])) command += ' --sim ' + component['simulationTimeout']
-          if (component['showGUI']) command += ' --gui'
-          if (component['optEnabled']) command += ' --opt'
+        command += tab['execPath']
+        if (tab['runningMode']) {
+          if (tab['taskId'] && tab['taskId'] !== '') command += ' --id ' + tab['taskId']
+          if (tab['dimension'] && tab['dimension'] !== '') command += ' --dim ' + tab['dimension']
+          if (!isNaN(tab['maxAgent'])) command += ' --max ' + tab['maxAgent']
+          if (!isNaN(tab['candidateCount'])) command += ' --can ' + tab['candidateCount']
+          if (!isNaN(tab['generationCount'])) command += ' --gen ' + tab['generationCount']
+          if (!isNaN(tab['optimizationSeed'])) command += ' --seed ' + tab['optimizationSeed']
+          if (!isNaN(tab['simulationTimeout'])) command += ' --sim ' + tab['simulationTimeout']
+          if (tab['showGUI']) command += ' --gui'
+          if (tab['optEnabled']) command += ' --opt'
           command += ' --src ' + '"' + pt.join(path, 'Models') + '"'
           command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
         }
@@ -340,7 +340,7 @@ module.exports = function () {
             watchDir: true,
             watchFile: true
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return false
           }
         },
@@ -353,29 +353,29 @@ module.exports = function () {
             watchDir: true,
             watchFile: true
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return false
           }
         }
       ],
-      isDone: function (component) {
-        // return (component['genFiles'] && component['genFiles'].length > 0)
+      isDone: function (tab) {
+        // return (tab['genFiles'] && tab['genFiles'].length > 0)
         return false
       },
 
-      isEnabled: function (component) {
-        // return (component['inputFiles'] && component['inputFiles'].length > 0)
+      isEnabled: function (tab) {
+        // return (tab['inputFiles'] && tab['inputFiles'].length > 0)
         return true
       },
 
-      allowLaunch: function (component) {
-        return component['stateMachineXML'] && component['stateMachineXML'] !== ''
+      allowLaunch: function (tab) {
+        return tab['stateMachineXML'] && tab['stateMachineXML'] !== ''
       },
 
-      getCommandLine: function (component, path) {
+      getCommandLine: function (tab, path) {
         var command = ''
-        command += component['execPath']
-        if (component['stateMachineXML'] && component['stateMachineXML'] !== '') command += ' --src "' + component['stateMachineXML'] + '"'
+        command += tab['execPath']
+        if (tab['stateMachineXML'] && tab['stateMachineXML'] !== '') command += ' --src "' + tab['stateMachineXML'] + '"'
         command += ' --target ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
@@ -398,14 +398,14 @@ module.exports = function () {
           type: 'file-list',
           label: 'Previous Versions',
           varId: 'genDir',
-          isEnabled: function (component) {
-            return !component.useGeneratedCode
+          isEnabled: function (tab) {
+            return !tab.useGeneratedCode
           },
           properties: {
             watchPath: 'GeneratedCode',
             allowAdd: false
           },
-          isVisible: function (component) {
+          isVisible: function (tab) {
             return false
           }
         },
@@ -422,8 +422,8 @@ module.exports = function () {
           type: 'file-list',
           label: 'Task File',
           varId: 'genDir',
-          isEnabled: function (component) {
-            return !component.useGeneratedCode
+          isEnabled: function (tab) {
+            return !tab.useGeneratedCode
           },
           properties: {
             watchPath: 'Deployment/Tasks',
@@ -438,8 +438,8 @@ module.exports = function () {
         // {
         //   type: 'file-list',
         //   label: 'Previous Versions',
-        //   isEnabled: function (component) {
-        //     return !component.useGeneratedCode
+        //   isEnabled: function (tab) {
+        //     return !tab.useGeneratedCode
         //   },
         //   properties: {
         //   watchPath: pt.join('Deployment', 'Workspaces'),
@@ -447,23 +447,23 @@ module.exports = function () {
         //   }
         // }
       ],
-      isDone: function (component) {
+      isDone: function (tab) {
         return false
       },
 
-      isEnabled: function (component) {
-        // return (component['genFiles'] && component['genFiles'].length > 0)
+      isEnabled: function (tab) {
+        // return (tab['genFiles'] && tab['genFiles'].length > 0)
         return true
       },
 
-      allowLaunch: function (component) {
-        // return (component['genFiles'] && component['genFiles'].length > 0)
+      allowLaunch: function (tab) {
+        // return (tab['genFiles'] && tab['genFiles'].length > 0)
         return true
       },
 
-      getCommandLine: function (component, path) {
+      getCommandLine: function (tab, path) {
         var command = ''
-        command += component['execPath']
+        command += tab['execPath']
         command += ' --src ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
@@ -483,21 +483,21 @@ module.exports = function () {
           }
         }
       ],
-      isDone: function (component) {
+      isDone: function (tab) {
         return false
       },
 
-      isEnabled: function (component) {
+      isEnabled: function (tab) {
         return true
       },
 
-      allowLaunch: function (component) {
+      allowLaunch: function (tab) {
         return true
       },
 
-      getCommandLine: function (component) {
+      getCommandLine: function (tab) {
         var command = ''
-        command += '"' + component['execPath'] + '"'
+        command += '"' + tab['execPath'] + '"'
         return command
       }
     }
