@@ -19,6 +19,7 @@ module.exports = function () {
         {
           type: 'explorer-button',
           label: 'Model Directory',
+          varId: 'modelDir',
           properties: {
             path: 'Models'
           }
@@ -219,6 +220,7 @@ module.exports = function () {
         {
           type: 'explorer-button',
           label: 'Simulation Configuration',
+          varId: 'simulationConf',
           properties: {
             path: 'SimulationConf'
           }
@@ -226,6 +228,7 @@ module.exports = function () {
         {
           type: 'explorer-button',
           label: 'Monitor Interface',
+          varId: 'monitorInterface',
           properties: {
             path: 'http://130.192.86.237:8080/dashboards/',
             openUrl: true
@@ -409,6 +412,7 @@ module.exports = function () {
         {
           type: 'explorer-button',
           label: 'Deployment Manager Interface',
+          varId: 'deploymentManagerInterface',
           properties: {
             path: 'http://localhost:8080/ui/',
             openUrl: true
