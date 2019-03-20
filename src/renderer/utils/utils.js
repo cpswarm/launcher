@@ -4,6 +4,7 @@ const async = require('async')
 
 export default
 {
+  // Create a project skeleton according to the structure defined in conf/FileStructure.json
   createProjectFolder: function (rootPath, o, callback) {
     // The list of each files and folder to be created
     var list = []
