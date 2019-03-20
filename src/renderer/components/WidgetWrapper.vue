@@ -13,11 +13,11 @@
 <script>
 import ProcessManager from '@/components/widgets/ProcessManager/ProcessManager.vue'
 import FileList from '@/components/widgets/FileList/CompleteFileList.vue'
-import TextInput from '@/components/widgets/TextInput.vue'
-import SingleCheckbox from '@/components/widgets/SingleCheckBox.vue'
-import ExplorerButton from '@/components/widgets/ExplorerButton.vue'
-import SelectFileButton from '@/components/widgets/SelectFileButton.vue'
-import DropdownBox from '@/components/widgets/DropdownBox.vue'
+import TextInput from '@/components/widgets/TextInput/TextInput.vue'
+import SingleCheckbox from '@/components/widgets/SingleCheckBox/SingleCheckBox.vue'
+import ExplorerButton from '@/components/widgets/ExplorerButton/ExplorerButton.vue'
+import SelectFileButton from '@/components/widgets/SelectFileButton/SelectFileButton.vue'
+import DropdownBox from '@/components/widgets/DropdownBox/DropdownBox.vue'
 
 export default {
   props: ['widget', 'varId', 'tabId'],

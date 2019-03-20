@@ -75,7 +75,7 @@ export default {
           if (!dirPath) return
 
           this.startLoading()
-          var structure = require('@/utils/FileStructure.json')
+          var structure = require('@/conf/FileStructure.json')
           utils.createProjectFolder(dirPath[0], structure, err => {
             if (err) {
               this.showError(err)

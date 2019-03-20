@@ -1,4 +1,4 @@
-var tabConfig = require('@/components/TabConfig.js')()
+var tabConfig = require('@/conf/TabConfig.js')()
 
 // Make the tabConfig into a map for easier query
 var tabConfigMap = {}
