@@ -288,7 +288,9 @@ module.exports = function () {
       getCommandLine: function (tab, path) {
         var command = ''
         command += tab['execPath']
+        var mode = ''
         if (tab['runningMode']) {
+          mode += 'r'
           if (tab['taskId'] && tab['taskId'] !== '') command += ' --id ' + tab['taskId']
           if (tab['dimension'] && tab['dimension'] !== '') command += ' --dim ' + tab['dimension']
           if (!isNaN(tab['maxAgent'])) command += ' --max ' + tab['maxAgent']
@@ -302,6 +304,11 @@ module.exports = function () {
           command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
         }
 
+        if (tab['deploymentMode']) {
+          mode += 'd'
+        }
+
+        if (mode) command += ' --mode ' + mode
         command += ' --conf ' + '"' + pt.join(path, 'SimulationConf') + '"'
 
         return command
