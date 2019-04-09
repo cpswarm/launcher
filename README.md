@@ -41,7 +41,7 @@ P. S.: currently, only ``deb`` and ``AppImage`` could be built from Windows. Bui
 
 #### Documentation 
 
-Please see the [docs]("docs/") directory for more documentations.
+Please see the [docs](docs/) directory for more documentations.
 
 ---
 
