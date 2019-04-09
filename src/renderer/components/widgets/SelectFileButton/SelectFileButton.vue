@@ -30,11 +30,12 @@ export default {
         dirPath => {
           if (!dirPath || dirPath.length === 0) return
           this.selectedPath = dirPath[0]
-          this.$store.commit('updateVar', {
-            tabId: this.tabId,
-            varId: this.varId,
-            value: this.selectedPath
-          })
+          // this.$store.commit('updateVar', {
+          //   tabId: this.tabId,
+          //   varId: this.varId,
+          //   value: this.selectedPath
+          // })
+          this.$emit('change', this.selectedPath)
         }
       )
     }
