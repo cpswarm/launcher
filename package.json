@@ -10,6 +10,7 @@
     "build": "node .electron-vue/build.js && electron-builder",
     "build:win": "node .electron-vue/build.js && electron-builder --win",
     "build:linux": "node .electron-vue/build.js && electron-builder --linux",
+    "build:mac": "node .electron-vue/build.js && electron-builder --mac",
     "build:dir": "node .electron-vue/build.js && electron-builder --dir",
     "build:ci": "node .electron-vue/build.js && electron-builder --win --dir",
     "build:clean": "cross-env BUILD_TARGET=clean node .electron-vue/build.js",
