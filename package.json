@@ -67,6 +67,7 @@
   "dependencies": {
     "async": "^2.6.1",
     "axios": "^0.16.1",
+    "electron-builder": "^20.44.4",
     "chokidar": "^2.0.4",
     "element-ui": "^2.3.6",
     "fs-extra": "^7.0.0",
@@ -97,7 +98,7 @@
     "del": "^3.0.0",
     "devtron": "^1.4.0",
     "electron": "^1.7.5",
-    "electron-builder": "^20.26.0",
+    "electron-builder": "^20.44.4",
     "electron-debug": "^1.4.0",
     "electron-devtools-installer": "^2.2.0",
     "eslint": "^4.4.1",
