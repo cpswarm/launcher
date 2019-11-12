@@ -1,7 +1,8 @@
 <template>
   <div class="container">
-    <div class="description">{{message}}</div>
+    <div class="description">{{info}}</div>
     <el-button title="Browse folder to select file" type="primary" size="medium" :disabled="!enabled" @click="open">Browse</el-button>
+    <span class="message">{{message}}</span>
   </div>
 </template>
 
@@ -12,14 +13,18 @@ const pt = require('path')
 export default {
   props: ['rootPath', 'enabled', 'properties'],
   data () {
-    var { path = '' } = this.properties
+    var { 
+      path = '',
+      info = '',
+    } = this.properties
 
     // Emit event when initializing component
     var selectedPath = null
 
     return {
       path: pt.join(this.rootPath, path),
-      selectedPath: selectedPath
+      selectedPath: selectedPath,
+      info
     }
   },
   methods: {
@@ -54,6 +59,11 @@ export default {
 
 <style lang="scss" scoped>
 .container {
+  .message {
+    margin-bottom: 5px;
+    color: #888888;
+    font-size: 0.9em;
+  }
   .description {
     margin-bottom: 5px;
     color: #888888;
