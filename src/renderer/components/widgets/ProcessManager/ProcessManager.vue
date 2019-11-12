@@ -1,8 +1,8 @@
 <template>
   <div>
     <div class="input-container">
-      <div class="label">Command Line</div>
-      <div class="description">The command line to be executed</div>
+      <div class="label">Execution</div>
+      <div class="description">The command to be executed</div>
       <el-input size="small" :readonly="true" v-model="execPath"></el-input>
     </div>
 
