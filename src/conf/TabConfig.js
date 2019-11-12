@@ -12,7 +12,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            defaultValue: 'C:/Users/liang/Desktop/launcher-project/test.bat',
+            defaultValue: 'modelio',
             info: 'The path to the Modelling Tool executable'
           }
         },
@@ -73,7 +73,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            defaultValue: '/home/liang/workspace/soo/start.sh',
+            defaultValue: '~/cpswarm/soo/run.sh',
             info: 'The path to the Simulation & Optimization Orchestrator executable'
           }
         },
@@ -326,16 +326,39 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            defaultValue: '/home/liang/workspace/code-generator/start.sh',
+            defaultValue: '~/cpswarm/code-generator/run.sh',
             info: 'The path to the Code Generator executable'
           }
         },
         {
           type: 'select-file-button',
-          label: 'State Machine XML',
-          varId: 'stateMachineXML',
+          label: 'State Machine File*',
+          varId: 'scxml',
           properties: {
-            path: 'Models'
+            path: 'Models',
+            info: 'SCXML file with XML extension (mandatory)'
+          }
+        },
+        {
+          type: 'select-file-button',
+          label: 'Abstraction Description File (ADF)',
+          varId: 'adf',
+          properties: {
+            path: 'Models',
+            info: 'ADF file with JSON extension'
+          }
+        },
+        {
+          type: 'dropdown-box',
+          label: 'Environment',
+          varId: 'env',
+          properties: {
+            items: [{
+              label: 'ROS',
+              value: 'ROS'
+            }],
+            defaultValue: 'ROS',
+            info: 'Target environment for the generated code'
           }
         },
         {
@@ -376,20 +399,22 @@ module.exports = function () {
       },
 
       allowLaunch: function (tab) {
-        return tab['stateMachineXML'] && tab['stateMachineXML'] !== ''
+        return tab['scxml'] && tab['scxml'] !== ''
       },
 
       getCommandLine: function (tab, path) {
         var command = ''
         command += tab['execPath']
-        if (tab['stateMachineXML'] && tab['stateMachineXML'] !== '') command += ' --src "' + tab['stateMachineXML'] + '"'
-        command += ' --target ' + '"' + pt.join(path, 'GeneratedCode') + '"'
+        if (tab['env'] && tab['env'] !== '') command += ' --env ' + tab['env']
+        if (tab['scxml'] && tab['scxml'] !== '') command += ' --scxml "' + tab['scxml'] + '"'
+        if (tab['adf'] && tab['adf'] !== '') command += ' --adf "' + tab['adf'] + '"'
+        command += ' --output ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
     },
     {
       id: 'deployment',
-      name: 'Swarm Deployment',
+      name: 'OTA Deployment',
       icon: require('@/assets/deployment.png'),
       widgets: [
         {
@@ -397,7 +422,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            defaultValue: '~/workspace/deployment-tool/manager',
+            defaultValue: '~/cpswarm/deployment-tool/run.sh',
             info: 'The path to the Deployment Tool executable'
           }
         },
@@ -477,7 +502,7 @@ module.exports = function () {
     },
     {
       id: 'monitoring',
-      name: 'Monitor & Command',
+      name: 'Monitoring & Command',
       icon: require('@/assets/monitoring.png'),
       widgets: [
         {
@@ -485,7 +510,7 @@ module.exports = function () {
           label: 'Executable Path',
           varId: 'execPath',
           properties: {
-            defaultValue: '/home/liang/workspace/monitoring-tool/start.sh',
+            defaultValue: '~/cpswarm/monitoring-tool/run.sh',
             info: 'The path to the Monitoring Tool executable'
           }
         }
