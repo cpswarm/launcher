@@ -85,7 +85,10 @@ module.exports = function () {
           properties: {
             defaultValue: false,
             label: 'Generate the simulation'
-          }
+          },
+          isEnabled: function (tab) {
+            return !tab['deploymentMode'] && !tab['simulationMode']
+          },
         },
         {
           type: 'select-file-button',
@@ -183,7 +186,7 @@ module.exports = function () {
             info: 'Number of dimension required for the simulation'
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -196,7 +199,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -208,7 +211,7 @@ module.exports = function () {
             label: 'Show the graphical interface of simulators'
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -221,7 +224,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -234,7 +237,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -246,7 +249,7 @@ module.exports = function () {
             label: 'Require the use of the Optimization Tool'
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -259,7 +262,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -272,18 +275,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode']
-          }
-        },
-        {
-          type: 'explorer-button',
-          label: 'Simulation Configuration',
-          varId: 'simulationConf',
-          properties: {
-            path: 'SimulationConf'
-          },
-          isVisible: function (tab) {
-            return tab['deploymentMode'] || tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -294,42 +286,21 @@ module.exports = function () {
             path: 'http://130.192.86.237:8080/dashboards/',
             openUrl: true
           },
-          isEnabled: function (tab) {
-            return true
-          },
           isVisible: function (tab) {
-            return tab['simulationMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
-          type: 'file-list',
-          label: 'Available Input',
-          varId: 'modelDir',
+          type: 'explorer-button',
+          label: 'Simulation Configuration',
+          varId: 'simulationConf',
           properties: {
-            watchPath: 'Models',
-            allowAdd: true,
-            watchDir: true,
-            watchFile: true
+            path: 'SimulationConf'
           },
           isVisible: function (tab) {
-            return false
-          }
-        },
-        {
-          type: 'file-list',
-          label: 'Available Input',
-          varId: 'optimizedDir',
-          properties: {
-            watchPath: 'Optimized',
-            allowAdd: true,
-            watchDir: true,
-            watchFile: true
-          },
-          isVisible: function (tab) {
-            return false
+            return (tab['deploymentMode'] || tab['simulationMode']) && !tab['generationMode']
           }
         }
-
       ],
       isDone: function (tab) {
         // return (tab['outputFiles'] && tab['outputFiles'].length > 0)
@@ -342,8 +313,7 @@ module.exports = function () {
       },
 
       allowLaunch: function (tab) {
-        return (!tab['deploymentMode'] && tab['taskId'] &&
-          tab['taskId'] !== '') || tab['deploymentMode']
+        return tab['deploymentMode'] ||  tab['simulationMode'] || tab['generationMode']
       },
 
       getCommandLine: function (tab, path) {
