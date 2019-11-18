@@ -77,23 +77,81 @@ module.exports = function () {
             info: 'The path to the Simulation & Optimization Orchestrator executable'
           }
         },
+        /* GENERATION MODE */
         {
           type: 'single-checkbox',
-          label: 'Running Mode',
-          varId: 'runningMode',
+          label: 'Generation Mode',
+          varId: 'generationMode',
           properties: {
             defaultValue: false,
-            label: 'Run in Running mode'
+            label: 'Generate the simulation'
           }
         },
+        {
+          type: 'select-file-button',
+          label: 'State Machine File*',
+          varId: 'scxml',
+          properties: {
+            path: 'Models',
+            info: 'SCXML file with XML extension (mandatory)'
+          },
+          isVisible: function (tab) {
+            return tab['generationMode']
+          },
+        },
+        {
+          type: 'select-file-button',
+          label: 'Abstraction Description File (ADF)',
+          varId: 'adf',
+          properties: {
+            path: 'Models',
+            info: 'ADF file with JSON extension'
+          },
+          isVisible: function (tab) {
+            return tab['generationMode']
+          },
+        },
+        {
+          type: 'dropdown-box',
+          label: 'Environment',
+          varId: 'env',
+          properties: {
+            items: [{
+              label: 'ROS',
+              value: 'ROS'
+            }],
+            defaultValue: 'ROS',
+            info: 'Target simulation environment'
+          },
+          isVisible: function (tab) {
+            return tab['generationMode']
+          },
+        },
+        /* DEPLOYMENT MODE */
         {
           type: 'single-checkbox',
           label: 'Deployment Mode',
           varId: 'deploymentMode',
           properties: {
             defaultValue: false,
-            label: 'Run in deployment mode'
-          }
+            label: 'Deploy images to the simulation environment'
+          },
+          isEnabled: function (tab) {
+            return !tab['generationMode']
+          },
+        },
+        /* SIMULATION MODE */
+        {
+          type: 'single-checkbox',
+          label: 'Simulation Mode',
+          varId: 'simulationMode',
+          properties: {
+            defaultValue: false,
+            label: 'Run the simulation'
+          },
+          isEnabled: function (tab) {
+            return !tab['generationMode']
+          },
         },
         {
           type: 'text',
@@ -103,7 +161,7 @@ module.exports = function () {
             info: 'The task ID, which is used to distinguish different processes'
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode'] && !tab['generationMode']
           }
         },
         {
@@ -125,7 +183,7 @@ module.exports = function () {
             info: 'Number of dimension required for the simulation'
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -138,7 +196,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -150,7 +208,7 @@ module.exports = function () {
             label: 'Show the graphical interface of simulators'
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -163,7 +221,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -176,7 +234,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -188,7 +246,7 @@ module.exports = function () {
             label: 'Require the use of the Optimization Tool'
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -201,7 +259,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -214,7 +272,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -223,6 +281,9 @@ module.exports = function () {
           varId: 'simulationConf',
           properties: {
             path: 'SimulationConf'
+          },
+          isVisible: function (tab) {
+            return tab['deploymentMode'] || tab['simulationMode']
           }
         },
         {
@@ -237,7 +298,7 @@ module.exports = function () {
             return true
           },
           isVisible: function (tab) {
-            return tab['runningMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -289,8 +350,20 @@ module.exports = function () {
         var command = ''
         command += tab['execPath']
         var mode = ''
-        if (tab['runningMode']) {
-          mode += 'r'
+
+        if (tab['generationMode']) {
+          mode += 'g'
+          if (tab['env'] && tab['env'] !== '') command += ' --env ' + tab['env']
+          if (tab['scxml'] && tab['scxml'] !== '') command += ' --scxml "' + tab['scxml'] + '"'
+          if (tab['adf'] && tab['adf'] !== '') command += ' --adf "' + tab['adf'] + '"'
+        }
+
+        if (tab['deploymentMode'] && !tab['generationMode']) {
+          mode += 'd'
+        }
+
+        if (tab['simulationMode'] && !tab['generationMode']) {
+          mode += 's'
           if (tab['taskId'] && tab['taskId'] !== '') command += ' --id ' + tab['taskId']
           if (tab['dimension'] && tab['dimension'] !== '') command += ' --dim ' + tab['dimension']
           if (!isNaN(tab['maxAgent'])) command += ' --max ' + tab['maxAgent']
@@ -304,12 +377,11 @@ module.exports = function () {
           command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
         }
 
-        if (tab['deploymentMode']) {
-          mode += 'd'
+        if (tab['deploymentMode'] || tab['simulationMode']) {
+          command += ' --conf ' + '"' + pt.join(path, 'SimulationConf') + '"'
         }
 
         if (mode) command += ' --mode ' + mode
-        command += ' --conf ' + '"' + pt.join(path, 'SimulationConf') + '"'
 
         return command
       }
