@@ -3,7 +3,7 @@
     <div class="input-container">
       <div class="label">Execution</div>
       <div class="description">The command to be executed</div>
-      <el-input size="small" :readonly="true" v-model="execPath"></el-input>
+      <el-input type="textarea" size="small" :readonly="true" v-model="execPath"></el-input>
     </div>
 
     <div class="btn-container">
