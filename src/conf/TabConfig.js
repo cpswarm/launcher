@@ -279,12 +279,11 @@ module.exports = function () {
           }
         },
         {
-          type: 'explorer-button',
+          type: 'browse-button',
           label: 'Monitor Interface',
           varId: 'monitorInterface',
           properties: {
-            path: 'http://130.192.86.237:8080/dashboards/',
-            openUrl: true
+            defaultPath: 'http://130.192.86.237:8080/dashboards/'
           },
           isVisible: function (tab) {
             return tab['simulationMode'] && !tab['generationMode']
@@ -469,57 +468,13 @@ module.exports = function () {
           }
         },
         {
-          type: 'file-list',
-          label: 'Previous Versions',
-          varId: 'genDir',
-          isEnabled: function (tab) {
-            return !tab.useGeneratedCode
-          },
-          properties: {
-            watchPath: 'GeneratedCode',
-            allowAdd: false
-          },
-          isVisible: function (tab) {
-            return false
-          }
-        },
-        {
-          type: 'explorer-button',
+          type: 'browse-button',
           label: 'Deployment Manager Interface',
           varId: 'deploymentManagerInterface',
           properties: {
-            path: 'http://localhost:8080/ui/',
-            openUrl: true
-          }
-        },
-        {
-          type: 'file-list',
-          label: 'Task File',
-          varId: 'genDir',
-          isEnabled: function (tab) {
-            return !tab.useGeneratedCode
-          },
-          properties: {
-            watchPath: 'Deployment/Tasks',
-            allowAdd: false,
-            watchDir: false,
-            watchFile: true,
-            execCommand: function (filePath) {
-              return 'curl -s -X POST -T "' + filePath + '" localhost:8080/tasks'
-            }
+            defaultPath: 'http://localhost:8090'
           }
         }
-        // {
-        //   type: 'file-list',
-        //   label: 'Previous Versions',
-        //   isEnabled: function (tab) {
-        //     return !tab.useGeneratedCode
-        //   },
-        //   properties: {
-        //   watchPath: pt.join('Deployment', 'Workspaces'),
-        //     allowAdd: false
-        //   }
-        // }
       ],
       isDone: function (tab) {
         return false
@@ -538,7 +493,6 @@ module.exports = function () {
       getCommandLine: function (tab, path) {
         var command = ''
         command += tab['execPath']
-        command += ' --src ' + '"' + pt.join(path, 'GeneratedCode') + '"'
         return command
       }
     },

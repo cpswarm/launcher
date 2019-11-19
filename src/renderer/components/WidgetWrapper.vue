@@ -5,6 +5,7 @@
     <text-input v-if="type === 'text'" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></text-input>
     <single-checkbox v-if="type === 'single-checkbox'" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></single-checkbox>
     <explorer-button v-if="type === 'explorer-button'" :rootPath="rootPath" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></explorer-button>
+    <browse-button v-if="type === 'browse-button'" :rootPath="rootPath" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></browse-button>
     <select-file-button v-if="type === 'select-file-button'" :rootPath="rootPath" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></select-file-button>
     <dropdown-box v-if="type === 'dropdown-box'" :properties="properties" :enabled="isEnabled" @change="onChange" @error="emitError"></dropdown-box>
   </div>
@@ -16,6 +17,7 @@ import FileList from '@/components/widgets/FileList/CompleteFileList.vue'
 import TextInput from '@/components/widgets/TextInput/TextInput.vue'
 import SingleCheckbox from '@/components/widgets/SingleCheckBox/SingleCheckBox.vue'
 import ExplorerButton from '@/components/widgets/ExplorerButton/ExplorerButton.vue'
+import BrowseButton from '@/components/widgets/BrowseButton/BrowseButton.vue'
 import SelectFileButton from '@/components/widgets/SelectFileButton/SelectFileButton.vue'
 import DropdownBox from '@/components/widgets/DropdownBox/DropdownBox.vue'
 
@@ -35,6 +37,7 @@ export default {
     TextInput,
     SingleCheckbox,
     ExplorerButton,
+    BrowseButton,
     SelectFileButton,
     DropdownBox
   },
