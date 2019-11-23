@@ -509,6 +509,13 @@ module.exports = function () {
             defaultValue: '~/cpswarm/monitoring-tool/run.sh',
             info: 'The path to the Monitoring Tool executable'
           }
+        },
+        {
+          type: 'browse-button',
+          label: 'Monitoring Tool Interface',
+          properties: {
+            defaultPath: 'http://localhost:9090'
+          }
         }
       ],
       isDone: function (tab) {
