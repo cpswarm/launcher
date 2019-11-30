@@ -143,6 +143,17 @@ module.exports = function () {
             return !tab['generationMode']
           },
         },
+        {
+          type: 'browse-button',
+          label: 'Deployment Dashboard',
+          varId: 'deploymentInterface',
+          properties: {
+            defaultPath: 'https://130.192.86.237:32641/#!/login'
+          },
+          isVisible: function (tab) {
+            return tab['deploymentMode']
+          }
+        },
         /* SIMULATION MODE */
         {
           type: 'single-checkbox',
@@ -164,7 +175,7 @@ module.exports = function () {
             info: 'The task ID, which is used to distinguish different processes'
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -186,7 +197,7 @@ module.exports = function () {
             info: 'Number of dimension required for the simulation'
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -199,7 +210,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -211,7 +222,7 @@ module.exports = function () {
             label: 'Show the graphical interface of simulators'
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -224,7 +235,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -237,7 +248,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -249,7 +260,7 @@ module.exports = function () {
             label: 'Require the use of the Optimization Tool'
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -262,7 +273,7 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -275,18 +286,18 @@ module.exports = function () {
             defaultValue: 0
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
           type: 'browse-button',
-          label: 'Monitor Interface',
+          label: 'Monitoring Dashboard',
           varId: 'monitorInterface',
           properties: {
             defaultPath: 'http://130.192.86.237:8080/dashboards/'
           },
           isVisible: function (tab) {
-            return tab['simulationMode'] && !tab['generationMode']
+            return tab['simulationMode']
           }
         },
         {
@@ -297,7 +308,7 @@ module.exports = function () {
             path: 'SimulationConf'
           },
           isVisible: function (tab) {
-            return (tab['deploymentMode'] || tab['simulationMode']) && !tab['generationMode']
+            return tab['deploymentMode'] || tab['simulationMode']
           }
         }
       ],
