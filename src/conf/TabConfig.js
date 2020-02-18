@@ -336,6 +336,7 @@ module.exports = function () {
           if (tab['env'] && tab['env'] !== '') command += ' --env ' + tab['env']
           if (tab['scxml'] && tab['scxml'] !== '') command += ' --scxml "' + tab['scxml'] + '"'
           if (tab['adf'] && tab['adf'] !== '') command += ' --adf "' + tab['adf'] + '"'
+          command += ' --target ' + '"' + pt.join(path, 'Optimized') + '"'
         }
 
         if (tab['deploymentMode'] && !tab['generationMode']) {
